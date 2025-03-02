@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  font-family: "Inter", serif;
+  font-optical-sizing: auto;
 }
 
 .App-logo {
@@ -35,4 +37,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.page-title {
+  font-size: 48px;
+  line-height: 58.09px;
+  font-weight: 600px;
+  color: rgba(21, 93, 164, 1);
+  margin-top: 43px;
+  margin-bottom: 54px;
+  padding: 0;
 }

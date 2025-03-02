@@ -1,0 +1,30 @@
+.projects-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 88px;
+    margin: 0;
+    padding: 0;
+    margin-left: 126px;
+    margin-bottom: 64px;
+}
+
+.project-preview {
+    width: 497px;
+    height: 262px;
+    background-color: rgba(21, 93, 164, 0.2);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.button {
+    margin-bottom: 47px;
+    width: 392px;
+    height: 79px;
+    background-color: rgba(21, 93, 164, 1);
+    border-radius: 15px;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 600px;
+    line-height: 38.73px;
+    border: none;
+}
