@@ -6,7 +6,6 @@ import CardsPage from './pages/cards-page.js';
 import TeamsPage from './pages/teams-page.js';
 import AchievementsPage from './pages/achievements-page.js';
 import UserPage from './pages/user-page.js';
-import './css/App.css';
 
 function App() {
   return (
