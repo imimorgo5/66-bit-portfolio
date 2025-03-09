@@ -5,6 +5,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
   text-align: center;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
 }
 
 code {
@@ -12,11 +21,15 @@ code {
     monospace;
 }
 
+.content {
+  padding: 43px 2%;
+}
+
 .page-title {
   font-size: 50px;
   line-height: 58.09px;
   font-weight: 600;
   color: rgba(21, 93, 164, 1);
-  margin: 43px auto 54px;
+  margin: 0 auto 54px;
   padding: 0;
 }

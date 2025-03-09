@@ -5,6 +5,18 @@ import '../css/header.css';
 
 
 export default class Header extends React.Component {
+  state = {
+    isDropdownOpen: false,
+  };
+
+  toggleDropdown = () => {
+    this.setState(prevState => ({ isDropdownOpen: !prevState.isDropdownOpen }));
+  };
+
+  closeDropdown = () => {
+    this.setState({ isDropdownOpen: false });
+  };
+
   render = () => (
     <nav className="header">
     <ul className="nav-list">
@@ -42,9 +54,29 @@ export default class Header extends React.Component {
         </NavLink>
       </li>
     </ul>
-    <NavLink to="/user" className="header-user-icon">
-      <img src={UserIcon} alt="Аватарка пользователя" />
-    </NavLink>
+    <div className="header-user-dropdown">
+      <div onClick={this.toggleDropdown} className="header-user-icon">
+        <img src={UserIcon} alt="Аватарка пользователя" />
+      </div>
+      {this.state.isDropdownOpen && (
+        <div className="dropdown-menu">
+          <NavLink
+            to="/login"
+            onClick={this.closeDropdown}
+            className="dropdown-item"
+          >
+            Войти
+          </NavLink>
+          <NavLink
+            to="/register"
+            onClick={this.closeDropdown}
+            className="dropdown-item"
+          >
+            Зарегистрироваться
+          </NavLink>
+        </div>
+      )}
+    </div>
   </nav>
   );
 }

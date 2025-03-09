@@ -1,0 +1,12 @@
+.registration-form {
+    max-width: 1400px;
+    margin: 50px auto;
+}
+
+.registration-lable {
+    min-width: 300px;
+}
+
+.registration-button {
+    max-width: 452px;
+}

@@ -1,0 +1,12 @@
+.login-form {
+    max-width: 1300px;
+    margin: 155px auto;
+}
+
+.login-lable {
+    min-width: 200px;
+}
+  
+.login-button {
+    max-width: 212px;
+}
