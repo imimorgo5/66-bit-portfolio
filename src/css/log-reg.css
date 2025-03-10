@@ -32,8 +32,9 @@
     font-size: 32px;
     font-weight: 300;
     text-align: right;
-    width: 20%;
     margin-right: 34px;
+    width: 20%;
+    min-width: 300px;
 }
   
 .input-wrapper {

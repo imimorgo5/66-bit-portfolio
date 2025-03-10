@@ -59,11 +59,37 @@ export default function RegistrationPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Здесь можно добавить отправку данных на сервер
-    if (!emailError && !passwordError && email && password) {
-      console.log('Данные формы корректны');
+    if (!emailError && !nameError && !passwordError && !passwordAgainError && email && name && password && passwordAgain) {
+      const formData = {
+        email: email,
+        name: name,
+        password: password
+      };
+  
+      fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Ошибка при регистрации');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Регистрация прошла успешно:', data);
+          // Можно выполнить редирект или показать сообщение об успехе
+        })
+        .catch((error) => {
+          console.error('Ошибка:', error);
+          // Здесь можно обработать ошибку и вывести сообщение пользователю
+        });
     }
   };
+  
 
   const isFormValid = email && name && password && passwordAgain && !emailError && !nameError && !passwordError && !passwordAgainError;
 
@@ -128,7 +154,7 @@ export default function RegistrationPage() {
           <Link to="/login">Войти</Link>
         </div>        
       </form>
-      <button type="submit" className="log-reg-button registration-button" disabled={!isFormValid}>Зарегестрироваться</button>
+      <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегестрироваться</button>
     </div>
   );
 }

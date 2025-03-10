@@ -32,9 +32,33 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Здесь можно добавить отправку данных на сервер
     if (!emailError && !passwordError && email && password) {
-      console.log('Данные формы корректны');
+      const formData = {
+        email: email,
+        password: password
+      };
+  
+      fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Ошибка при входе');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Вход выполнен успешно:', data);
+          // Можно выполнить редирект или показать сообщение об успехе
+        })
+        .catch((error) => {
+          console.error('Ошибка:', error);
+          // Здесь можно обработать ошибку и вывести сообщение пользователю
+        });
     }
   };
 
@@ -45,7 +69,7 @@ export default function LoginPage() {
       <h1 className="page-title">Вход</h1>
       <form onSubmit={handleSubmit} className="log-reg-form login-form">
         <div className="input-group">
-          <label className='login-lable' htmlFor="email">Почта / Логин</label>
+          <label className='login-lable' htmlFor="email">Электронная почта</label>
           <div className="input-wrapper">
             <input
               type="text"
@@ -75,7 +99,7 @@ export default function LoginPage() {
           <Link to="/register">Зарегистрироваться</Link>
         </div>        
       </form>
-      <button type="submit" className="log-reg-button login-button" disabled={!isFormValid}>Войти</button>
+      <button type="submit" className="log-reg-button login-button" onClick={handleSubmit} disabled={!isFormValid}>Войти</button>
     </div>
   );
 }
