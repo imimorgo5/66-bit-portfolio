@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/registration-page.css';
 import '../css/log-reg.css';
+import logo from '../img/logo.png';
 
 export default function RegistrationPage() {
   const [email, setEmail] = useState('');
@@ -94,67 +95,72 @@ export default function RegistrationPage() {
   const isFormValid = email && name && password && passwordAgain && !emailError && !nameError && !passwordError && !passwordAgainError;
 
   return (
-    <div className="content log-reg-page">
-      <h1 className="page-title">Регистрация</h1>
-      <form onSubmit={handleSubmit} className="log-reg-form registration-form">
-        <div className="input-group">
-          <label className='registration-lable' htmlFor="email">Электронная почта</label>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              id="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="Введите вашу электронную почту"
-            />
-            {emailError && <span className="error-message">{emailError}</span>}
+    <div className='page'>
+      <div className='log-reg-title-container'>
+        <Link to="/"><img src={logo} className='logo' alt="Лого сайта" /></Link>
+        <h1 className="log-reg-title">Регистрация</h1>
+      </div>
+      <div className="content log-reg-page">
+        <form onSubmit={handleSubmit} className="log-reg-form registration-form">
+          <div className="input-group">
+            <label className='registration-lable' htmlFor="email">Электронная почта</label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                id="email"
+                value={email}
+                onChange={handleEmailChange}
+                placeholder="Введите ваш email"
+              />
+              {emailError && <span className="error-message">{emailError}</span>}
+            </div>
           </div>
-        </div>
-        <div className="input-group">
-          <label className='registration-lable' htmlFor="name">Имя пользователя</label>
-          <div className="input-wrapper">
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={handleNameChange}
-              placeholder="Введите желаемое имя пользователя"
-            />
-            {nameError && <span className="error-message">{nameError}</span>}
+          <div className="input-group">
+            <label className='registration-lable' htmlFor="name">Имя пользователя</label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={handleNameChange}
+                placeholder="Введите желаемое имя пользователя"
+              />
+              {nameError && <span className="error-message">{nameError}</span>}
+            </div>
           </div>
-        </div>
-        <div className="input-group">
-          <label className='registration-lable' htmlFor="password">Пароль</label>
-          <div className="input-wrapper">
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Придумайте пароль (не менее 8 символов)"
-            />
-            {passwordError && <span className="error-message">{passwordError}</span>}
+          <div className="input-group">
+            <label className='registration-lable' htmlFor="password">Пароль</label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                placeholder="Придумайте пароль (не менее 8 символов)"
+              />
+              {passwordError && <span className="error-message">{passwordError}</span>}
+            </div>
           </div>
-        </div>
-        <div className="input-group">
-          <label className='registration-lable' htmlFor="passwordAgain">Пароль (ещё раз)</label>
-          <div className="input-wrapper">
-            <input
-              type="password"
-              id="passwordAgain"
-              value={passwordAgain}
-              onChange={handlePasswordAgainChange}
-              placeholder="Повторите пароль"
-            />
-            {passwordAgainError && <span className="error-message">{passwordAgainError}</span>}
+          <div className="input-group">
+            <label className='registration-lable' htmlFor="passwordAgain">Пароль (ещё раз)</label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                id="passwordAgain"
+                value={passwordAgain}
+                onChange={handlePasswordAgainChange}
+                placeholder="Повторите пароль"
+              />
+              {passwordAgainError && <span className="error-message">{passwordAgainError}</span>}
+            </div>
           </div>
-        </div>
-        <div className="log-reg-link">
-          <span>У Вас уже есть аккаунт? </span>
-          <Link to="/login">Войти</Link>
-        </div>        
-      </form>
-      <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегестрироваться</button>
+          <div className="log-reg-link">
+            <span>У Вас уже есть аккаунт? </span>
+            <Link to="/login">Войти</Link>
+          </div>        
+        </form>
+        <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегестрироваться</button>
+      </div>
     </div>
   );
 }

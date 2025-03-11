@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import UserIcon from '../img/user-icon.png';
+import userIcon from '../img/user-icon.png';
 import '../css/header.css';
 
 
@@ -56,7 +56,7 @@ export default class Header extends React.Component {
     </ul>
     <div className="header-user-dropdown">
       <div onClick={this.toggleDropdown} className="header-user-icon">
-        <img src={UserIcon} alt="Аватарка пользователя" />
+        <img src={userIcon} alt="Аватарка пользователя" />
       </div>
       {this.state.isDropdownOpen && (
         <div className="dropdown-menu">
