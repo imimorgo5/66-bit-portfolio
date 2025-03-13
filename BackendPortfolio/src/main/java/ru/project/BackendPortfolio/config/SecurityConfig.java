@@ -30,7 +30,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/auth/login", "/error").permitAll()
+                                .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
