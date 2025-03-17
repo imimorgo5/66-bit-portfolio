@@ -67,7 +67,7 @@ export default function RegistrationPage() {
         password: password
       };
   
-      fetch('/api/register', {
+      fetch('/auth/registration', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
