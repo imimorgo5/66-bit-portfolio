@@ -10,4 +10,9 @@ public class HelloController {
     public String helloPage(){
         return "hello";
     }
+
+    @GetMapping("/admin")
+    public String adminPage(){
+        return "admin";
+    }
 }
