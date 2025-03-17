@@ -81,9 +81,14 @@ export default function LoginPage() {
                 id="email"
                 value={email}
                 onChange={handleEmailChange}
-                placeholder="Введите email"
+                placeholder="Введите ваш email"
               />
-              {emailError && <span className="error-message">{emailError}</span>}
+              {emailError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{emailError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="input-group">
@@ -96,7 +101,12 @@ export default function LoginPage() {
                 onChange={handlePasswordChange}
                 placeholder="Введите пароль"
               />
-              {passwordError && <span className="error-message">{passwordError}</span>}
+              {passwordError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{passwordError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="log-reg-link">

@@ -112,7 +112,12 @@ export default function RegistrationPage() {
                 onChange={handleEmailChange}
                 placeholder="Введите ваш email"
               />
-              {emailError && <span className="error-message">{emailError}</span>}
+              {emailError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{emailError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="input-group">
@@ -125,7 +130,12 @@ export default function RegistrationPage() {
                 onChange={handleNameChange}
                 placeholder="Введите желаемое имя пользователя"
               />
-              {nameError && <span className="error-message">{nameError}</span>}
+              {nameError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{nameError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="input-group">
@@ -138,7 +148,12 @@ export default function RegistrationPage() {
                 onChange={handlePasswordChange}
                 placeholder="Придумайте пароль (не менее 8 символов)"
               />
-              {passwordError && <span className="error-message">{passwordError}</span>}
+              {passwordError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{passwordError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="input-group">
@@ -151,7 +166,12 @@ export default function RegistrationPage() {
                 onChange={handlePasswordAgainChange}
                 placeholder="Повторите пароль"
               />
-              {passwordAgainError && <span className="error-message">{passwordAgainError}</span>}
+              {passwordAgainError && (
+                <div className="error-icon-wrapper">
+                  <span className="error-icon">&times;</span>
+                  <span className="error-message">{passwordAgainError}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="log-reg-link">
