@@ -1,0 +1,31 @@
+.sort-options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 88.5%;
+    gap: 15px;
+    margin: 0 auto 40px auto;
+  }
+  
+  .sort-option {
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 1px solid #155DA4;
+    border-radius: 15px;
+    color: #155DA4;
+    font-size: 24px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .sort-option.active {
+    background-color: #155DA4;
+    color: #fff;
+  }
+
+  .sort-options h2 {
+    font-size: 32px;
+    font-weight: 300;
+    padding: 0;
+    margin: 0;
+  }
+  
