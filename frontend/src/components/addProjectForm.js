@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../css/add-project-form.css';
+import '../css/add-form.css';
 
 export default function AddProjectForm({ onClose, onCreate }) {
   const [title, setTitle] = useState('');
@@ -42,7 +42,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
 
   return (
     <div className="modal-overlay">
-      <div className="add-project-form">
+      <div className="add-form">
         <h2>Добавление проекта</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

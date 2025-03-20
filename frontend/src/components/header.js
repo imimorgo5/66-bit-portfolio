@@ -8,8 +8,30 @@ import { logout } from '../services/authService';
 export default class Header extends React.Component {
   static contextType = AuthContext;
 
-  state = {
-    isDropdownOpen: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDropdownOpen: false,
+    };
+    this.dropdownRef = React.createRef();
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+  
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+  
+  handleClickOutside = (event) => {
+    if (
+      this.state.isDropdownOpen &&
+      this.dropdownRef.current &&
+      !this.dropdownRef.current.contains(event.target)
+    ) {
+      this.setState({ isDropdownOpen: false });
+    }
   };
 
   toggleDropdown = () => {
@@ -86,7 +108,7 @@ export default class Header extends React.Component {
             )}
           </ul>
         </div>
-        <div className="header-user-dropdown">
+        <div className="header-user-dropdown" ref={this.dropdownRef}>
           <div onClick={this.toggleDropdown} className="header-user-icon">
             <img src={userIcon} alt="Аватарка пользователя" />
           </div>

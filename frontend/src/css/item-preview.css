@@ -1,4 +1,4 @@
-.project-preview {
+.item-preview {
     width: 100%;
     aspect-ratio: 370 / 300;
     background-color: rgba(255, 255, 255, 1);
@@ -15,7 +15,7 @@
     height: 50px;
 }
 
-.project-preview h3 {
+.item-preview h3 {
     margin: 0;
     padding: 0;
     font-size: 24px;

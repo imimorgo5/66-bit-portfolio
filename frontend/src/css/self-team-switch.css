@@ -1,13 +1,11 @@
-.sort-options {
+.self-team-switch {
     display: flex;
-    align-items: center;
     gap: 15px;
-    margin: 5px 0;
   }
   
-  .sort-option {
+  .self-team-switch-option {
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 15px 30px;
     border: 1px solid #155DA4;
     border-radius: 15px;
     color: #155DA4;
@@ -15,15 +13,8 @@
     transition: background-color 0.3s, color 0.3s;
   }
   
-  .sort-option.active {
+  .self-team-switch-option.active {
     background-color: #155DA4;
     color: #fff;
-  }
-
-  .sort-options h2 {
-    font-size: 32px;
-    font-weight: 300;
-    padding: 0;
-    margin: 0;
   }
   

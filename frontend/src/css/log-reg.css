@@ -8,7 +8,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: 0;
-    min-height: 85vh;
+    min-height: 85.5vh;
 }
 
 .log-reg-title-container {
@@ -119,11 +119,7 @@
 }
 
 .log-reg-button:hover {
-    background-color: rgba(202, 209, 225, 1);
-}
-  
-.log-reg-button:active {
-    background-color: rgba(21, 93, 164, 1);
+    background-color: #114880;
 }
 
 .log-reg-button:disabled {
