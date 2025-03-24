@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import '../css/registration-page.css';
 import '../css/log-reg.css';
 import logo from '../img/logo.png';
+import { register } from '../services/authService';
 
 export default function RegistrationPage() {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [userName, setName] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -60,39 +61,20 @@ export default function RegistrationPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!emailError && !nameError && !passwordError && !passwordAgainError && email && name && password && passwordAgain) {
-      const formData = {
-        email: email,
-        name: name,
-        password: password
-      };
-  
-      fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+    if (!emailError && !nameError && !passwordError && !passwordAgainError && email && userName && password && passwordAgain) {
+      register({ email, userName, password })
+      .then(data => {
+        console.log('Успешная регистрация:', data);
+        window.location.href = '/login';
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Ошибка при регистрации');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('Регистрация прошла успешно:', data);
-          // Можно выполнить редирект или показать сообщение об успехе
-        })
-        .catch((error) => {
-          console.error('Ошибка:', error);
-          // Здесь можно обработать ошибку и вывести сообщение пользователю
-        });
+      .catch(error => {
+        console.error('Ошибка регистрации:', error.message);
+      });
     }
   };
   
 
-  const isFormValid = email && name && password && passwordAgain && !emailError && !nameError && !passwordError && !passwordAgainError;
+  const isFormValid = email && userName && password && passwordAgain && !emailError && !nameError && !passwordError && !passwordAgainError;
 
   return (
     <div className='page'>
@@ -111,12 +93,10 @@ export default function RegistrationPage() {
                 value={email}
                 onChange={handleEmailChange}
                 placeholder="Введите ваш email"
+                className={`${emailError ? 'input-error' : ''}`}
               />
               {emailError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
                   <span className="error-message">{emailError}</span>
-                </div>
               )}
             </div>
           </div>
@@ -126,15 +106,13 @@ export default function RegistrationPage() {
               <input
                 type="text"
                 id="name"
-                value={name}
+                value={userName}
                 onChange={handleNameChange}
                 placeholder="Введите желаемое имя пользователя"
+                className={`${nameError ? 'input-error' : ''}`}
               />
               {nameError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
                   <span className="error-message">{nameError}</span>
-                </div>
               )}
             </div>
           </div>
@@ -147,12 +125,10 @@ export default function RegistrationPage() {
                 value={password}
                 onChange={handlePasswordChange}
                 placeholder="Придумайте пароль (не менее 8 символов)"
+                className={`${passwordError ? 'input-error' : ''}`}
               />
               {passwordError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
                   <span className="error-message">{passwordError}</span>
-                </div>
               )}
             </div>
           </div>
@@ -165,12 +141,10 @@ export default function RegistrationPage() {
                 value={passwordAgain}
                 onChange={handlePasswordAgainChange}
                 placeholder="Повторите пароль"
+                className={`${passwordAgainError ? 'input-error' : ''}`}
               />
-              {passwordAgainError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
+              {passwordAgainError && (                
                   <span className="error-message">{passwordAgainError}</span>
-                </div>
               )}
             </div>
           </div>
@@ -179,7 +153,7 @@ export default function RegistrationPage() {
             <Link to="/login">Войти</Link>
           </div>        
         </form>
-        <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегестрироваться</button>
+        <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегистрироваться</button>
       </div>
     </div>
   );

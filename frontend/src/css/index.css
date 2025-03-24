@@ -6,6 +6,7 @@ body {
   font-optical-sizing: auto;
   text-align: center;
   -ms-overflow-style: none;
+  background-color: rgba(212, 230, 244, 1);
 }
 
 ::-webkit-scrollbar {
@@ -22,7 +23,7 @@ code {
 }
 
 .content {
-  padding: 43px 2%;
+  padding: 40px 2%;  
 }
 
 .page-title {

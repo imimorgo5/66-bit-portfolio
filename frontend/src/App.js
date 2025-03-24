@@ -7,6 +7,7 @@ import AchievementsPage from './pages/achievements-page.js';
 import UserPage from './pages/user-page.js';
 import LoginPage from './pages/login-page.js';
 import RegistrationPage from './pages/registration-page.js';
+import NotificationPage from './pages/notification-page.js';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="/notification" element={<NotificationPage />} />
         </Routes>
       </Router>
     </div>

@@ -1,3 +1,7 @@
-.cards-page {
-    background-color: rgba(212, 230, 244, 1);
-  }
+.cards-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 88.5%;
+    margin: 0 auto 40px;
+}

@@ -1,8 +1,12 @@
 .login-form {
     max-width: 1300px;
-    margin: 150px auto;
+    margin: 50px auto;
 }
   
 .login-button {
     max-width: 212px;
+}
+
+.password-link {
+    margin-bottom: 40px;
 }

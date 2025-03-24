@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/login-page.css';
 import '../css/log-reg.css';
 import logo from '../img/logo.png';
+import { AuthContext } from '../context/AuthContext';
+import { login } from '../services/authService';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -10,11 +12,12 @@ export default function LoginPage() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  const { setUser } = useContext(AuthContext);
+
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (value && !emailPattern.test(value)) {
+    if (!value) {
       setEmailError('Некорректный email');
     } else {
       setEmailError('');
@@ -34,31 +37,14 @@ export default function LoginPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!emailError && !passwordError && email && password) {
-      const formData = {
-        email: email,
-        password: password
-      };
-  
-      fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Ошибка при входе');
-          }
-          return response.json();
+      login({ email, password })
+        .then(data => {
+          setUser(data.user);
+          window.location.href = '/';
         })
-        .then((data) => {
-          console.log('Вход выполнен успешно:', data);
-          // Можно выполнить редирект или показать сообщение об успехе
-        })
-        .catch((error) => {
-          console.error('Ошибка:', error);
-          // Здесь можно обработать ошибку и вывести сообщение пользователю
+        .catch(error => {
+          console.error('Ошибка входа:', error);
+          // Дополнительная обработка ошибок
         });
     }
   };
@@ -82,12 +68,10 @@ export default function LoginPage() {
                 value={email}
                 onChange={handleEmailChange}
                 placeholder="Введите ваш email"
+                className={`${emailError ? 'input-error' : ''}`}
               />
               {emailError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
-                  <span className="error-message">{emailError}</span>
-                </div>
+                <span className="error-message">{emailError}</span>
               )}
             </div>
           </div>
@@ -100,21 +84,25 @@ export default function LoginPage() {
                 value={password}
                 onChange={handlePasswordChange}
                 placeholder="Введите пароль"
+                className={`${passwordError ? 'input-error' : ''}`}
               />
               {passwordError && (
-                <div className="error-icon-wrapper">
-                  <span className="error-icon">&times;</span>
-                  <span className="error-message">{passwordError}</span>
-                </div>
+                <span className="error-message">{passwordError}</span>
               )}
             </div>
+          </div>
+          <div className="log-reg-link password-link">
+            <span>Забыли пароль? </span>
+            <Link to="/login">Восстановить пароль</Link>
           </div>
           <div className="log-reg-link">
             <span>У Вас ещё нет аккаунта? </span>
             <Link to="/register">Зарегистрироваться</Link>
           </div>        
         </form>
-        <button type="submit" className="log-reg-button login-button" onClick={handleSubmit} disabled={!isFormValid}>Войти</button>
+        <button type="submit" className="log-reg-button login-button" onClick={handleSubmit} disabled={!isFormValid}>
+          Войти
+        </button>
       </div>
     </div>
   );
