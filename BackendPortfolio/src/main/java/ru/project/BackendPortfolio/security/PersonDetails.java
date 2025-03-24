@@ -55,4 +55,8 @@ public class PersonDetails implements UserDetails {
     public Person getPerson() {
         return this.person;
     }
+
+    public String getEmail() {
+        return this.person.getEmail();
+    }
 }

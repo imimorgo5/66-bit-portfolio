@@ -1,21 +1,26 @@
 package ru.project.BackendPortfolio.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.project.BackendPortfolio.dto.AuthenticationDTO;
 import ru.project.BackendPortfolio.dto.PersonDTO;
 import ru.project.BackendPortfolio.models.Person;
-import ru.project.BackendPortfolio.security.JWTUtil;
 import ru.project.BackendPortfolio.services.RegistrationService;
 import ru.project.BackendPortfolio.util.PersonValidator;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,57 +28,77 @@ public class AuthController {
 
     private final PersonValidator personValidator;
     private final RegistrationService registrationService;
-    private final JWTUtil jwtUtil;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(PersonValidator personValidator, RegistrationService registrationService, JWTUtil jwtUtil,
+    public AuthController(PersonValidator personValidator, RegistrationService registrationService,
                           ModelMapper modelMapper, AuthenticationManager authenticationManager) {
         this.personValidator = personValidator;
         this.registrationService = registrationService;
-        this.jwtUtil = jwtUtil;
         this.modelMapper = modelMapper;
         this.authenticationManager = authenticationManager;
     }
 
+    @GetMapping("/registration")
+    public ResponseEntity<Void> registrationPage() {
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/registration")
-    public Map<String, String> performRegistration(@RequestBody @Valid PersonDTO personDTO,
-                                      BindingResult bindingResult){
+    public ResponseEntity<?> performRegistration(@RequestBody @Valid PersonDTO personDTO,
+                                                 BindingResult bindingResult){
         Person person = convertToPersonFromDTO(personDTO);
 
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(error -> {
-                System.out.println(error.getDefaultMessage());
-            });
-            return Map.of("message", "Ошибка!");
+            // Собираем все ошибки в список
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage()) // Получаем текст ошибки
+                    .collect(Collectors.toList());
+
+            // Возвращаем ошибки в виде JSON
+            return ResponseEntity.badRequest().body(Map.of("errors", errors));
         }
 
         registrationService.register(person);
-        String token = jwtUtil.generateToken(person.getUsername());
-        return Map.of("jwt-token", token);
+        return ResponseEntity.ok(Map.of("message", "Регистрация прошла успешно!"));
+//        return Map.of("message", "Регистрация прошла успешно!");
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> loginPage() {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody @Valid AuthenticationDTO authenticationDTO,
-                                            BindingResult bindingResult){
+    public ResponseEntity<?> performLogin(@RequestBody @Valid AuthenticationDTO authenticationDTO,
+                                            BindingResult bindingResult, HttpSession session){
         var authenticationInputToken = new UsernamePasswordAuthenticationToken(
-                authenticationDTO.getUsername(), authenticationDTO.getPassword()
+                authenticationDTO.getEmail(), authenticationDTO.getPassword()
         );
 
         try {
-            authenticationManager.authenticate(authenticationInputToken);
+            var authentication = authenticationManager.authenticate(authenticationInputToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         } catch (BadCredentialsException e) {
             bindingResult.getAllErrors().forEach(error -> {
                 System.out.println(error.getDefaultMessage());
             });
-            return Map.of("message", "Invalid credentials!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
 
-        var token = jwtUtil.generateToken(authenticationDTO.getUsername());
-        return Map.of("jwt-token", token);
+        return ResponseEntity.ok(Map.of("message", "Login successful!"));
+    }
+
+    @PostMapping("/logout")
+    public Map<String, String> performLogout(HttpSession session) {
+        session.invalidate();
+        SecurityContextHolder.clearContext();
+        return Map.of("message", "Logout successful!");
     }
 
     public Person convertToPersonFromDTO(PersonDTO personDTO){
