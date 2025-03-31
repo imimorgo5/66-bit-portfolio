@@ -53,19 +53,16 @@ public class AuthController {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            // Собираем все ошибки в список
             List<String> errors = bindingResult.getAllErrors()
                     .stream()
-                    .map(error -> error.getDefaultMessage()) // Получаем текст ошибки
+                    .map(error -> error.getDefaultMessage())
                     .collect(Collectors.toList());
 
-            // Возвращаем ошибки в виде JSON
             return ResponseEntity.badRequest().body(Map.of("errors", errors));
         }
 
         registrationService.register(person);
         return ResponseEntity.ok(Map.of("message", "Регистрация прошла успешно!"));
-//        return Map.of("message", "Регистрация прошла успешно!");
     }
 
     @GetMapping("/login")

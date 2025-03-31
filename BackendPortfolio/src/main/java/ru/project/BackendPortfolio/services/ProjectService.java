@@ -5,11 +5,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.project.BackendPortfolio.dto.ProjectDTO;
 import ru.project.BackendPortfolio.models.Person;
 import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.repositories.PeopleRepository;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +25,6 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository, PeopleRepository personRepository) {
         this.projectRepository = projectRepository;
         this.personRepository = personRepository;
-    }
-
-    public List<Project> getProjectsByUser(Person person) {
-        return projectRepository.findByOwner(person);
     }
 
     @Transactional
@@ -88,5 +86,30 @@ public class ProjectService {
         project.setTitle(newTitle);
         project.setDescription(newDescription);
         return projectRepository.save(project);
+    }
+
+    public List<ProjectDTO> getProjectsByUser(String username) {
+        var person = personRepository.findByUsername(username);
+        var projects = projectRepository.findByOwner(person.get());
+        List<ProjectDTO> projectDTOs = new ArrayList<>();
+        for (var project : projects) {
+            var projectDTO = mapToDTO(project);
+            projectDTOs.add(projectDTO);
+        }
+        return projectDTOs;
+    }
+
+    public ProjectDTO mapToDTO(Project project) {
+        var projectDTO = new ProjectDTO();
+        projectDTO.setTitle(project.getTitle());
+        projectDTO.setDescription(project.getDescription());
+        return projectDTO;
+    }
+
+    public Project mapDTOToProject(ProjectDTO projectDTO) {
+        var project = new Project();
+        project.setTitle(projectDTO.getTitle());
+        project.setDescription(projectDTO.getDescription());
+        return project;
     }
 }

@@ -1,7 +1,12 @@
 package ru.project.BackendPortfolio.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
+@Getter
+@Setter
 public class ProjectDTO {
 
     @NotEmpty(message = "Название не должно быть пустым")
@@ -10,19 +15,5 @@ public class ProjectDTO {
     @NotEmpty(message = "Название не должно быть пустым")
     private String description;
 
-    public @NotEmpty(message = "Название не должно быть пустым") String getTitle() {
-        return title;
-    }
-
-    public void setTitle(@NotEmpty(message = "Название не должно быть пустым") String title) {
-        this.title = title;
-    }
-
-    public @NotEmpty(message = "Название не должно быть пустым") String getDescription() {
-        return description;
-    }
-
-    public void setDescription(@NotEmpty(message = "Название не должно быть пустым") String description) {
-        this.description = description;
-    }
+    private MultipartFile image;
 }
