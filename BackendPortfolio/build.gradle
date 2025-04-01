@@ -27,6 +27,8 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:3.2.2'
 	implementation 'com.auth0:java-jwt:4.5.0'
 	runtimeOnly 'org.postgresql:postgresql'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

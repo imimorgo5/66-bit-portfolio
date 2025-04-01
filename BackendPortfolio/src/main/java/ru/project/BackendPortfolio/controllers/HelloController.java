@@ -10,11 +10,6 @@ import ru.project.BackendPortfolio.security.PersonDetails;
 @Controller
 public class HelloController {
 
-    @GetMapping("/hello")
-    public String helloPage(){
-        return "hello";
-    }
-
     @GetMapping("/admin")
     public String adminPage(){
         return "admin";

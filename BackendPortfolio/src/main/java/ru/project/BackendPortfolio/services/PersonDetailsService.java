@@ -19,17 +19,6 @@ public class PersonDetailsService implements UserDetailsService {
         this.peopleRepository = peopleRepository;
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        var person = peopleRepository.findByUsername(username);
-//
-//        if (person.isEmpty()){
-//            throw new UsernameNotFoundException("User not found");
-//        }
-//
-//        return new PersonDetails(person.get());
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         var person = peopleRepository.findByEmail(email);
