@@ -1,5 +1,6 @@
 package ru.project.BackendPortfolio.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,26 +19,35 @@ import java.util.Optional;
 @Service
 public class ProjectService {
 
+    private final ModelMapper modelMapper;
     private final ProjectRepository projectRepository;
     private final PeopleRepository personRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, PeopleRepository personRepository) {
+    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository, PeopleRepository personRepository, FileStorageService fileStorageService) {
+        this.modelMapper = modelMapper;
         this.projectRepository = projectRepository;
         this.personRepository = personRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
-    public Project createProject(Project project) {
-        var username = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
-        var person = personRepository.findByUsername(username);
-        if (person.isEmpty()) {
-            throw new RuntimeException("Пользователь не найден");
+    public Project createProject(ProjectDTO projectDTO) {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        var person = personRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+
+        Project project = new Project();
+        project.setTitle(projectDTO.getTitle());
+        project.setDescription(projectDTO.getDescription());
+        project.setOwner(person);
+
+        if (projectDTO.getImageFile() != null) {
+            String fileName = fileStorageService.saveFile(projectDTO.getImageFile());
+            project.setImageName(fileName);
         }
 
-        project.setOwner(person.get());
         return projectRepository.save(project);
     }
 
@@ -100,16 +110,15 @@ public class ProjectService {
     }
 
     public ProjectDTO mapToDTO(Project project) {
-        var projectDTO = new ProjectDTO();
-        projectDTO.setTitle(project.getTitle());
-        projectDTO.setDescription(project.getDescription());
-        return projectDTO;
+        return modelMapper.map(project, ProjectDTO.class);
     }
 
     public Project mapDTOToProject(ProjectDTO projectDTO) {
-        var project = new Project();
-        project.setTitle(projectDTO.getTitle());
-        project.setDescription(projectDTO.getDescription());
-        return project;
+        return modelMapper.map(projectDTO, Project.class);
     }
+
+    public Optional<Project> getProjectById(int projectId) {
+        return projectRepository.findById(projectId);
+    }
+
 }
