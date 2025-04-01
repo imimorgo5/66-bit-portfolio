@@ -23,8 +23,8 @@
   
   .add-form h2 {
     margin: 0 0 35px;
-    color: #155DA4;
-    font-size: 48px;
+    color: #000;
+    font-size: 42px;
     font-weight: 600;
   }
   
@@ -37,7 +37,7 @@
   .form-group label {
     display: block;
     padding: 20px 0;
-    color: #155DA4;
+    color: #000;
     font-weight: 300;
     font-size: 24px;
     white-space: nowrap;
@@ -70,11 +70,12 @@
   .form-group .file-upload {
     display: block;
     padding: 20px;
-    background: #155DA4;
+    background: rgba(21, 93, 164, 1);
     color: rgb(255, 255, 255);
+    border: 2px solid rgba(21, 93, 164, 1);
     border-radius: 15px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
     font-size: 24px;
     font-weight: 600;
     text-align: center;
@@ -82,7 +83,8 @@
   }
   
   .file-upload:hover {
-    background: #114880;
+    background-color: #fff;
+    color: rgba(21, 93, 164, 1);
   }
   
   .file-upload input[type="file"] {
@@ -106,24 +108,27 @@
   }
   
   .form-actions button[type="button"] {
-    background: transparent;
-    border: 1px solid #155DA4;
-    color: #155DA4;
+    background-color: rgba(172, 29, 29, 1);
+    color: #fff;
+    border: 2px solid rgba(172, 29, 29, 1);
     transition: background-color 0.3s;
   }
   
   .form-actions button[type="submit"] {
-    background: #155DA4;
-    color: white;
-    transition: background-color 0.3s;
+    background: rgba(77, 161, 128, 1);
+    color: #fff;
+    border: 2px solid rgba(77, 161, 128, 1);
+    transition: background-color 0.3s, color 0.3s;
   }
 
   .form-actions button[type="submit"]:hover {
-    background: #114880;
+    background-color: #fff;
+    color: rgba(77, 161, 128, 1);
   }
 
   .form-actions button[type="button"]:hover {
-    background: #fff;
+    background-color: #fff;
+    color: rgba(172, 29, 29, 1);
   }
   
   .image-preview-wrapper {
@@ -135,7 +140,7 @@
   
   .image-preview {
     max-width: 100%;
-    max-height: 250px;
+    max-height: 220px;
     border-radius: 10px;
   }
   

@@ -4,6 +4,7 @@ import userIcon from '../img/user-icon.png';
 import '../css/header.css';
 import { AuthContext } from '../context/AuthContext.js';
 import { logout } from '../services/authService';
+import logo from '../img/logo.png';
 
 export default class Header extends React.Component {
   static contextType = AuthContext;
@@ -61,6 +62,9 @@ export default class Header extends React.Component {
 
     return (
       <nav className="header">
+        <div className='logo-container'>
+          <NavLink to="/"><img src={logo} className='main-logo' alt="Лого сайта" /></NavLink>
+        </div>
         <div className='nav-list-container'>
           <ul className="nav-list">
             <li>

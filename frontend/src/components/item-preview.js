@@ -14,7 +14,7 @@ export default function ItemPreview({ title, image, createdAt }) {
         alt="Фото проекта/карточки" 
       />
       {createdAt && (
-        <div className="preview-date">
+        <div className="preview-date disabled">
           {new Date(createdAt).toLocaleDateString()}
         </div>
       )}

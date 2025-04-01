@@ -30,9 +30,9 @@ export default function RegistrationPage() {
     const value = e.target.value;
     setName(value);
     let userNames = ['qwerty123', 'zxc', 'qwertyqwertyqwertyqwertyqwer'];
-    if (userNames.includes(value)) {
+    if (value && userNames.includes(value)) {
       setNameError('Пользователь с таким логином уже есть');
-    } else if (value.length > 28) {
+    } else if (value && value.length > 28) {
         setNameError('Слишком длинное имя пользователя');   
     } else {
       setNameError('');
@@ -52,7 +52,7 @@ export default function RegistrationPage() {
   const handlePasswordAgainChange = (e) => {
     const value = e.target.value;
     setPasswordAgain(value);
-    if (value !== password) {
+    if (value && value !== password) {
       setPasswordAgainError('Пароли не совпадают');
     } else {
         setPasswordAgainError('');

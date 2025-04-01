@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/sort.css';
 
-export default function SortOptions({ onSortChange }) {
+export default function SortComponent({ onSortChange }) {
   const [selectedOption, setSelectedOption] = useState('date');
 
   const handleClick = (option) => {
@@ -11,9 +11,15 @@ export default function SortOptions({ onSortChange }) {
     }
   };
 
+  useEffect(() => {
+    if (onSortChange) {
+      onSortChange(selectedOption);
+    }
+  }, [selectedOption, onSortChange]);
+
   return (
     <div className="sort-options">
-      <h2>Сортировка:</h2>
+      <h2>Сортировать:</h2>
       <div
         className={`sort-option ${selectedOption === 'date' ? 'active' : ''}`}
         onClick={() => handleClick('date')}

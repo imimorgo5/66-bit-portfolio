@@ -103,7 +103,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
                 onClick={triggerFileInput}
                 className="file-upload-button"
               >
-                Прикрепить файлы
+                Добавить файлы
               </button>
               <input
                 type="file"
@@ -131,7 +131,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
                         onChange={(e) =>
                           handleFileDescriptionChange(index, e.target.value)
                         }
-                        placeholder="Описание файла"
+                        placeholder={item.file.name}
                         className="file-description-input"
                       />
                     </div>
