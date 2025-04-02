@@ -24,7 +24,7 @@ export default function SortComponent({ onSortChange }) {
         className={`sort-option ${selectedOption === 'date' ? 'active' : ''}`}
         onClick={() => handleClick('date')}
       >
-        По дате создания
+        По времени добавления
       </div>
       <div
         className={`sort-option ${selectedOption === 'name' ? 'active' : ''}`}

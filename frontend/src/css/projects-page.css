@@ -1,6 +1,6 @@
 .sort-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     max-width: 88.5%;
     margin: 0 auto 28px;
 }

@@ -6,10 +6,11 @@
   padding: 0;
   gap: 3.06%;
   max-width: 88.5%;
+  min-height: 562px;
 }
 
 .preview-list li {
-  flex: 0 0 22.7%;
+  width: 22.7%;
   box-sizing: border-box;
   margin-bottom: 3.06%;
 }
@@ -20,9 +21,8 @@
 
 .add-item {
   display: block;
-  width: 100%;
-  max-width: 307px;
-  height: 59px;
+  max-width: fit-content;
+  padding: 15px 50px;
   margin: 0 auto;
   background-color: rgba(77, 161, 128, 1);
   border-radius: 15px;

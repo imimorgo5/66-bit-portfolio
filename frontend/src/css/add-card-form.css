@@ -1,29 +1,13 @@
+.add-card-form {
+  width: 60%;
+}
+
 .files-upload-container,
 .links-upload-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
-}
-
-.file-upload-button,
-.add-link-button {
-  padding: 20px;
-  font-size: 24px;
-  background: rgba(21, 93, 164, 1);
-  color: rgb(255, 255, 255);
-  border: 2px solid rgba(21, 93, 164, 1);
-  border-radius: 15px;
-  cursor: pointer;
-  white-space: nowrap;
-  width: fit-content;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.file-upload-button:hover,
-.add-link-button:hover {
-  background-color: #fff;
-  color: rgba(21, 93, 164, 1);
 }
 
 .files-preview {

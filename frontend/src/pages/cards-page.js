@@ -69,8 +69,8 @@ export default function CardsPage() {
                     {sortedCards.length > 0 ? (
                       <div>
                         <div className='cards-actions'>
-                            <SelfTeamSwitch onOptionChange={handleTeamSwitchChange} />
                             <SortComponent onSortChange={handleSortChange} />
+                            <SelfTeamSwitch onOptionChange={handleTeamSwitchChange} />
                         </div>
                         <ul className="preview-list">
                           {sortedCards.map(card => (
