@@ -2,20 +2,13 @@ package ru.project.BackendPortfolio.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-//import lombok.AllArgsConstructor;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-@Entity(name = "project")
-public class Project {
+@Entity
+@Table(name = "card")
+public class Card {
 
     @Id
     @Column(name = "id")
@@ -30,27 +23,24 @@ public class Project {
     @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
 
-    @Column(name = "image_name")
-    private String imageName;
-
-    @Column(name = "created_at", updatable = false, nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @ElementCollection
+    @CollectionTable(name = "card_links", joinColumns = @JoinColumn(name = "card_id"))
+    @Column(name = "link")
+    private List<String> links = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
-    public Project(int id, String title, String description, String imageName, LocalDateTime createdAt, Person owner) {
+    public Card() {
+    }
+
+    public Card(int id, String title, String description, Person owner) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.imageName = imageName;
-        this.createdAt = createdAt;
         this.owner = owner;
     }
-
-    public Project() {}
 
     public int getId() {
         return id;
@@ -68,28 +58,12 @@ public class Project {
         this.title = title;
     }
 
-    public @NotEmpty(message = "Название не должно быть пустым") String getDescription() {
+    public @NotEmpty(message = "Описание не должно быть пустым") String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotEmpty(message = "Название не должно быть пустым") String description) {
+    public void setDescription(@NotEmpty(message = "Описание не должно быть пустым") String description) {
         this.description = description;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 
     public Person getOwner() {
@@ -98,5 +72,13 @@ public class Project {
 
     public void setOwner(Person owner) {
         this.owner = owner;
+    }
+
+    public List<String> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<String> links) {
+        this.links = links;
     }
 }
