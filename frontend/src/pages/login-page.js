@@ -17,7 +17,8 @@ export default function LoginPage() {
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
-    if (!value) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value && !emailPattern.test(value)) {
       setEmailError('Некорректный email');
     } else {
       setEmailError('');

@@ -71,7 +71,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
 
   return (
     <div className="modal-overlay">
-      <div className="add-form">
+      <div className="add-form add-card-form">
       <h2>Добавление карточки</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -96,14 +96,14 @@ export default function AddProjectForm({ onClose, onCreate }) {
           </div>
 
           <div className="form-group">
-            <label>Файлы</label>
+            <label className='file-input-lable'>Файлы</label>
             <div className="files-upload-container">
               <button
                 type="button"
                 onClick={triggerFileInput}
-                className="file-upload-button"
+                className="file-upload"
               >
-                Прикрепить файлы
+                Добавить файлы
               </button>
               <input
                 type="file"
@@ -131,7 +131,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
                         onChange={(e) =>
                           handleFileDescriptionChange(index, e.target.value)
                         }
-                        placeholder="Описание файла"
+                        placeholder={item.file.name}
                         className="file-description-input"
                       />
                     </div>

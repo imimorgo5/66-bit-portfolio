@@ -2,14 +2,15 @@
   display: flex;
   flex-wrap: wrap;
   list-style: none;
-  margin: 0 auto;
+  margin: 0 auto 50px;
   padding: 0;
   gap: 3.06%;
   max-width: 88.5%;
+  min-height: 562px;
 }
 
 .preview-list li {
-  flex: 0 0 22.7%;
+  width: 22.7%;
   box-sizing: border-box;
   margin-bottom: 3.06%;
 }
@@ -20,25 +21,49 @@
 
 .add-item {
   display: block;
-  width: 100%;
-  max-width: 392px;
-  height: 79px;
-  margin: 50px auto 0;
-  background-color: rgba(21, 93, 164, 1);
+  max-width: fit-content;
+  padding: 15px 50px;
+  margin: 0 auto;
+  background-color: rgba(77, 161, 128, 1);
   border-radius: 15px;
   color: #fff;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
-  line-height: 38.73px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .add-item:hover {
-  background-color: #114880;
+  background-color: #fff;
+  color: rgba(77, 161, 128, 1);
+  border: 2px solid rgba(77, 161, 128, 1);
 }
 
 .disabled {
   display: none;
+}
+
+.empty-previews {
+  text-align: center;
+  margin: 276px auto 0;
+}
+
+.arrow-to-add {
+  margin: 14px 0;
+}
+
+.empty-title {
+  font-size: 32px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 1);
+  margin: 0;
+}
+
+.empty-title span {
+  color: rgba(77, 161, 128, 1);
+}
+
+.empty-arrow {
+  margin-left: 220px;
 }

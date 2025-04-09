@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../css/add-form.css';
+import '../css/add-project-form.css';
 
 export default function AddProjectForm({ onClose, onCreate }) {
   const [title, setTitle] = useState('');
@@ -42,7 +43,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
 
   return (
     <div className="modal-overlay">
-      <div className="add-form">
+      <div className="add-form add-project-form">
         <h2>Добавление проекта</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -67,7 +68,7 @@ export default function AddProjectForm({ onClose, onCreate }) {
           </div>
 
           <div className="form-group">
-            <label>Фото проекта</label>
+            <label className='file-input-lable'>Фото проекта</label>
             <div className="image-upload-container">
               {imagePreviewUrl ? (
                 <div className="image-preview-wrapper">
@@ -85,9 +86,13 @@ export default function AddProjectForm({ onClose, onCreate }) {
                   </button>
                 </div>
               ) : (
-                <label className='file-upload' onClick={triggerFileInput}>
+                <button 
+                  type="button"
+                  onClick={triggerFileInput}
+                  className='file-upload' 
+                >
                   Добавить фото
-                </label>
+                </button>
               )}
               <input
                 type="file"

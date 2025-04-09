@@ -8,16 +8,13 @@ export default function ItemPreview({ title, image, createdAt }) {
       <div className='preview-title-container'>
         <h3>{title || 'Новый проект/карточка'}</h3>
       </div>
-      <img 
-        src={image || defaultPreview} 
-        className='preview-img' 
-        alt="Фото проекта/карточки" 
-      />
-      {createdAt && (
-        <div className="preview-date">
-          {new Date(createdAt).toLocaleDateString()}
-        </div>
-      )}
+      <div className='preview-container'>
+        <img 
+          src={image || defaultPreview} 
+          className='preview-img' 
+          alt="Фото проекта/карточки" 
+        />
+      </div>
     </div>
   );
 }

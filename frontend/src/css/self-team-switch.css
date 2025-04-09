@@ -1,15 +1,16 @@
 .self-team-switch {
     display: flex;
-    gap: 15px;
+    gap: 20px;
   }
   
   .self-team-switch-option {
     cursor: pointer;
-    padding: 15px 30px;
-    border: 1px solid #155DA4;
+    padding: 13px 40px;
+    border: 2px solid #155DA4;
     border-radius: 15px;
     color: #155DA4;
     font-size: 24px;
+    font-weight: 600;
     transition: background-color 0.3s, color 0.3s;
   }
   
