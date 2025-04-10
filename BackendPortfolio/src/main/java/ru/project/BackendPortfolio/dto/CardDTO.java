@@ -14,6 +14,9 @@ public class CardDTO {
 
     private List<String> links;
 
+    private List<CardFileDTO> cardFiles;
+
+
     public @NotEmpty(message = "Название не должно быть пустым") String getTitle() {
         return title;
     }
@@ -36,5 +39,13 @@ public class CardDTO {
 
     public void setLinks(List<String> links) {
         this.links = links;
+    }
+
+    public List<CardFileDTO> getCardFiles() {
+        return cardFiles;
+    }
+
+    public void setCardFiles(List<CardFileDTO> cardFiles) {
+        this.cardFiles = cardFiles;
     }
 }

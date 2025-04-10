@@ -23,6 +23,9 @@ public class Card {
     @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
 
+    @OneToMany(mappedBy = "card")
+    private List<CardFile> cardFiles;
+
     @ElementCollection
     @CollectionTable(name = "card_links", joinColumns = @JoinColumn(name = "card_id"))
     @Column(name = "link")
@@ -80,5 +83,13 @@ public class Card {
 
     public void setLinks(List<String> links) {
         this.links = links;
+    }
+
+    public List<CardFile> getCardFiles() {
+        return cardFiles;
+    }
+
+    public void setCardFiles(List<CardFile> cardFiles) {
+        this.cardFiles = cardFiles;
     }
 }

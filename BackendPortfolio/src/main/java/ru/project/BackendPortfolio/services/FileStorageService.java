@@ -1,10 +1,11 @@
+
+
 package ru.project.BackendPortfolio.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 
@@ -22,14 +23,14 @@ public class FileStorageService {
         }
     }
 
-    public String saveFile(MultipartFile file) {
+    public String save(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return null;
         }
         try {
             Files.createDirectories(Paths.get(uploadDir));
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            File targetFile = new File(uploadDir, fileName);
+            var fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            var targetFile = new File(uploadDir, fileName);
             file.transferTo(targetFile);
             System.out.println("Saving file to: " + targetFile.getAbsolutePath());
             return fileName;
@@ -38,9 +39,21 @@ public class FileStorageService {
         }
     }
 
+    public void delete(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+        try {
+            var filePath = Paths.get(uploadDir, fileName);
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при удалении файла", e);
+        }
+    }
+
     public byte[] loadFileAsBytes(String fileName) {
         try {
-            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+            var filePath = Paths.get(uploadDir).resolve(fileName).normalize();
             return Files.readAllBytes(filePath);
         } catch (IOException e) {
             throw new RuntimeException("Ошибка при загрузке файла", e);

@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
-import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
 import ru.project.BackendPortfolio.services.FileStorageService;
 import ru.project.BackendPortfolio.services.ProjectService;
@@ -30,14 +28,6 @@ public class ProjectController {
         this.fileStorageService = fileStorageService;
     }
 
-    @GetMapping("/show")
-    public Map<String, List<ProjectDTO>> getUserProjects() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var username = authentication.getName();
-        var projects = projectService.getProjectsByUser(username);
-        return Map.of("projects", projects);
-    }
-
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createProject(@ModelAttribute ProjectDTO projectDTO) {
         var project = projectService.createProject(projectDTO);
@@ -47,11 +37,19 @@ public class ProjectController {
                 "project", newProjectDTO));
     }
 
+    @GetMapping("/show")
+    public Map<String, List<ProjectDTO>> getUserProjects() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var username = authentication.getName();
+        var projects = projectService.getProjectsByUser(username);
+        return Map.of("projects", projects);
+    }
+
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProjectWithFile(@PathVariable int id, @ModelAttribute ProjectDTO projectDTO) {
         var updatedProject = projectService.updateProject(id, projectDTO.getTitle(), projectDTO.getDescription());
         if (projectDTO.getImageFile() != null) {
-            String fileName = fileStorageService.saveFile(projectDTO.getImageFile());
+            String fileName = fileStorageService.save(projectDTO.getImageFile());
             updatedProject.setImageName(fileName);
         }
         var newProjectDTO = projectService.mapToDTO(projectRepository.save(updatedProject));

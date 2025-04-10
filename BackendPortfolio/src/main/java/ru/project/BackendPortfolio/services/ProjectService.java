@@ -44,7 +44,7 @@ public class ProjectService {
         project.setOwner(person);
 
         if (projectDTO.getImageFile() != null) {
-            String fileName = fileStorageService.saveFile(projectDTO.getImageFile());
+            String fileName = fileStorageService.save(projectDTO.getImageFile());
             project.setImageName(fileName);
         }
 
@@ -83,12 +83,12 @@ public class ProjectService {
             throw new RuntimeException("Пользователь не найден");
         }
 
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        var projectOptional = projectRepository.findById(projectId);
         if (projectOptional.isEmpty()) {
             throw new RuntimeException("Проект не найден");
         }
 
-        Project project = projectOptional.get();
+        var project = projectOptional.get();
         if (!project.getOwner().equals(person.get())) {
             throw new RuntimeException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
         }
