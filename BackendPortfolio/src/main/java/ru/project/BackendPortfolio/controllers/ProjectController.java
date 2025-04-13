@@ -3,10 +3,8 @@ package ru.project.BackendPortfolio.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
-import ru.project.BackendPortfolio.repositories.ProjectRepository;
 import ru.project.BackendPortfolio.services.FileStorageService;
 import ru.project.BackendPortfolio.services.ProjectService;
 
@@ -18,13 +16,11 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final ProjectRepository projectRepository;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectRepository projectRepository, FileStorageService fileStorageService) {
+    public ProjectController(ProjectService projectService, FileStorageService fileStorageService) {
         this.projectService = projectService;
-        this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
     }
 
@@ -39,20 +35,14 @@ public class ProjectController {
 
     @GetMapping("/show")
     public Map<String, List<ProjectDTO>> getUserProjects() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var username = authentication.getName();
-        var projects = projectService.getProjectsByUser(username);
+        var projects = projectService.getProjectsByUser();
         return Map.of("projects", projects);
     }
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProjectWithFile(@PathVariable int id, @ModelAttribute ProjectDTO projectDTO) {
-        var updatedProject = projectService.updateProject(id, projectDTO.getTitle(), projectDTO.getDescription());
-        if (projectDTO.getImageFile() != null) {
-            String fileName = fileStorageService.save(projectDTO.getImageFile());
-            updatedProject.setImageName(fileName);
-        }
-        var newProjectDTO = projectService.mapToDTO(projectRepository.save(updatedProject));
+        var updatedProject = projectService.updateProject(id, projectDTO);
+        var newProjectDTO = projectService.mapToDTO(updatedProject);
         return ResponseEntity.ok(newProjectDTO);
     }
 
@@ -64,8 +54,7 @@ public class ProjectController {
 
     @GetMapping("/image/{projectId}")
     public ResponseEntity<byte[]> getProjectImage(@PathVariable int projectId) {
-        var project = projectService.getProjectById(projectId)
-                .orElseThrow(() -> new RuntimeException("Проект не найден"));
+        var project = projectService.getProjectById(projectId);
 
         if (project.getImageName() == null) {
             return ResponseEntity.notFound().build();

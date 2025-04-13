@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +21,6 @@ import ru.project.BackendPortfolio.util.PersonValidator;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -46,17 +46,18 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> performRegistration(@RequestBody @Valid PersonDTO personDTO,
                                                  BindingResult bindingResult){
-        Person person = convertToPersonFromDTO(personDTO);
+        var person = convertToPersonFromDTO(personDTO);
 
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors()
                     .stream()
-                    .map(error -> error.getDefaultMessage())
-                    .collect(Collectors.toList());
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
 
             return ResponseEntity.badRequest().body(Map.of("errors", errors));
         }

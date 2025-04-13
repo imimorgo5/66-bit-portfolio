@@ -2,49 +2,40 @@ package ru.project.BackendPortfolio.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
-import ru.project.BackendPortfolio.models.Person;
+import ru.project.BackendPortfolio.exceptions.ForbiddenException;
 import ru.project.BackendPortfolio.models.Project;
-import ru.project.BackendPortfolio.repositories.PeopleRepository;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProjectService {
 
     private final ModelMapper modelMapper;
     private final ProjectRepository projectRepository;
-    private final PeopleRepository personRepository;
     private final FileStorageService fileStorageService;
+    private final PersonService personService;
 
     @Autowired
-    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository, PeopleRepository personRepository, FileStorageService fileStorageService) {
+    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository, FileStorageService fileStorageService, PersonService personService) {
         this.modelMapper = modelMapper;
         this.projectRepository = projectRepository;
-        this.personRepository = personRepository;
         this.fileStorageService = fileStorageService;
+        this.personService = personService;
     }
 
     @Transactional
     public Project createProject(ProjectDTO projectDTO) {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        var person = personRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-
-        Project project = new Project();
-        project.setTitle(projectDTO.getTitle());
-        project.setDescription(projectDTO.getDescription());
+        var person = personService.getActivePerson();
+        var project = modelMapper.map(projectDTO, Project.class);
         project.setOwner(person);
 
         if (projectDTO.getImageFile() != null) {
-            String fileName = fileStorageService.save(projectDTO.getImageFile());
+            var fileName = fileStorageService.save(projectDTO.getImageFile());
             project.setImageName(fileName);
         }
 
@@ -53,54 +44,39 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(int projectId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        var person = personService.getActivePerson();
+        var project = getProjectById(projectId);
 
-        Optional<Person> person = personRepository.findByUsername(username);
-        if (person.isEmpty()) {
-            throw new RuntimeException("Пользователь не найден");
+        if (!project.getOwner().equals(person)) {
+            throw new ForbiddenException("Вы не можете удалить этот проект, так как он вам не принадлежит.");
         }
 
-        Optional<Project> project = projectRepository.findById(projectId);
-        if (project.isEmpty()) {
-            throw new RuntimeException("Проект не найден");
-        }
-
-        if (!project.get().getOwner().equals(person.get())) {
-            throw new RuntimeException("Вы не можете удалить этот проект, так как он вам не принадлежит.");
-        }
-
-        projectRepository.delete(project.get());
+        projectRepository.delete(project);
     }
 
     @Transactional
-    public Project updateProject(int projectId, String newTitle, String newDescription) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public Project updateProject(int projectId, ProjectDTO projectDTO) {
+        var person = personService.getActivePerson();
+        var project = getProjectById(projectId);
 
-        Optional<Person> person = personRepository.findByUsername(username);
-        if (person.isEmpty()) {
-            throw new RuntimeException("Пользователь не найден");
+        if (!project.getOwner().equals(person)) {
+            throw new ForbiddenException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
         }
 
-        var projectOptional = projectRepository.findById(projectId);
-        if (projectOptional.isEmpty()) {
-            throw new RuntimeException("Проект не найден");
+        project.setTitle(projectDTO.getTitle());
+        project.setDescription(projectDTO.getDescription());
+
+        if (projectDTO.getImageFile() != null) {
+            var fileName = fileStorageService.save(projectDTO.getImageFile());
+            project.setImageName(fileName);
         }
 
-        var project = projectOptional.get();
-        if (!project.getOwner().equals(person.get())) {
-            throw new RuntimeException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
-        }
-
-        project.setTitle(newTitle);
-        project.setDescription(newDescription);
         return projectRepository.save(project);
     }
 
-    public List<ProjectDTO> getProjectsByUser(String username) {
-        var person = personRepository.findByUsername(username);
-        var projects = projectRepository.findByOwner(person.get());
+    public List<ProjectDTO> getProjectsByUser() {
+        var person = personService.getActivePerson();
+        var projects = projectRepository.findByOwner(person);
         List<ProjectDTO> projectDTOs = new ArrayList<>();
         for (var project : projects) {
             var projectDTO = mapToDTO(project);
@@ -117,8 +93,9 @@ public class ProjectService {
         return modelMapper.map(projectDTO, Project.class);
     }
 
-    public Optional<Project> getProjectById(int projectId) {
-        return projectRepository.findById(projectId);
+    public Project getProjectById(int projectId) {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Проект не найден"));
     }
 
 }
