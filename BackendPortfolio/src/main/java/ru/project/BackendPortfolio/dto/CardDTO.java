@@ -2,6 +2,7 @@ package ru.project.BackendPortfolio.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CardDTO {
@@ -16,6 +17,15 @@ public class CardDTO {
 
     private List<CardFileDTO> cardFiles;
 
+    private LocalDateTime createdAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public @NotEmpty(message = "Название не должно быть пустым") String getTitle() {
         return title;

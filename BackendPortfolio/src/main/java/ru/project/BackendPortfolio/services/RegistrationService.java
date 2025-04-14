@@ -22,7 +22,7 @@ public class RegistrationService {
 
     @Transactional
     public void register(Person person){
-        if (peopleRepository.findByUsername(person.getUsername()).isPresent()){
+        if (peopleRepository.findByEmail(person.getEmail()).isPresent()){
             throw new RegistrationException("Пользователь с таким email уже существует");
         }
 

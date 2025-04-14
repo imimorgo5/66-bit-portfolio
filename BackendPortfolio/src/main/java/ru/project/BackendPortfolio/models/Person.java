@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 //import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 //@Getter
@@ -37,6 +38,15 @@ public class Person {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "image_name")
+    private String imageName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+
     @OneToMany(mappedBy = "owner")
     private List<Project> projects;
 
@@ -54,6 +64,30 @@ public class Person {
     }
 
     public Person() {}
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public int getId() {
         return id;

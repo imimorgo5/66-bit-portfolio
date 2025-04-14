@@ -2,7 +2,9 @@ package ru.project.BackendPortfolio.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,10 @@ public class Card {
     @Column(name = "link")
     private List<String> links = new ArrayList<>();
 
+    @Column(name = "created_at", updatable = false, nullable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
@@ -38,11 +44,12 @@ public class Card {
     public Card() {
     }
 
-    public Card(int id, String title, String description, Person owner) {
+    public Card(int id, String title, String description, Person owner, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.owner = owner;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -91,5 +98,13 @@ public class Card {
 
     public void setCardFiles(List<CardFile> cardFiles) {
         this.cardFiles = cardFiles;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

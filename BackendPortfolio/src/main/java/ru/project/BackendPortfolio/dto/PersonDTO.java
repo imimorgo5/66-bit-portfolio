@@ -4,6 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.util.List;
 //import lombok.Getter;
 //import lombok.Setter;
 
@@ -20,7 +24,67 @@ public class PersonDTO {
 
     private String password;
 
-    public @NotEmpty(message = "Имя не должно быть пустым") @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной") String getUsername() {
+    private String imageName;
+
+    private MultipartFile imageFile;
+
+    private String phoneNumber;
+
+    private String birthDate;
+
+    private List<ProjectDTO> projectDTOs;
+
+    private List<CardDTO> cardDTOs;
+
+    public List<CardDTO> getCardDTOs() {
+        return cardDTOs;
+    }
+
+    public void setCardDTOs(List<CardDTO> cardDTOs) {
+        this.cardDTOs = cardDTOs;
+    }
+
+    public List<ProjectDTO> getProjectDTOs() {
+        return projectDTOs;
+    }
+
+    public void setProjectDTOs(List<ProjectDTO> projectDTOs) {
+        this.projectDTOs = projectDTOs;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getUsername() {
         return username;
     }
 
