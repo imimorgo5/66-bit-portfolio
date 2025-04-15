@@ -74,6 +74,11 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    public ProjectDTO getProjectDTOById(int id){
+        var project = getProjectById(id);
+        return mapToDTO(project);
+    }
+
     public List<ProjectDTO> getProjectsByUser() {
         var person = personService.getActivePerson();
         var projects = projectRepository.findByOwner(person);

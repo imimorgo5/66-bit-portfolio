@@ -21,13 +21,13 @@ public class PersonController {
     }
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updatePerson(@PathVariable int id, @ModelAttribute PersonDTO personDTO) {
+    public ResponseEntity<?> updatePerson(@PathVariable("id") int id, @ModelAttribute PersonDTO personDTO) {
         var updatedPerson = personService.updateProfile(id, personDTO);
         return ResponseEntity.ok(Map.of("updatedPerson", personService.mapToDTO(updatedPerson)));
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<?> getPerson(@PathVariable int id) {
+    public ResponseEntity<?> getPerson(@PathVariable("id") int id) {
         var personDTO = personService.getPersonDTOById(id);
         return ResponseEntity.ok(Map.of("person", personDTO));
     }

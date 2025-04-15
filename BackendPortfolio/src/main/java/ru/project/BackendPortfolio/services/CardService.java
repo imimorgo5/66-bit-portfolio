@@ -45,6 +45,11 @@ public class CardService {
         return card;
     }
 
+    public CardDTO getCardDTOById(int id){
+        var card = getCardById(id);
+        return mapToDTO(card);
+    }
+
     public List<CardDTO> getAllCardsByPerson(){
         var person = personService.getActivePerson();
         var cards = cardRepository.findByOwner(person);

@@ -6,6 +6,7 @@ import ru.project.BackendPortfolio.models.Person;
 import ru.project.BackendPortfolio.models.Project;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
@@ -13,4 +14,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     List<Project> findByOwner(Person person);
 
     List<Project> findByTitle(String itemName);
+
+    Optional<Project> findById(int id);
 }

@@ -29,6 +29,12 @@ public class CardController {
                 "card", newCardDTO));
     }
 
+    @GetMapping("/card/{id}")
+    public ResponseEntity<?> getCardById(@PathVariable("id") int id) {
+        var cardDTO = cardService.getCardDTOById(id);
+        return ResponseEntity.ok(Map.of("card", cardDTO));
+    }
+
     @GetMapping("/show")
     public ResponseEntity<?> showCards(){
         var cardDTOs = cardService.getAllCardsByPerson();
@@ -36,7 +42,7 @@ public class CardController {
     }
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProjectWithFile(@PathVariable int id, @ModelAttribute CardDTO cardDTO) {
+    public ResponseEntity<?> updateProjectWithFile(@PathVariable("id") int id, @ModelAttribute CardDTO cardDTO) {
         var updatedCardDTO = cardService.update(id, cardDTO);
         return ResponseEntity.ok(Map.of(
             "message", "Карточка успешно обновлена",
@@ -44,7 +50,7 @@ public class CardController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCard(@PathVariable int id) {
+    public ResponseEntity<?> deleteCard(@PathVariable("id") int id) {
         cardService.delete(id);
         return ResponseEntity.ok(Map.of(
                 "message", "Карточка успешно удалена вместе с файлами"

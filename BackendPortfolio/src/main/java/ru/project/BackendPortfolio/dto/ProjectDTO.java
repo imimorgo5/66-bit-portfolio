@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 //@Setter
 public class ProjectDTO {
 
+    private int id;
+
     @NotEmpty(message = "Название не должно быть пустым")
     private String title;
 
@@ -22,6 +24,14 @@ public class ProjectDTO {
     private String imageName;
 
     private LocalDateTime createdAt;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public @NotEmpty(message = "Название не должно быть пустым") String getTitle() {
         return title;

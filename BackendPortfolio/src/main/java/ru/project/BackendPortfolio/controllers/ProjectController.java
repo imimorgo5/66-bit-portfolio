@@ -39,21 +39,27 @@ public class ProjectController {
         return Map.of("projects", projects);
     }
 
+    @GetMapping("/project/{id}")
+    public ResponseEntity<?> getProjectById(@PathVariable("id") int id) {
+        var project = projectService.getProjectDTOById(id);
+        return ResponseEntity.ok(Map.of("project", project));
+    }
+
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProjectWithFile(@PathVariable int id, @ModelAttribute ProjectDTO projectDTO) {
+    public ResponseEntity<?> updateProjectWithFile(@PathVariable("id") int id, @ModelAttribute ProjectDTO projectDTO) {
         var updatedProject = projectService.updateProject(id, projectDTO);
         var newProjectDTO = projectService.mapToDTO(updatedProject);
         return ResponseEntity.ok(newProjectDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable int id) {
+    public ResponseEntity<?> deleteProject(@PathVariable("id") int id) {
         projectService.deleteProject(id);
         return ResponseEntity.ok("Проект успешно удалён");
     }
 
     @GetMapping("/image/{projectId}")
-    public ResponseEntity<byte[]> getProjectImage(@PathVariable int projectId) {
+    public ResponseEntity<byte[]> getProjectImage(@PathVariable("projectId") int projectId) {
         var project = projectService.getProjectById(projectId);
 
         if (project.getImageName() == null) {

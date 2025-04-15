@@ -15,6 +15,8 @@ import java.util.List;
 //@Setter
 public class PersonDTO {
 
+    private int id;
+
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
     private String username;
@@ -35,6 +37,14 @@ public class PersonDTO {
     private List<ProjectDTO> projectDTOs;
 
     private List<CardDTO> cardDTOs;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public List<CardDTO> getCardDTOs() {
         return cardDTOs;

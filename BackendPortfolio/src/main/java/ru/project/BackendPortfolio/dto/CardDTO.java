@@ -7,6 +7,8 @@ import java.util.List;
 
 public class CardDTO {
 
+    private int id;
+
     @NotEmpty(message = "Название не должно быть пустым")
     private String title;
 
@@ -18,6 +20,14 @@ public class CardDTO {
     private List<CardFileDTO> cardFiles;
 
     private LocalDateTime createdAt;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
