@@ -21,7 +21,7 @@
   }
 
   .nav-list-container {
-    margin-right: 160px;
+    margin-right: 156px;
     width: 100%;
   }
   
@@ -76,8 +76,9 @@
   .header-user-icon img {
     display: block;
     margin-top: 6px;
-    max-width: 48px;
-    height: auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 45px;
   }
 
   .header-user-dropdown {

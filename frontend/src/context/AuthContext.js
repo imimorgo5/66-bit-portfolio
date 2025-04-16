@@ -12,8 +12,7 @@ export function AuthProvider({ children }) {
     })
       .then(async (response) => {
         if (response.ok) {
-            const username = await response.text();
-            return { username }; 
+          return await response.json();
         }
         return null;
       })

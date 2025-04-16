@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/header';
-import ItemPreview from '../components/item-preview';
+import ProjectPreview from '../components/project-preview';
 import { AuthContext } from '../context/AuthContext';
 import SortComponent from '../components/sortComponent';
 import AddProjectForm from '../components/addProjectForm';
@@ -17,7 +17,6 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState([]);
   const [sortMode, setSortMode] = useState('date');
 
-  // Получение проектов с бэкенда
   useEffect(() => {
     getProjects()
       .then((fetchedProjects) => setProjects(fetchedProjects))
@@ -45,6 +44,10 @@ export default function ProjectsPage() {
     setSortMode(mode);
   };
 
+  const goToProjectDetail = (project) => {
+    navigate(`/projects/${project.id}`, { state: { project } });
+  };  
+
   const sortedProjects = [...projects].sort((a, b) => {
     if (sortMode === 'name') {
       return a.title.localeCompare(b.title);
@@ -70,11 +73,10 @@ export default function ProjectsPage() {
             </div>
             <ul className="preview-list">
               {sortedProjects.map((project) => (
-                <li key={project.id}>
-                  <ItemPreview 
+                <li key={project.id} onClick={() => goToProjectDetail(project)}>
+                  <ProjectPreview 
                     title={project.title}
-                    image={'http://localhost:8080/uploads/' + project.imageName}
-                    createdAt={project.createdAt}
+                    image={`http://localhost:8080/uploads/${project.imageName}`}
                   />
                 </li>
               ))}

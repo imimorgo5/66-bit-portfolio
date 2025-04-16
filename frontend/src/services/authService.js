@@ -13,7 +13,8 @@ export const login = async (credentials) => {
         });
 
         if (!response.ok) {
-        throw new Error('Ошибка авторизации');
+          const errorData = await response.json();
+          throw new Error(errorData.error);
         }
 
         return await response.json();
@@ -30,7 +31,7 @@ export const logout = async () => {
         });
 
         if (!response.ok) {
-        throw new Error('Ошибка при выходе');
+          throw new Error('Ошибка при выходе');
         }
 
         return await response.json();
@@ -56,7 +57,7 @@ export const register = async (userData) => {
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.errors?.join(', ') || 'Ошибка регистрации');
+        throw new Error(errorData.errors?.join(', '));
       }
   
       return await response.json();

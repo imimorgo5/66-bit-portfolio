@@ -29,11 +29,10 @@ export default function RegistrationPage() {
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
-    let userNames = ['qwerty123', 'zxc', 'qwertyqwertyqwertyqwertyqwer'];
-    if (value && userNames.includes(value)) {
-      setNameError('Пользователь с таким логином уже есть');
-    } else if (value && value.length > 28) {
-        setNameError('Слишком длинное имя пользователя');   
+    if (value && value.length > 64) {
+      setNameError('Слишком длинное ФИО');   
+    } else if (value && value.split(' ').filter(el => el).length < 2) {
+      setNameError('Некорректное ФИО');
     } else {
       setNameError('');
     }
@@ -63,13 +62,15 @@ export default function RegistrationPage() {
     e.preventDefault();
     if (!emailError && !nameError && !passwordError && !passwordAgainError && email && userName && password && passwordAgain) {
       register({ email, userName, password })
-      .then(data => {
-        console.log('Успешная регистрация:', data);
-        window.location.href = '/login';
-      })
-      .catch(error => {
-        console.error('Ошибка регистрации:', error.message);
-      });
+        .then(data => {
+          window.location.href = '/login';
+        })
+        .catch(error => {
+          if (error.message.includes("Пользователь с таким email уже существует")) {
+            setEmail('');
+            setEmailError("Пользователь с таким email уже существует");
+          }
+        });
     }
   };
   
@@ -101,14 +102,14 @@ export default function RegistrationPage() {
             </div>
           </div>
           <div className="input-group">
-            <label className='registration-lable' htmlFor="name">Имя пользователя</label>
+            <label className='registration-lable' htmlFor="name">ФИО</label>
             <div className="input-wrapper">
               <input
                 type="text"
                 id="name"
                 value={userName}
                 onChange={handleNameChange}
-                placeholder="Введите желаемое имя пользователя"
+                placeholder="Введите свои фамилию, имя и отчество"
                 className={`${nameError ? 'input-error' : ''}`}
               />
               {nameError && (

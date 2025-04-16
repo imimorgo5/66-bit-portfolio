@@ -5,6 +5,7 @@ import '../css/header.css';
 import { AuthContext } from '../context/AuthContext.js';
 import { logout } from '../services/authService';
 import logo from '../img/logo.png';
+import { getPersonById } from '../services/PersonService';
 
 export default class Header extends React.Component {
   static contextType = AuthContext;
@@ -13,18 +14,29 @@ export default class Header extends React.Component {
     super(props);
     this.state = {
       isDropdownOpen: false,
+      person: null,
     };
     this.dropdownRef = React.createRef();
   }
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
+    const { user } = this.context;
+    if (user && user.id) {
+      getPersonById(user.id)
+        .then((personData) => {
+          this.setState({ person: personData });
+        })
+        .catch((err) => {
+          console.error('Ошибка получения данных пользователя:', err);
+        });
+    }
   }
-  
+
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
-  
+
   handleClickOutside = (event) => {
     if (
       this.state.isDropdownOpen &&
@@ -59,13 +71,17 @@ export default class Header extends React.Component {
 
   render() {
     const { user } = this.context;
+    const { person } = this.state;
+    const userPhoto = person && person.imageName 
+      ? `http://localhost:8080/uploads/${person.imageName}` 
+      : userIcon;
 
     return (
       <nav className="header">
-        <div className='logo-container'>
-          <NavLink to="/"><img src={logo} className='main-logo' alt="Лого сайта" /></NavLink>
+        <div className="logo-container">
+          <NavLink to="/"><img src={logo} className="main-logo" alt="Лого сайта" /></NavLink>
         </div>
-        <div className='nav-list-container'>
+        <div className="nav-list-container">
           <ul className="nav-list">
             <li>
               <NavLink
@@ -114,7 +130,7 @@ export default class Header extends React.Component {
         </div>
         <div className="header-user-dropdown" ref={this.dropdownRef}>
           <div onClick={this.toggleDropdown} className="header-user-icon">
-            <img src={userIcon} alt="Аватарка пользователя" />
+            <img src={userPhoto} alt="Аватарка пользователя" />
           </div>
           {this.state.isDropdownOpen && (
             <div className="dropdown-menu">

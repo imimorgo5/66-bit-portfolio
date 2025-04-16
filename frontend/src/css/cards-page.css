@@ -5,3 +5,8 @@
     max-width: 88.5%;
     margin: 0 auto 28px;
 }
+
+.preview-list a {
+    text-decoration: none;
+    color: inherit;
+}
