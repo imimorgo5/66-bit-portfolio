@@ -35,10 +35,9 @@ code {
 }
 
 .page-title {
-  font-size: 50px;
-  line-height: 58.09px;
+  font-size: 40px;
   font-weight: 600;
   color: rgba(21, 93, 164, 1);
-  margin: 0 auto 54px;
+  margin: 0 auto 20px;
   padding: 0;
 }

@@ -12,6 +12,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 0 0 10px 10px;
+    height: 200px;
 }
 
 .preview-title-container {
@@ -27,6 +28,16 @@
     font-size: 24px;
     font-weight: 600;
     color: rgba(21, 93, 164, 1);
+}
+
+.item-preview h4 {
+    margin: 0;
+    padding: 25px;
+    padding-top: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(21, 93, 164, 1);
+    word-break: break-all;
 }
 
 .preview-img {

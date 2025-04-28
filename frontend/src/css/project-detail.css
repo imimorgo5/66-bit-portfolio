@@ -1,0 +1,114 @@
+.project-detail-content {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    word-break: break-all;
+  }
+  
+  .project-detail-content h2 {
+    font-size: 32px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+  }
+
+  .project-detail-content h3 {
+    font-size: 24px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  .project-detail-content p {
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .project-detail-content .project-description {
+    margin-bottom: 20px;
+  }
+  
+  .project-detail-actions {
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .project-detail-actions button {
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+  }
+  
+  .edit-button {
+    background-color: #155DA4;
+    color: #fff;
+  }
+  
+  .delete-button {
+    background-color: #d9534f;
+    color: #fff;
+  }
+  
+  .save-button {
+    background-color: #5cb85c;
+    color: #fff;
+  }
+  
+  .cancel-button {
+    background-color: #f0ad4e;
+    color: #fff;
+  }
+
+  .edit-title, .edit-description {
+    width: 100%;
+    font-size: 18px;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+  }
+
+  .edit-description {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .project-preview-img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 10px;
+    border-radius: 15px;
+  }
+  
+  .edit-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .change-project-photo-button {
+    padding: 8px 12px;
+    font-size: 18px;
+    background-color: #155DA4;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .change-project-photo-button:hover {
+    background-color: #0f4a7e;
+  }
+  

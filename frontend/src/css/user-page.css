@@ -1,0 +1,130 @@
+.user-page {
+    padding: 20px;
+  }
+  
+  .user-info, .user-info-edit {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-info h2 {
+    font-size: 32px;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+    
+  .user-info-edit h3 {
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+  
+  .user-info p {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  .description-title {
+    font-weight: 600;
+  }
+
+  .user-discription {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    margin: 0 auto;
+  }
+  
+  .user-photo {
+    display: block;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+  }
+
+  .edit-user-description {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-photo-edit {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-info-edit label {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .user-info-edit input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+  }
+  
+  .user-info-actions {
+    text-align: center;
+  }
+  
+  .user-info-actions button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .save-button {
+    background-color: #5cb85c;
+    color: #fff;
+    transition: background-color 0.2s;
+  }
+  
+  .cancel-button {
+    background-color: #f0ad4e;
+    color: #fff;
+    transition: background-color 0.2s;
+  }
+
+  .save-button:hover {
+    background-color: #26ac26;
+  }
+
+  .cancel-button:hover {
+    background-color: #f09618;
+  }
+  
+  .edit-info-button, .user-photo-edit button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #155DA4;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .edit-info-button:hover, .user-photo-edit button:hover {
+    background-color: #0f4a7e;
+  }
+  

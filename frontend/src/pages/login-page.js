@@ -44,8 +44,12 @@ export default function LoginPage() {
           window.location.href = '/';
         })
         .catch(error => {
-          console.error('Ошибка входа:', error);
-          // Дополнительная обработка ошибок
+          if (error.message.includes('Invalid credentials')) {
+            setEmail('');
+            setEmailError('Неверная почта или пароль');
+            setPassword('');
+            setPasswordError('Неверная почта или пароль');
+          }
         });
     }
   };
