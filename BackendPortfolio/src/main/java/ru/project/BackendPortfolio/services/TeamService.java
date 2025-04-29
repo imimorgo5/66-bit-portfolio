@@ -1,5 +1,6 @@
 package ru.project.BackendPortfolio.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +25,16 @@ public class TeamService {
     private final PersonTeamRepository personTeamRepository;
     private final PeopleRepository peopleRepository;
     private final PersonService personService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public TeamService(TeamRepository teamRepository, PersonTeamRepository personTeamRepository,
-                       PeopleRepository peopleRepository, PersonService personService) {
+                       PeopleRepository peopleRepository, PersonService personService, ModelMapper modelMapper) {
         this.teamRepository = teamRepository;
         this.personTeamRepository = personTeamRepository;
         this.peopleRepository = peopleRepository;
         this.personService = personService;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
@@ -158,7 +161,6 @@ public class TeamService {
         }
 
         teamDTO.setPersons(personDTOs);
-
         return teamDTO;
     }
 }

@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 //@Getter
 //@Setter
@@ -27,8 +29,13 @@ public class Project {
     private String title;
 
     @Column(name = "description")
-    @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
+
+    @OneToMany(mappedBy = "project")
+    private List<ProjectLink> projectLinks;
+
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProjectCard> projectCards = new ArrayList<>();
 
     @Column(name = "image_name")
     private String imageName;
@@ -52,6 +59,14 @@ public class Project {
 
     public Project() {}
 
+    public List<ProjectLink> getProjectLinks() {
+        return projectLinks;
+    }
+
+    public void setProjectLinks(List<ProjectLink> projectLinks) {
+        this.projectLinks = projectLinks;
+    }
+
     public int getId() {
         return id;
     }
@@ -68,11 +83,11 @@ public class Project {
         this.title = title;
     }
 
-    public @NotEmpty(message = "Название не должно быть пустым") String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotEmpty(message = "Название не должно быть пустым") String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

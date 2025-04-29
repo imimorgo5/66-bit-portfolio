@@ -4,8 +4,10 @@ import jakarta.validation.constraints.NotEmpty;
 //import lombok.Getter;
 //import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import ru.project.BackendPortfolio.models.ProjectLink;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 //@Getter
 //@Setter
@@ -16,14 +18,23 @@ public class ProjectDTO {
     @NotEmpty(message = "Название не должно быть пустым")
     private String title;
 
-    @NotEmpty(message = "Название не должно быть пустым")
     private String description;
+
+    private List<ProjectLinkDTO> projectLinks;
 
     private MultipartFile imageFile;
 
     private String imageName;
 
     private LocalDateTime createdAt;
+
+    public List<ProjectLinkDTO> getProjectLinks() {
+        return projectLinks;
+    }
+
+    public void setProjectLinks(List<ProjectLinkDTO> projectLinks) {
+        this.projectLinks = projectLinks;
+    }
 
     public int getId() {
         return id;
@@ -41,11 +52,11 @@ public class ProjectDTO {
         this.title = title;
     }
 
-    public @NotEmpty(message = "Название не должно быть пустым") String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotEmpty(message = "Название не должно быть пустым") String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 

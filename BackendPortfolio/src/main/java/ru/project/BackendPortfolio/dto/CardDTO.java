@@ -1,6 +1,7 @@
 package ru.project.BackendPortfolio.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import ru.project.BackendPortfolio.models.CardLink;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,14 +13,21 @@ public class CardDTO {
     @NotEmpty(message = "Название не должно быть пустым")
     private String title;
 
-    @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
 
-    private List<String> links;
+    private List<CardLinkDTO> cardLinks;
 
     private List<CardFileDTO> cardFiles;
 
     private LocalDateTime createdAt;
+
+    public List<CardLinkDTO> getCardLinks() {
+        return cardLinks;
+    }
+
+    public void setCardLinks(List<CardLinkDTO> cardLinks) {
+        this.cardLinks = cardLinks;
+    }
 
     public int getId() {
         return id;
@@ -41,7 +49,7 @@ public class CardDTO {
         return title;
     }
 
-    public @NotEmpty(message = "Описание не должно быть пустым") String getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -49,16 +57,8 @@ public class CardDTO {
         this.title = title;
     }
 
-    public void setDescription(@NotEmpty(message = "Описание не должно быть пустым") String description) {
+    public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<String> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<String> links) {
-        this.links = links;
     }
 
     public List<CardFileDTO> getCardFiles() {
