@@ -24,9 +24,6 @@ export const createCard = (cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
 
-    //Убрать после переделки в бэке
-    formData.append('description', ' ');
-
     return fetch('/cards/create', {
         method: 'POST',
         credentials: 'include',
@@ -67,8 +64,8 @@ export const updateCard = (id, cardData) => {
     }
 
     if (cardData.projects && Array.isArray(cardData.projects)) {
-        cardData.projects.forEach(projectId => {
-            formData.append('projects', projectId);
+        cardData.projects.forEach((projectId, index) => {
+            formData.append(`projects[${index}].id`, projectId);
         });
     }
 

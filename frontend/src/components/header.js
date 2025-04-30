@@ -80,7 +80,6 @@ export default class Header extends React.Component {
 
   render() {
     const { user } = this.context;
-    const userPhoto = userIcon;
 
     return (
       <nav className="header">
@@ -136,7 +135,7 @@ export default class Header extends React.Component {
           )}
           <div className="header-user-dropdown" ref={this.dropdownRef}>
             <div onClick={this.toggleDropdown} className="header-user-icon">
-              <img src={userPhoto} alt="Аватарка пользователя" />
+              <img src={userIcon} alt="Аватарка пользователя" />
             </div>
             {this.state.isDropdownOpen && (
               <div className="dropdown-menu">

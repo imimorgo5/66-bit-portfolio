@@ -4,7 +4,6 @@ import Header from '../components/header';
 import '../css/card-detail.css';
 import { AuthContext } from '../context/AuthContext';
 import { getCardById, updateCard, deleteCard } from '../services/cardService.js';
-import { getPersonById } from '../services/PersonService';
 import { getProjects } from '../services/projectService.js';
 import userIcon from '../img/user-icon.svg';
 import fileIcon from '../img/file_icon.svg';
@@ -14,10 +13,8 @@ export default function CardDetailPage() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [person, setPerson] = useState(null);
   const [card, setCard] = useState(null);
   const [isCardLoading,   setIsCardLoading]   = useState(true);
-  const [isPersonLoading, setIsPersonLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(null);
   const [filesLoaded, setFilesLoaded] = useState(false);
@@ -41,30 +38,12 @@ export default function CardDetailPage() {
   }, [id]);
 
   useEffect(() => {
-      if (user?.id) {
-        getPersonById(user.id)
-          .then((data) => {
-            setPerson(data);
-            setEditData(data);
-          })
-          .catch((error) => {
-            console.error('Ошибка получения данных пользователя:', error);
-          })
-          .finally(() => {
-            setIsPersonLoading(false);
-          });
-      } else {
-        setIsPersonLoading(false);
-      }
-    }, [user]);
-
-    useEffect(() => {
-      if (isEditing) {
-        getProjects()
-          .then(data => setProjects(data))
-          .catch(err => console.error(err));
-      }
-    }, [isEditing]);
+    if (isEditing) {
+      getProjects()
+        .then(data => setProjects(data))
+        .catch(err => console.error(err));
+    }
+  }, [isEditing]);
 
   useEffect(() => {
     if (isEditing && !filesLoaded && editData && editData.cardFiles && editData.cardFiles.some(file => !file.file)) {
@@ -144,7 +123,7 @@ export default function CardDetailPage() {
   const handleEditClick = () => {
     setEditData({
       ...card,
-      projects: card.cardProjects ? card.cardProjects.map(p => p.id) : []
+      projects: card.projects ? card.projects.map(p => p.id) : []
     });
     setIsEditing(true);
   };
@@ -153,7 +132,7 @@ export default function CardDetailPage() {
     setIsEditing(false);
     setEditData({
       ...card,
-      projects: card.cardProjects ? card.cardProjects.map(p => p.id) : []
+      projects: card.projects ? card.projects.map(p => p.id) : []
      });
     setLinkInput('');
     setShowProjectsList(false);
@@ -273,16 +252,12 @@ export default function CardDetailPage() {
     }));
   };
 
-  if (isCardLoading || isPersonLoading) {
+  if (isCardLoading) {
     return <div>Загрузка...</div>;
   }
 
   if (!card) {
     return <div>Карточка не найдена</div>;
-  }
-
-  if (!person) {
-    return <div>Пользователь не найден или не авторизован</div>;
   }
 
   return (
@@ -428,16 +403,16 @@ export default function CardDetailPage() {
               <div className='card-user-info-container'>
                 <div className="card-user-info">
                   <img
-                    src={person.imageName ? `http://localhost:8080/uploads/${person.imageName}` : userIcon}
+                    src={user.imageName ? `http://localhost:8080/uploads/${user.imageName}` : userIcon}
                     alt="Фото пользователя"
                     className="card-user-photo"
                   />
-                  <h2>{person.username}</h2>
+                  <h2>{user.username}</h2>
                 </div>
                 <div className='card-user-description'>
-                  <p><span className='card-user-description-title'>Email: </span>{person.email}</p>
-                  <p><span className='card-user-description-title'>Телефон: </span>{person.phoneNumber ? person.phoneNumber : 'Не указан' }</p>
-                  <p><span className='card-user-description-title'>Дата рождения: </span>{person.birthDate ? person.birthDate : 'Не указана'}</p>
+                  <p><span className='card-user-description-title'>Email: </span>{user.email}</p>
+                  <p><span className='card-user-description-title'>Телефон: </span>{user.phoneNumber ? user.phoneNumber : 'Не указан' }</p>
+                  <p><span className='card-user-description-title'>Дата рождения: </span>{user.birthDate ? user.birthDate : 'Не указана'}</p>
                 </div>
               </div>
             </div>
@@ -449,9 +424,9 @@ export default function CardDetailPage() {
             <div className='card-appendices-container'>
               <div className='card-projects'>
                 <h3>Проекты:</h3>
-                {card.cardProjects && card.cardProjects.length > 0? (
+                {card.projects && card.projects.length > 0? (
                   <ul className="card-projects-list">
-                      {card.cardProjects.map((project, index) => (
+                      {card.projects.map((project, index) => (
                         <li key={index} className="card-projects-item">
                           <Link to={`/projects/${project.id}`} className="project-title">{project.title}</Link>
                           <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>

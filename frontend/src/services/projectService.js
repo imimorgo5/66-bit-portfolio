@@ -24,9 +24,6 @@ export const createProject = (projectData) => {
     const formData = new FormData();
     formData.append('title', projectData.title);
 
-    //Убрать после переделки в бэке
-    formData.append('description', ' ');
-
     return fetch('/projects/create', {
         method: 'POST',
         credentials: 'include',

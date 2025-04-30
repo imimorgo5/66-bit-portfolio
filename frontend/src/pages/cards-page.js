@@ -39,10 +39,13 @@ export default function CardsPage() {
   const handleTeamSwitchChange = option => setTeamMode(option === 'team');
   const goToCardDetail = card => navigate(`/cards/${card.id}`, { state: { card } });
 
-  const isNew = card => {
-    const keys = Object.keys(card);
-    return keys.every(k => k === 'title' || card[k] == null || card[k] === '')
-      && typeof card.title === 'string' && card.title !== '';
+  const isNew = (card) => {
+    return (
+      (card.description === null || card.description === '') &&
+      (card.cardFiles === null || (Array.isArray(card.cardFiles) && card.cardFiles.length === 0)) &&
+      (card.cardLinks === null || (Array.isArray(card.cardLinks) && card.cardLinks.length === 0)) &&
+      typeof card.title === 'string' && card.title.trim() !== ''
+    );
   };
 
   const sortedCards = [...cards].sort((a, b) => {
@@ -67,7 +70,7 @@ export default function CardsPage() {
                   onClick={() => goToCardDetail(card)}
                   className={isNew(card) ? 'new-item' : ''}
                 >
-                  <CardPreview title={card.title} />
+                  <CardPreview title={card.title}/>
                 </li>
               ))}
             </ul>

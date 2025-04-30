@@ -38,11 +38,13 @@ export default function ProjectsPage() {
   const goToProjectDetail = project =>
     navigate(`/projects/${project.id}`, { state: { project } });
 
-  const isNew = proj => {
-    const keys = Object.keys(proj);
-    return keys.every(k =>
-      k === 'title' || proj[k] === '' || proj[k] == null
-    ) && typeof proj.title === 'string' && proj.title !== '';
+  const isNew = (proj) => {
+    return (
+      (proj.description === null || proj.description === '') &&
+      (proj.imageName == null || proj.imageName === '') &&
+      (proj.projectLinks === null || (Array.isArray(proj.projectLinks) && proj.projectLinks.length === 0)) &&
+      typeof proj.title === 'string' && proj.title.trim() !== ''
+    );
   };
 
   const sortedProjects = [...projects].sort((a, b) => {

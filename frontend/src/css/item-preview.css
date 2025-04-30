@@ -7,7 +7,6 @@
     height: calc(100% - 6px);
     width: calc(100% - 6px);
     color: rgba(0, 119, 255, 1);
-    transition: transform 0.2s;
   }
 
 .preview-container {
@@ -62,10 +61,6 @@
     border-radius: 0 0 7px 7px;
 }
 
-.item-preview:hover {
-    transform: scale(1.02);
-}
-
 .item-preview:hover h3 {
     text-decoration-color: rgba(0, 119, 255, 1);
 }
@@ -80,8 +75,4 @@
 
 .card-preview-title-container h3 {
     font-size: 28px;
-}
-
-.new-item {
-    border: 2px solid rgba(0, 119, 255, 0.5);
 }

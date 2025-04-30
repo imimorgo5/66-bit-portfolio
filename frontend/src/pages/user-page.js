@@ -2,12 +2,12 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import Header from '../components/header';
 import '../css/user-page.css';
 import { AuthContext } from '../context/AuthContext';
-import { getPersonById, updatePerson } from '../services/PersonService';
+import { updatePerson } from '../services/PersonService';
 import userIcon from '../img/user-icon.svg';
 
 export default function UserPage() {
-  const { user, setUser } = useContext(AuthContext);
-  const [person, setPerson] = useState(null);
+  const { user } = useContext(AuthContext);
+  const [person, setPerson] = useState(user);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState({email: '', username: ''});
@@ -17,21 +17,15 @@ export default function UserPage() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (user && user.id) {
-      getPersonById(user.id)
-        .then((data) => {
-          setPerson(data);
-          setEditData(data);
-        })
-        .catch((error) => {
-          console.error('Ошибка получения данных пользователя:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
+      setPerson(user);
+      setEditData({
+        email: user?.email || '',
+        username: user?.username || '',
+        phoneNumber: user?.phoneNumber || '',
+        birthDate: user?.birthDate || '',
+        imageName: user?.imageName || null
+      });
+    setLoading(false);
   }, [user]);
 
   useEffect(() => {
@@ -130,9 +124,14 @@ export default function UserPage() {
     updatePerson(person.id, updatedEditData)
       .then((updatedPerson) => {
         setPerson(updatedPerson);
-        setEditData(updatedPerson);
+        setEditData({
+          email: updatedPerson.email,
+          username: updatedPerson.username,
+          phoneNumber: updatedPerson.phoneNumber,
+          birthDate: updatedPerson.birthDate,
+          imageName: updatedPerson.imageName
+        });
         setEditMode(false);
-        setUser(updatedPerson);
       })
       .catch((error) => {
         console.error('Ошибка обновления профиля:', error);
@@ -142,7 +141,7 @@ export default function UserPage() {
   const isFormValid = editData.email && editData.username && !emailError && !nameError && !phoneError;
 
   if (loading) return <div>Загрузка...</div>;
-  if (!person) return <div>Пользователь не найден</div>;
+  if (!user) return <div>Пользователь не найден</div>;
 
   return (
     <div className="page">

@@ -6,27 +6,19 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('/showUserInfo', {
+    fetch('/person/profile/my', {
       method: 'GET',
       credentials: 'include',
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return await response.json();
-        }
-        return null;
-      })
-      .then((data) => {
-        if (data) {
-          setUser(data);
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.person) {
+          setUser(data.person);
         } else {
           setUser(null);
         }
       })
-      .catch((error) => {
-        console.error('Ошибка проверки сессии:', error);
-        setUser(null);
-      });
+      .catch(() => setUser(null));
   }, []);
 
   return (
