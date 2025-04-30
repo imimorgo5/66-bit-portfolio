@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
+import ru.project.BackendPortfolio.dto.ProjectLinkDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
 import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
@@ -119,8 +120,31 @@ public class ProjectService {
         return projectDTOs;
     }
 
+//    public ProjectDTO mapToDTO(Project project) {
+//        return modelMapper.map(project, ProjectDTO.class);
+//    }
+
     public ProjectDTO mapToDTO(Project project) {
-        return modelMapper.map(project, ProjectDTO.class);
+        var projectDTO = new ProjectDTO();
+        projectDTO.setId(project.getId());
+        projectDTO.setTitle(project.getTitle());
+        projectDTO.setDescription(project.getDescription());
+
+        List<ProjectLinkDTO> projectLinkDTOs = new ArrayList<>();
+        var links = project.getProjectLinks();
+        if (links != null) {
+            for (var link : links) {
+                var linkDTO = new ProjectLinkDTO();
+                linkDTO.setId(link.getId());
+                linkDTO.setLink(link.getLink());
+                linkDTO.setDescription(link.getDescription());
+                projectLinkDTOs.add(linkDTO);
+            }
+        }
+        projectDTO.setProjectLinks(projectLinkDTOs);
+        projectDTO.setCreatedAt(project.getCreatedAt());
+        projectDTO.setImageName(project.getImageName());
+        return projectDTO;
     }
 
     public Project mapDTOToProject(ProjectDTO projectDTO) {

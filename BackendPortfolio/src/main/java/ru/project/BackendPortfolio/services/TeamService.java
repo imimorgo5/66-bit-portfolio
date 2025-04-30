@@ -163,4 +163,20 @@ public class TeamService {
         teamDTO.setPersons(personDTOs);
         return teamDTO;
     }
+
+    public List<TeamDTO> getAllPersonTeams(){
+        var activePerson = personService.getActivePerson();
+        List<TeamDTO> teamDTOs = new ArrayList<>();
+        var allTeams = teamRepository.findAll();
+        for(var team : allTeams){
+            var personTeams = team.getPersonTeams();
+            for(var personTeam : personTeams) {
+                var person = personTeam.getPerson();
+                if (person.equals(activePerson)) {
+                    teamDTOs.add(mapTeamDTO(team));
+                }
+            }
+        }
+        return teamDTOs;
+    }
 }

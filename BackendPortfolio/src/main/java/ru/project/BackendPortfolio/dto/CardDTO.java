@@ -1,7 +1,6 @@
 package ru.project.BackendPortfolio.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import ru.project.BackendPortfolio.models.CardLink;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,11 +14,24 @@ public class CardDTO {
 
     private String description;
 
+    // Проекты
+    private List<ProjectDTO> projects;
+
     private List<CardLinkDTO> cardLinks;
 
     private List<CardFileDTO> cardFiles;
 
     private LocalDateTime createdAt;
+
+    // Геттеры и сеттеры проектов
+
+    public List<ProjectDTO> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<ProjectDTO> projects) {
+        this.projects = projects;
+    }
 
     public List<CardLinkDTO> getCardLinks() {
         return cardLinks;

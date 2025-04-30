@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 //import lombok.Getter;
 //import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-import ru.project.BackendPortfolio.models.ProjectLink;
 
 import java.time.LocalDateTime;
 import java.util.List;
