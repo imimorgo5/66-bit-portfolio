@@ -30,8 +30,8 @@ public class Card {
     @OneToMany(mappedBy = "card")
     private List<CardLink> cardLinks;
 
-//    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProjectCard> projectCards = new ArrayList<>();
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectCard> projectCards = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "card_links", joinColumns = @JoinColumn(name = "card_id"))
@@ -55,6 +55,14 @@ public class Card {
         this.description = description;
         this.owner = owner;
         this.createdAt = createdAt;
+    }
+
+    public List<ProjectCard> getProjectCards() {
+        return projectCards;
+    }
+
+    public void setProjectCards(List<ProjectCard> projectCards) {
+        this.projectCards = projectCards;
     }
 
     public List<CardLink> getCardLinks() {

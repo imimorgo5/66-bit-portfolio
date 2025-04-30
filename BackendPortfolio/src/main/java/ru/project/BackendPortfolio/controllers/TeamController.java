@@ -34,6 +34,13 @@ public class TeamController {
         return ResponseEntity.ok(Map.of("team", teamDTO));
     }
 
+    // Метод для получения всех команд пользователя
+    @GetMapping("/team/all")
+    public ResponseEntity<?> getAllPersonTeam() {
+        var teamsDTO = teamService.getAllPersonTeams();
+        return ResponseEntity.ok(Map.of("teams", teamsDTO));
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateTeamById(@PathVariable("id") int id, @RequestBody CreateTeamDTO createTeamDTO) {
         var teamDTO = teamService.updateTeam(id, createTeamDTO);
