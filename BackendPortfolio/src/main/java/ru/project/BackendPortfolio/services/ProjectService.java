@@ -19,13 +19,17 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final FileStorageService fileStorageService;
     private final PersonService personService;
+    private final ProjectLinkService projectLinkService;
 
     @Autowired
-    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository, FileStorageService fileStorageService, PersonService personService) {
+    public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository,
+                          FileStorageService fileStorageService, PersonService personService,
+                          ProjectLinkService projectLinkService) {
         this.modelMapper = modelMapper;
         this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
         this.personService = personService;
+        this.projectLinkService = projectLinkService;
     }
 
     @Transactional
@@ -39,8 +43,19 @@ public class ProjectService {
             project.setImageName(fileName);
         }
 
-        return projectRepository.save(project);
+        // Сначала сохраняем проект, чтобы получить его ID
+        project = projectRepository.save(project);
+
+        var newProjectLinks = projectDTO.getProjectLinks();
+        if (newProjectLinks != null) {
+            for (var newProjectLink : newProjectLinks) {
+                projectLinkService.create(newProjectLink, project);
+            }
+        }
+
+        return project;
     }
+
 
     @Transactional
     public void deleteProject(int projectId) {
@@ -69,6 +84,20 @@ public class ProjectService {
         if (projectDTO.getImageFile() != null) {
             var fileName = fileStorageService.save(projectDTO.getImageFile());
             project.setImageName(fileName);
+        }
+
+        var oldProjectLinks = project.getProjectLinks();
+        if (oldProjectLinks != null) {
+            for(var oldProjectLink : oldProjectLinks) {
+                projectLinkService.delete(oldProjectLink);
+            }
+        }
+
+        var newProjectLinks = projectDTO.getProjectLinks();
+        if (newProjectLinks != null) {
+            for(var newProjectLink : newProjectLinks) {
+                projectLinkService.create(newProjectLink, project);
+            }
         }
 
         return projectRepository.save(project);

@@ -85,8 +85,23 @@ public class PersonService {
         return peopleRepository.save(person);
     }
 
+    public PersonDTO getActivePersonDTO() {
+        var person = getActivePerson();
+        return mapToDTO(person);
+    }
+
+    public List<PersonDTO> getAllPersonDTO() {
+        var persons = peopleRepository.findAll();
+        List<PersonDTO> personDTOs = new ArrayList<>();
+        for(var person : persons) {
+            personDTOs.add(mapToDTO(person));
+        }
+        return personDTOs;
+    }
+
     public PersonDTO mapToDTO(Person person) {
         var personDTO = modelMapper.map(person, PersonDTO.class);
+        personDTO.setPassword("No");
 
         List<ProjectDTO> projectDTOs = new ArrayList<>();
         for(var project : person.getProjects()) {

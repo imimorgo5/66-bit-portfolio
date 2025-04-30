@@ -19,13 +19,16 @@ public class CardService {
     private final CardRepository cardRepository;
     private final ModelMapper modelMapper;
     private final PersonService personService;
+    private final CardLinkService cardLinkService;
 
     @Autowired
-    public CardService(CardFileService cardFileService, CardRepository cardRepository, ModelMapper modelMapper, PersonService personService) {
+    public CardService(CardFileService cardFileService, CardRepository cardRepository,
+                       ModelMapper modelMapper, PersonService personService, CardLinkService cardLinkService) {
         this.cardFileService = cardFileService;
         this.cardRepository = cardRepository;
         this.modelMapper = modelMapper;
         this.personService = personService;
+        this.cardLinkService = cardLinkService;
     }
 
     @Transactional
@@ -39,6 +42,13 @@ public class CardService {
         if (cardFileDTOs != null) {
             for (var cardFileDTO : cardFileDTOs) {
                 cardFileService.create(cardFileDTO, card);
+            }
+        }
+
+        var cardLinkDTOs = cardDTO.getCardLinks();
+        if (cardLinkDTOs != null) {
+            for (var cardLinkDTO : cardLinkDTOs) {
+                cardLinkService.create(cardLinkDTO, card);
             }
         }
 
@@ -67,9 +77,25 @@ public class CardService {
             throw new ForbiddenException("Вы не можете редактировать чужие карточки");
         }
 
+
         card.setTitle(cardDTO.getTitle());
         card.setDescription(cardDTO.getDescription());
-        card.setLinks(cardDTO.getLinks());
+
+        var oldLinks = card.getCardLinks();
+        var newLinks = cardDTO.getCardLinks();
+
+        if (oldLinks != null) {
+            for(var oldLink : oldLinks) {
+                cardLinkService.delete(oldLink);
+            }
+        }
+
+        if (newLinks != null) {
+            for (var newCardLinkDTO : newLinks) {
+                cardLinkService.create(newCardLinkDTO, card);
+            }
+        }
+
         cardFileService.update(card, cardDTO.getCardFiles());
         cardRepository.save(card);
         return mapToDTO(card);

@@ -31,4 +31,18 @@ public class PersonController {
         var personDTO = personService.getPersonDTOById(id);
         return ResponseEntity.ok(Map.of("person", personDTO));
     }
+
+    // Метод для получения профиля текущего пользователя
+    @GetMapping("/profile/my")
+    public ResponseEntity<?> getActivePerson(){
+        var personDTO = personService.getActivePersonDTO();
+        return ResponseEntity.ok(Map.of("person", personDTO));
+    }
+
+    // Метод, для получения профилей всех пользователей
+    @GetMapping("/profile/all")
+    public ResponseEntity<?> getAllPersons(){
+        var personDTO = personService.getAllPersonDTO();
+        return ResponseEntity.ok(Map.of("persons", personDTO));
+    }
 }

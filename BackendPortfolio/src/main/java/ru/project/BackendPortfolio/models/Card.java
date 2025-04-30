@@ -22,11 +22,16 @@ public class Card {
     private String title;
 
     @Column(name = "description")
-    @NotEmpty(message = "Описание не должно быть пустым")
     private String description;
 
     @OneToMany(mappedBy = "card")
     private List<CardFile> cardFiles;
+
+    @OneToMany(mappedBy = "card")
+    private List<CardLink> cardLinks;
+
+//    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<ProjectCard> projectCards = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "card_links", joinColumns = @JoinColumn(name = "card_id"))
@@ -52,6 +57,14 @@ public class Card {
         this.createdAt = createdAt;
     }
 
+    public List<CardLink> getCardLinks() {
+        return cardLinks;
+    }
+
+    public void setCardLinks(List<CardLink> cardLinks) {
+        this.cardLinks = cardLinks;
+    }
+
     public int getId() {
         return id;
     }
@@ -68,11 +81,11 @@ public class Card {
         this.title = title;
     }
 
-    public @NotEmpty(message = "Описание не должно быть пустым") String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(@NotEmpty(message = "Описание не должно быть пустым") String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
