@@ -23,21 +23,9 @@ export const getCardById = (id) => {
 export const createCard = (cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
-    formData.append('description', cardData.description);
 
-    if (cardData.links && Array.isArray(cardData.links)) {
-        cardData.links.forEach(link => {
-            formData.append('links', link);
-        });
-    }
-
-    if (cardData.files && Array.isArray(cardData.files)) {
-        cardData.files.forEach((fileItem, index) => {
-            formData.append(`cardFiles[${index}].file`, fileItem.file);
-            formData.append(`cardFiles[${index}].fileTitle`, fileItem.fileTitle);
-            formData.append(`cardFiles[${index}].description`, fileItem.description);
-        });
-    }
+    //Убрать после переделки в бэке
+    formData.append('description', ' ');
 
     return fetch('/cards/create', {
         method: 'POST',
@@ -56,11 +44,15 @@ export const createCard = (cardData) => {
 export const updateCard = (id, cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
-    formData.append('description', cardData.description);
+   
+    if (cardData.description) {
+        formData.append('description', cardData.description);
+    }
 
-    if (cardData.links && Array.isArray(cardData.links)) {
-        cardData.links.forEach(link => {
-            formData.append('links', link);
+    if (cardData.cardLinks && Array.isArray(cardData.cardLinks)) {
+        cardData.cardLinks.forEach((link, index) => {
+            formData.append(`cardLinks[${index}].link`, link.link || '');
+            formData.append(`cardLinks[${index}].description`, link.description || '');
         });
     }
 
@@ -71,6 +63,12 @@ export const updateCard = (id, cardData) => {
             }
             formData.append(`cardFiles[${index}].fileTitle`, fileItem.fileTitle || '');
             formData.append(`cardFiles[${index}].description`, fileItem.description || '');
+        });
+    }
+
+    if (cardData.projects && Array.isArray(cardData.projects)) {
+        cardData.projects.forEach(projectId => {
+            formData.append('projects', projectId);
         });
     }
 

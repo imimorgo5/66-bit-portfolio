@@ -4,79 +4,75 @@ import Header from '../components/header';
 import ProjectPreview from '../components/project-preview';
 import { AuthContext } from '../context/AuthContext';
 import SortComponent from '../components/sortComponent';
-import AddProjectForm from '../components/addProjectForm';
 import '../css/preview-pages.css';
 import '../css/projects-page.css';
 import EmptyArrow from '../img/empty-arrow.svg';
+import EmptyPicture from '../img/empty-items-picture.png';
 import { getProjects, createProject } from '../services/projectService';
 
 export default function ProjectsPage() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+
   const [projects, setProjects] = useState([]);
   const [sortMode, setSortMode] = useState('date');
 
   useEffect(() => {
     getProjects()
-      .then((fetchedProjects) => setProjects(fetchedProjects))
-      .catch((error) => console.error(error));
+      .then(fetched => setProjects(fetched))
+      .catch(err => console.error(err));
   }, []);
 
   const handleAddProject = () => {
     if (!user) {
       navigate('/register');
-    } else {
-      setIsFormOpen(true);
+      return;
     }
+    createProject({ title: 'Новый проект' })
+      .then(newProj => setProjects(prev => [...prev, newProj]))
+      .catch(err => console.error(err));
   };
 
-  const handleCreateProject = (projectData) => {
-    createProject(projectData)
-      .then((newProject) => {
-        setProjects((prev) => [...prev, newProject]);
-        setIsFormOpen(false);
-      })
-      .catch((error) => console.error(error));
-  };
+  const handleSortChange = mode => setSortMode(mode);
 
-  const handleSortChange = (mode) => {
-    setSortMode(mode);
-  };
-
-  const goToProjectDetail = (project) => {
+  const goToProjectDetail = project =>
     navigate(`/projects/${project.id}`, { state: { project } });
-  };  
+
+  const isNew = proj => {
+    const keys = Object.keys(proj);
+    return keys.every(k =>
+      k === 'title' || proj[k] === '' || proj[k] == null
+    ) && typeof proj.title === 'string' && proj.title !== '';
+  };
 
   const sortedProjects = [...projects].sort((a, b) => {
-    if (sortMode === 'name') {
-      return a.title.localeCompare(b.title);
-    } else {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    }
+    if (sortMode === 'name') return a.title.localeCompare(b.title);
+    return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
   return (
     <div className="page">
       <Header />
       <div className="content projects-page">
-        {isFormOpen && (
-          <AddProjectForm
-            onClose={() => setIsFormOpen(false)}
-            onCreate={handleCreateProject}
-          />
-        )}
-        {sortedProjects.length > 0 ? (
+        {projects.length > 0 ? (
           <>
             <div className="sort-container">
               <SortComponent onSortChange={handleSortChange} />
             </div>
             <ul className="preview-list">
-              {sortedProjects.map((project) => (
-                <li key={project.id} onClick={() => goToProjectDetail(project)}>
-                  <ProjectPreview 
-                    title={project.title}
-                    image={`http://localhost:8080/uploads/${project.imageName}`}
+              {sortedProjects.map(proj => (
+                <li
+                  key={proj.id}
+                  onClick={() => goToProjectDetail(proj)}
+                  className={isNew(proj) ? 'new-item' : ''}
+                >
+                  <ProjectPreview
+                    title={proj.title}
+                    image={
+                      proj.imageName
+                        ? `http://localhost:8080/uploads/${proj.imageName}`
+                        : ''
+                    }
                   />
                 </li>
               ))}
@@ -84,6 +80,11 @@ export default function ProjectsPage() {
           </>
         ) : (
           <div className="empty-previews">
+            <img
+              src={EmptyPicture}
+              alt="Красивая картинка"
+              className="empty-items-picture"
+            />
             <p className="empty-title">
               У Вас пока нет проектов - <span>добавьте первый!</span>
             </p>
@@ -96,6 +97,7 @@ export default function ProjectsPage() {
             </div>
           </div>
         )}
+
         <button type="button" className="add-item" onClick={handleAddProject}>
           Добавить проект
         </button>

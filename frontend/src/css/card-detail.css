@@ -1,226 +1,431 @@
+  .card-detail-page {
+    min-height: 100vh;
+  }
+  
   .card-detail-content {
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    word-break: break-all;
-  }
-  
-  .card-detail-content h2 {
-    font-size: 32px;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 20px;
-  }
-  
-  .card-detail-content h3 {
-    font-size: 24px;
-    padding: 0;
-    margin: 0;
+    padding: 15px;
   }
 
-  .card-detail-content h4 {
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
-  .card-detail-content p {
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-  }
-
-  .card-detail-content .card-description {
-    margin-bottom: 20px;
-  }
-  
-  .card-files-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .card-file-item {
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    padding: 20px;
-  }
-
-  .card-file-item:hover {
-    background-color: #eef;
-  }
-
-  .edit-card-file-item {
-    border-bottom: 1px solid #ddd;
+  .card-detail-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
+    gap: 15px;
+    align-items: flex-start;
   }
 
-  .edit-file-item-container {
-    width: 100%;
+  .card-user-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 20%;
   }
 
-  .card-links {
-    margin-top: 20px;
+  .card-user-container a {
+    font-size: 20px;
+    margin-bottom: 15px;
+    text-align: left;
+    color: rgba(0, 119, 255, 1);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 0.2s, text-decoration-color 0.2s;
   }
-  
-  .card-links h3 {
-    margin-bottom: 10px;
+
+  .card-user-container a span {
+    font-size: 24px;
   }
-  
-  .card-links-list {
+
+  .card-user-container a:hover, .link-title:hover, .edit-card-link-item a:hover, .file-title:hover, .project-title:hover {
+    text-decoration-color: rgba(0, 119, 255, 0.5);
+    color: rgba(0, 119, 255, 0.5);
+  }
+
+  .card-user-info-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 10px;
+    padding: 30px;
+    gap: 50px;
+    background: #fff;
+    border-radius: 15px;
   }
 
-  .card-links-list li {
+  .card-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .card-user-info img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(0, 119, 255, 0.3);
+  }
+
+  .card-user-info h2 {
+    color: rgba(0, 119, 255, 1);
+    font-size: 32px;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+  }
+
+  .card-user-description {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: left;
+    width: fit-content;
+    white-space: nowrap;
+  }
+
+  .card-user-description p {
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-user-description-title {
+    font-weight: 600;
+    color: rgba(0, 119, 255, 1);
+  }
+
+  .card-description-container, .edit-card-description-container {
+    background-color: #fff;
+    border-radius: 15px;
+    height: 795px;
+    width: calc(60% - 130px);
+    line-height: 30px;
+    padding: 35px 50px;
+    text-align: justify;
+  }
+
+  .edit-card-description-container {
+    text-align: left;
+    width: calc(60% - 115px);
+  }
+
+  .card-description-container h2 {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: rgba(0, 119, 255, 1);
+    font-weight: 600;
+  }
+
+  .card-description-container label, .edit-card-description-container label {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .card-description-container p {
+    margin: 0;
+    padding: 0;
+    margin-top: 15px;
+    font-size: 20px;
+  }
+
+  .card-appendices-container, .edit-card-appendices-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 20%;
+  }
+
+  .edit-card-appendices-container {
+    width: 40%;
+  }
+
+  .card-projects, .card-files, .card-links, .edit-card-projects, .edit-card-files, .edit-card-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    height: 190px;
+    width: calc(100% - 60px);
+  }
+
+  .card-detail-actions, .edit-card-detail-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 10px 25px;
+    height: 50px;
+    width: calc(100% - 50px);
+  }
+
+  .card-appendices-container h3, .edit-card-appendices-container h3 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+  }
+
+  .card-appendices-container ul, .edit-card-appendices-container ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    list-style: none;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: calc(100% - 17px);
+    overflow-y: auto;
+  }
+
+  .edit-card-appendices-container ul {
+    width: 100%;
+  }
+
+  .card-links-item, .card-projects-item, .card-files-item {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
   }
-  
-  .card-links-list li a {
-    color: #155DA4;
-    text-decoration: none;
-    font-size: 18px;
+
+  .card-links-item::before, .card-projects-item::before {
+    content: '•';
+    font-size: 20px;
+    color: rgba(0, 119, 255, 1);
   }
-  
-  .card-links-list li a:hover {
+
+  .project-title, .file-title, .edit-file-title, .edit-link-title, .edit-card-project-title, .link-title {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: 400;
+    color: #000;
     text-decoration: underline;
-  }
-  
-  .card-detail-actions {
-    max-width: 800px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .card-detail-actions button {
-    padding: 10px 20px;
-    font-size: 24px;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 0.2s, text-decoration-color 0.2s;
     cursor: pointer;
-    border: none;
+  }
+
+  .link-title, .edit-card-link-item a {
+    color: rgba(0, 119, 255, 1);
+  }
+
+  .edit-card-link-item a {
+    font-size: 16px;
+  }
+
+  .card-empty-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-detail-actions button, .edit-card-detail-actions button {
+    width: 156.5px;
+    padding: 11.5px 0;
+    font-size: 20px;
+    cursor: pointer;
     border-radius: 15px;
   }
-  
-  .edit-button {
-    background-color: #155DA4;
-    color: #fff;
+
+  .edit-card-detail-actions button {
+    width: 250px;
   }
-  
-  .delete-button {
-    background-color: #d9534f;
-    color: #fff;
+
+  .edit-card-file-item, .edit-card-link-item, .card-projects-item, .edit-card-projects-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
   }
-  
-  .save-button {
-    background-color: #5cb85c;
-    color: #fff;
+
+  .edit-file-item-container, .edit-link-item-container {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
   }
-  
-  .cancel-button {
-    background-color: #f0ad4e;
-    color: #fff;
-  }
-  
-  .card-files-list, .card-links-list {
-    list-style: none;
-    padding: 0;
+
+  .edit-file-title, .edit-card-project-title {
     margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: default;
   }
 
-  .edit-title, .edit-description {
-    width: 100%;
-    font-size: 18px;
+  .edit-file-title, .edit-link-title {
+    min-width: 50%;
+  }
+  
+  .edit-button, .save-button {
+    background-color: transparent;
+    color: rgba(0, 119, 255, 1);
+    border: 2px solid rgba(0, 119, 255, 1);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  .delete-button, .cancel-button {
+    background-color: transparent;
+    color: rgba(172, 29, 29, 1);
+    border: 2px solid rgba(172, 29, 29, 1);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .edit-button:hover, .save-button:hover {
+    background-color: rgba(0, 119, 255, 1);
+    color: #fff;
+  }
+  
+  .delete-button:hover, .cancel-button:hover {
+    background-color: rgba(172, 29, 29, 1);
+    color: #fff;
+  }
+
+  .edit-card-title, .edit-card-description, .link-input, .file-description-input, .link-description-input {
+    width: calc(100% - 18px);
+    font-size: 20px;
     padding: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
+    border: 1px solid rgba(0, 119, 255, 0.3);
+    border-radius: 10px;
+    transition: border-color 0.3s;
   }
 
-  .edit-description {
-    min-height: 100px;
-    resize: vertical;
+  .edit-card-title {
+    margin-bottom: 15px;
   }
-  
- .edit-links {
-    margin-top: 20px;
-  }
-  
-  .edit-links h3 {
-    margin-bottom: 10px;
-  }
-  
-  .file-description-input {
-    padding: 5px;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    width: 90%;
-  }
-  
-  .link-input {
-    width: 100%;
-    padding: 5px;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-  }
-  
+
   .card-link-input-group {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    width: 100%;
   }
-  
-  .add-card-link-button, .file-upload-button {
-    padding: 8px 12px;
-    font-size: 18px;
+
+  .link-input {
+    width: 100%;
+  }
+
+  .edit-card-description {
+    font-family: 'Inter', serif;
+    min-height: 675px;
+    max-height: 675px;
+    min-width: calc(100% - 18px);
+    max-width: calc(100% - 18px);
+    margin-top: 15px;
+  }
+
+  .file-description-input, .link-description-input {
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  .edit-card-title:focus, .edit-card-description:focus, .link-input:focus, .file-description-input:focus, .link-description-input:focus {
+    border-color: rgba(0, 119, 255, 1);
+    outline: none;
+  }
+
+  .add-card-link-button, .file-upload-button, .project-upload-button {
+    padding: 5px 30px;
+    font-size: 20px;
     min-width: fit-content;
-    background-color: #155DA4;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
+    background-color: transparent;
+    color: rgba(0, 119, 255, 1);
+    border: 2px solid rgba(0, 119, 255, 1);
+    border-radius: 15px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s, color 0.3s;
   }
-  
-  .add-card-link-button:hover, .file-upload-button:hover {
-    background-color: #0f4a7e;
+
+  .file-upload-button, .project-upload-button {
+    width: 100%;
+  }
+
+  .add-card-link-button:hover, .file-upload-button:hover, .project-upload-button:hover {
+    background-color: rgba(0, 119, 255, 1);
+    color: #fff;
   }
 
   .file-upload-button {
     margin-top: 20px;
   }
-  
-  .remove-card-link-button, .remove-card-file-button {
+
+  .remove-card-link-button, .remove-card-file-button, .remove-card-project-button {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 40px;
     background: transparent;
-    color: rgba(205, 33, 33, 1);
+    color: rgba(172, 29, 29, 1);
     border: none;
     border-radius: 5px;
     width: 20px;
     height: 20px;
     cursor: pointer;
     margin-left: 5px;
+  }
+  
+  .edit-card-projects .project-suggestions-list, .projects-empty-dropdown {
+    margin: 0;
+    padding: 7px;
+    border: 1px solid rgba(0, 119, 255, 0.5);
+    border-radius: 15px;
+    max-height: 204px;
+    width: 255px;
+    overflow-y: auto;
+    background: #fff;
+    position: absolute;
+    margin-top: 40px;
+    z-index: 10;
+    gap: 0;
+  }
+  
+  .projects-empty-dropdown p {
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    font-size: 16px;
+    color: rgba(26, 26, 26, 1);
+  }
+  
+  .edit-card-projects .project-suggestions-list li {
+    width: calc(100% - 20px);
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: rgba(26, 26, 26, 1);
+    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(0, 119, 255, 0.5);
+  }
+  
+  .project-suggestions-list li:last-child {
+    border-radius: 0 0 10px 10px;
+    border: none;
+  }
+  .project-suggestions-list li:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .project-suggestions-list li:hover {
+    background: rgba(0, 119, 255, 0.2);
+  }
+  
+  .project-upload-button-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }

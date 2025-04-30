@@ -3,14 +3,17 @@ import Header from '../components/header';
 import '../css/user-page.css';
 import { AuthContext } from '../context/AuthContext';
 import { getPersonById, updatePerson } from '../services/PersonService';
-import userIcon from '../img/user-icon.png';
+import userIcon from '../img/user-icon.svg';
 
 export default function UserPage() {
   const { user, setUser } = useContext(AuthContext);
   const [person, setPerson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [editData, setEditData] = useState({email: '', username: ''});
+  const [emailError, setEmailError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -31,6 +34,15 @@ export default function UserPage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (editMode) {
+      setEditData(person);
+      setEmailError('');
+      setNameError('');
+      setPhoneError('');
+    }
+  }, [editMode, person]);
+
   const convertDateToServerFormat = (dateStr) => {
     const parts = dateStr.split('-');
     if (parts.length === 3) {
@@ -39,11 +51,54 @@ export default function UserPage() {
     return dateStr;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
     setEditData((prev) => ({
       ...prev,
-      [name]: value,
+      email: value,
+    }));
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value && !emailPattern.test(value)) {
+      setEmailError('Некорректный email');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setEditData((prev) => ({
+      ...prev,
+      username: value,
+    }));
+    if (value && value.length > 64) {
+      setNameError('Слишком длинное ФИО');   
+    } else if (value && value.split(' ').filter(el => el).length < 2) {
+      setNameError('Некорректное ФИО');
+    } else {
+      setNameError('');
+    }
+  };
+
+  const handleNumberChange = (e) => {
+    const value = e.target.value;
+    const pattern = /^(\+7|8)\d{10}$/;
+    if (value && !pattern.test(value)) {
+      setPhoneError('Неверный формат номера');
+    } else {
+      setPhoneError('');
+    }
+    setEditData((prev) => ({
+      ...prev,
+      phoneNumber: value,
+    }));
+  };
+
+  const handleBirthDateChange = (e) => {
+    const value = e.target.value;
+    setEditData((prev) => ({
+      ...prev,
+      birthDate: value,
     }));
   };
 
@@ -84,6 +139,7 @@ export default function UserPage() {
       });
   };
 
+  const isFormValid = editData.email && editData.username && !emailError && !nameError && !phoneError;
 
   if (loading) return <div>Загрузка...</div>;
   if (!person) return <div>Пользователь не найден</div>;
@@ -91,12 +147,10 @@ export default function UserPage() {
   return (
     <div className="page">
       <Header />
-      <div className="content user-page">
-        <h1 className="page-title">Личный кабинет</h1>
+      <div className="user-page">
         {editMode ? (
-          <div className="user-info-edit">
-            <div className="user-photo-edit">
-              <h3>Фото пользователя:</h3>
+          <div className='user-container'>
+            <div className="user-info">
               <img
                 src={
                   editData.imagePreviewUrl
@@ -108,7 +162,7 @@ export default function UserPage() {
                 alt="Фото пользователя"
                 className="user-photo"
               />
-              <button type="button" onClick={triggerPhotoInput}>
+              <button type="button" onClick={triggerPhotoInput} className='user-photo-change'>
                 Изменить фото
               </button>
               <input
@@ -118,58 +172,80 @@ export default function UserPage() {
                 ref={fileInputRef}
                 style={{ display: 'none' }}
               />
-            </div>
-            <div className='edit-user-description'>
-                <label>Имя пользователя:</label>
-                <input
+              <input
                 type="text"
                 name="username"
                 value={editData.username}
-                onChange={handleChange}
-                />
-                <label>Email:</label>
-                <input
-                type="email"
-                name="email"
-                value={editData.email}
-                onChange={handleChange}
-                />
-                <label>Телефон:</label>
-                <input
-                type="text"
-                name="phoneNumber"
-                value={editData.phoneNumber || ''}
-                onChange={handleChange}
-                />
-                <label>Дата рождения:</label>
-                <input
-                type="date"
-                name="birthDate"
-                value={editData.birthDate || ''}
-                onChange={handleChange}
-                />
+                maxLength={75}
+                onChange={handleNameChange}
+                className={`${nameError ? 'input-error' : ''}`}
+              />
+              {nameError && <span className="user-error-message">{nameError}</span>}               
             </div>
-            <div className="user-info-actions">
-              <button onClick={handleSave} className="save-button">Сохранить</button>
-              <button onClick={() => setEditMode(false)} className="cancel-button">Отменить изменения</button>
+            <div className="user-data">
+                <h1 className="user-data-title">Личные данные</h1>
+                <div className='user-description'>
+                  <div className='user-input-wrapper'>
+                    <p className='description-title'>Email:</p>
+                    <input
+                      type="email"
+                      name="email"
+                      value={editData.email}
+                      maxLength={50}
+                      onChange={handleEmailChange}
+                      className={`${emailError ? 'input-error' : ''}`}
+                    />
+                  </div>
+                  {emailError && <span className="user-error-message">{emailError}</span>}
+                  <div className='user-input-wrapper'>
+                    <p className='description-title'>Телефон:</p>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      value={editData.phoneNumber || ''}
+                      maxLength={12}
+                      onChange={handleNumberChange}
+                      className={`${emailError ? 'input-error' : ''}`}
+                    />
+                  </div>
+                  {phoneError && <span className="user-error-message">{phoneError}</span>}
+                  <div className='user-input-wrapper'>
+                    <p className='description-title'>Дата рождения:</p>
+                    <input
+                      type="date"
+                      name="birthDate"
+                      value={editData.birthDate || ''}
+                      onChange={handleBirthDateChange}
+                    />
+                  </div>
+                </div>
+                <div className="user-info-actions">
+                  <button onClick={handleSave} className="user-data-save-button" disabled={!isFormValid}>Сохранить</button>
+                  <button onClick={() => setEditMode(false)} className="user-data-cancel-button">Отменить изменения</button>
+                </div>
             </div>
           </div>
         ) : (
-          <div className="user-info">
-            <img
-              src={person.imageName ? `http://localhost:8080/uploads/${person.imageName}` : userIcon}
-              alt="Фото пользователя"
-              className="user-photo"
-            />
-            <h2>{person.username}</h2>
-            <div className='user-discription'>
-            <p><span className='description-title'>Email: </span>{person.email}</p>
-            <p><span className='description-title'>Телефон: </span>{person.phoneNumber ? person.phoneNumber : 'Не указан' }</p>
-            <p><span className='description-title'>Дата рождения: </span>{person.birthDate ? person.birthDate : 'Не указана'}</p>
+          <div className='user-container'>
+            <div className="user-info">
+              <img
+                src={person.imageName ? `http://localhost:8080/uploads/${person.imageName}` : userIcon}
+                alt="Фото пользователя"
+                className="user-photo"
+              />
+              <h2>{person.username}</h2>
             </div>
-            <button onClick={() => setEditMode(true)} className="edit-info-button">
-              Изменить информацию
-            </button>
+            <div className="user-data">
+                <h1 className="user-data-title">Личные данные</h1>
+                <div className='user-description'>
+                  <p><span className='description-title'>Email: </span>{person.email}</p>
+                  <p><span className='description-title'>Телефон: </span>{person.phoneNumber ? person.phoneNumber : 'Не указан' }</p>
+                  <p><span className='description-title'>Дата рождения: </span>{person.birthDate ? person.birthDate : 'Не указана'}</p>
+                </div>
+                <button onClick={() => setEditMode(true)} className="edit-info-button">
+                  Редактировать
+                </button>
+            </div>
           </div>
         )}
       </div>

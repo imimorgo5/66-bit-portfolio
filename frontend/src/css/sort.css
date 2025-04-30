@@ -7,24 +7,28 @@
   
   .sort-option {
     cursor: pointer;
-    padding: 13px 30px;
-    border: 2px solid #155DA4;
+    padding: 6px 30px;
+    border: 2px solid rgba(0, 119, 255, 1);
     border-radius: 15px;
-    color: #155DA4;
-    font-size: 24px;
-    font-weight: 600;
+    color: rgba(0, 119, 255, 1);
+    font-size: 20px;
+    font-weight: 400;
     transition: background-color 0.3s, color 0.3s;
+  }
+
+  .sort-option:hover {
+    background-color: rgba(0, 119, 255, 0.3);
   }
   
   .sort-option.active {
-    background-color: #155DA4;
+    background-color: rgba(0, 119, 255, 1);
     color: #fff;
   }
 
   .sort-options h2 {
-    font-size: 28px;
-    font-weight: 600;
-    color: #155DA4;
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(0, 119, 255, 1);
     padding: 0;
     margin: 0;
   }

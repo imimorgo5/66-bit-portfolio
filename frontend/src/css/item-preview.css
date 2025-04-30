@@ -1,10 +1,13 @@
 .item-preview {
-    max-width: 100%;
     background-color: rgba(255, 255, 255, 1);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     cursor: pointer;
     padding: 3px;
+    height: calc(100% - 6px);
+    width: calc(100% - 6px);
+    color: rgba(0, 119, 255, 1);
+    transition: transform 0.2s;
   }
 
 .preview-container {
@@ -12,31 +15,42 @@
     align-items: center;
     justify-content: center;
     border-radius: 0 0 10px 10px;
-    height: 200px;
+    width: 100%;
+    height: 80%;
 }
 
-.preview-title-container {
+.preview-title-container  {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50px;
+    width: 100%;
+    height: 20%;
 }
 
 .item-preview h3 {
     margin: 0;
     padding: 0;
-    font-size: 24px;
-    font-weight: 600;
-    color: rgba(21, 93, 164, 1);
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(0, 119, 255, 1);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+}
+
+.item-preview h3:hover {
+    text-decoration-color: rgba(0, 119, 255, 1);
+    transform: scale(1.02);
 }
 
 .item-preview h4 {
     margin: 0;
     padding: 25px;
     padding-top: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: rgba(21, 93, 164, 1);
+    color: rgba(0, 119, 255, 1);
     word-break: break-all;
 }
 
@@ -44,6 +58,30 @@
     display: block;
     object-fit: cover;
     width: 100%;
-    height: 200px;
+    height: 100%;
     border-radius: 0 0 7px 7px;
+}
+
+.item-preview:hover {
+    transform: scale(1.02);
+}
+
+.item-preview:hover h3 {
+    text-decoration-color: rgba(0, 119, 255, 1);
+}
+
+.card-preview-title-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-preview-title-container h3 {
+    font-size: 28px;
+}
+
+.new-item {
+    border: 2px solid rgba(0, 119, 255, 0.5);
 }

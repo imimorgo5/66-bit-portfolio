@@ -23,10 +23,9 @@ export const getProjectById = (id) => {
 export const createProject = (projectData) => {
     const formData = new FormData();
     formData.append('title', projectData.title);
-    formData.append('description', projectData.description);
-    if (projectData.image) {
-        formData.append('imageFile', projectData.image);
-    }
+
+    //Убрать после переделки в бэке
+    formData.append('description', ' ');
 
     return fetch('/projects/create', {
         method: 'POST',
@@ -45,10 +44,21 @@ export const createProject = (projectData) => {
 export const updateProject = (id, projectData) => {
   const formData = new FormData();
   formData.append('title', projectData.title);
-  formData.append('description', projectData.description);
+  
+  if (projectData.description) {
+    formData.append('description', projectData.description);
+  }
+  
   if (projectData.image) {
     formData.append('imageFile', projectData.image);
   }
+
+  if (projectData.projectLinks && Array.isArray(projectData.projectLinks)) {
+    projectData.projectLinks.forEach((link, index) => {
+        formData.append(`projectLinks[${index}].link`, link.link || '');
+        formData.append(`projectLinks[${index}].description`, link.description || '');
+    });
+}
 
   return fetch(`/projects/update/${id}`, {
       method: 'PUT',
