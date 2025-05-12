@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
-import ru.project.BackendPortfolio.dto.ProjectLinkDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
+import ru.project.BackendPortfolio.models.Folder;
 import ru.project.BackendPortfolio.models.Project;
+import ru.project.BackendPortfolio.models.ProjectFile;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
 
 import java.util.ArrayList;
@@ -36,7 +37,9 @@ public class ProjectService {
     @Transactional
     public Project createProject(ProjectDTO projectDTO) {
         var person = personService.getActivePerson();
-        var project = modelMapper.map(projectDTO, Project.class);
+        var project = new Project();
+        project.setTitle(projectDTO.getTitle());
+        project.setDescription(projectDTO.getDescription());
         project.setOwner(person);
 
         if (projectDTO.getImageFile() != null) {
@@ -44,7 +47,6 @@ public class ProjectService {
             project.setImageName(fileName);
         }
 
-        // Сначала сохраняем проект, чтобы получить его ID
         project = projectRepository.save(project);
 
         var newProjectLinks = projectDTO.getProjectLinks();
@@ -54,9 +56,12 @@ public class ProjectService {
             }
         }
 
-        return project;
-    }
+        if (projectDTO.getFolders() != null) {
+            createFolders(projectDTO, project);
+        }
 
+        return projectRepository.save(project);
+    }
 
     @Transactional
     public void deleteProject(int projectId) {
@@ -87,21 +92,48 @@ public class ProjectService {
             project.setImageName(fileName);
         }
 
-        var oldProjectLinks = project.getProjectLinks();
-        if (oldProjectLinks != null) {
-            for(var oldProjectLink : oldProjectLinks) {
-                projectLinkService.delete(oldProjectLink);
+        project.getProjectLinks().clear();
+        project.getFolders().clear();
+
+        // Добавление новых ссылок
+        var newProjectLinks = projectDTO.getProjectLinks();
+        if (newProjectLinks != null) {
+            for (var newLink : newProjectLinks) {
+                projectLinkService.create(newLink, project);
             }
         }
 
-        var newProjectLinks = projectDTO.getProjectLinks();
-        if (newProjectLinks != null) {
-            for(var newProjectLink : newProjectLinks) {
-                projectLinkService.create(newProjectLink, project);
-            }
+        // Добавление новых папок и файлов
+        if (projectDTO.getFolders() != null) {
+            createFolders(projectDTO, project);
         }
 
         return projectRepository.save(project);
+    }
+
+    @Transactional
+    public void createFolders(ProjectDTO projectDTO, Project project){
+        for (var folderDTO : projectDTO.getFolders()) {
+            var folder = new Folder();
+            folder.setTitle(folderDTO.getTitle());
+            folder.setProject(project);
+            List<ProjectFile> files = new ArrayList<>();
+            if (folderDTO.getFiles() != null) {
+                for (var fileDTO : folderDTO.getFiles()) {
+                    var file = new ProjectFile();
+                    file.setDescription(fileDTO.getDescription());
+                    var fileName = fileStorageService.save(fileDTO.getFile());
+                    file.setFileTitle(fileName);
+                    file.setFolder(folder);
+                    files.add(file);
+                }
+            }
+            folder.setFiles(files);
+            if (project.getFolders() == null){
+                project.setFolders(new ArrayList<>());
+            }
+            project.getFolders().add(folder);
+        }
     }
 
     public ProjectDTO getProjectDTOById(int id){
@@ -120,40 +152,12 @@ public class ProjectService {
         return projectDTOs;
     }
 
-//    public ProjectDTO mapToDTO(Project project) {
-//        return modelMapper.map(project, ProjectDTO.class);
-//    }
-
     public ProjectDTO mapToDTO(Project project) {
-        var projectDTO = new ProjectDTO();
-        projectDTO.setId(project.getId());
-        projectDTO.setTitle(project.getTitle());
-        projectDTO.setDescription(project.getDescription());
-
-        List<ProjectLinkDTO> projectLinkDTOs = new ArrayList<>();
-        var links = project.getProjectLinks();
-        if (links != null) {
-            for (var link : links) {
-                var linkDTO = new ProjectLinkDTO();
-                linkDTO.setId(link.getId());
-                linkDTO.setLink(link.getLink());
-                linkDTO.setDescription(link.getDescription());
-                projectLinkDTOs.add(linkDTO);
-            }
-        }
-        projectDTO.setProjectLinks(projectLinkDTOs);
-        projectDTO.setCreatedAt(project.getCreatedAt());
-        projectDTO.setImageName(project.getImageName());
-        return projectDTO;
-    }
-
-    public Project mapDTOToProject(ProjectDTO projectDTO) {
-        return modelMapper.map(projectDTO, Project.class);
+        return modelMapper.map(project, ProjectDTO.class);
     }
 
     public Project getProjectById(int projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Проект не найден"));
     }
-
 }

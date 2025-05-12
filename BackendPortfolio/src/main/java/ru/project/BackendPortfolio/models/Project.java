@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 //@Getter
@@ -31,8 +32,11 @@ public class Project {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "project")
-    private List<ProjectLink> projectLinks;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectLink> projectLinks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Folder> folders = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<ProjectCard> projectCards = new ArrayList<>();
@@ -58,6 +62,17 @@ public class Project {
     }
 
     public Project() {}
+
+    public void addFolder(Folder folder) {
+        folders.add(folder);
+        folder.setProject(this);
+    }
+
+    public void removeFolder(Folder folder) {
+        folders.remove(folder);
+        folder.setProject(null);
+    }
+
 
     public List<ProjectLink> getProjectLinks() {
         return projectLinks;
@@ -113,5 +128,13 @@ public class Project {
 
     public void setOwner(Person owner) {
         this.owner = owner;
+    }
+
+    public List<Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<Folder> folders) {
+        this.folders = folders;
     }
 }

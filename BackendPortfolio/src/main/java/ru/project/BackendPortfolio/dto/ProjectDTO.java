@@ -27,6 +27,9 @@ public class ProjectDTO {
 
     private LocalDateTime createdAt;
 
+    private List<FolderDTO> folders;
+
+
     public List<ProjectLinkDTO> getProjectLinks() {
         return projectLinks;
     }
@@ -81,5 +84,13 @@ public class ProjectDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<FolderDTO> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<FolderDTO> folders) {
+        this.folders = folders;
     }
 }
