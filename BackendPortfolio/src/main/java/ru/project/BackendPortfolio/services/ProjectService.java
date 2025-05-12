@@ -122,7 +122,15 @@ public class ProjectService {
                 for (var fileDTO : folderDTO.getFiles()) {
                     var file = new ProjectFile();
                     file.setDescription(fileDTO.getDescription());
+
+                    if (fileDTO.getFile() == null) {
+                        throw new RuntimeException("ERROR1");
+                    }
                     var fileName = fileStorageService.save(fileDTO.getFile());
+                    if (fileName == null) {
+                        throw new RuntimeException("ERROR2");
+                    }
+
                     file.setFileTitle(fileName);
                     file.setFolder(folder);
                     files.add(file);

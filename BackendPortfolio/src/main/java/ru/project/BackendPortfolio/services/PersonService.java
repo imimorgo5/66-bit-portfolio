@@ -10,6 +10,7 @@ import ru.project.BackendPortfolio.dto.CardFileDTO;
 import ru.project.BackendPortfolio.dto.PersonDTO;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
+import ru.project.BackendPortfolio.models.Link;
 import ru.project.BackendPortfolio.models.Person;
 import ru.project.BackendPortfolio.repositories.PeopleRepository;
 import ru.project.BackendPortfolio.security.PersonDetails;
@@ -65,7 +66,9 @@ public class PersonService {
             person.setUsername(newUsername);
         }
 
-        person.setPhoneNumber(personDTO.getPhoneNumber());
+        if (personDTO.getPhoneNumber() != null) {
+            person.setPhoneNumber(personDTO.getPhoneNumber());
+        }
 
         if (personDTO.getImageFile() != null) {
             var fileName = fileStorageService.save(personDTO.getImageFile());
@@ -79,6 +82,15 @@ public class PersonService {
                 person.setBirthDate(parsedDate);
             } catch (DateTimeParseException e) {
                 throw new RuntimeException("Неверный формат даты рождения. Ожидается формат: дд.ММ.гггг");
+            }
+        }
+
+        if (personDTO.getLinkDTOs() != null) {
+            person.getLinks().clear();
+            for (var linkDTO : personDTO.getLinkDTOs()) {
+                var link = modelMapper.map(linkDTO, Link.class);
+                link.setPerson(person);
+                person.getLinks().add(link);
             }
         }
 

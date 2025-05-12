@@ -38,6 +38,16 @@ public class PersonDTO {
 
     private List<CardDTO> cardDTOs;
 
+    private List<LinkDTO> linkDTOs;
+
+    public List<LinkDTO> getLinkDTOs() {
+        return linkDTOs;
+    }
+
+    public void setLinkDTOs(List<LinkDTO> linkDTOs) {
+        this.linkDTOs = linkDTOs;
+    }
+
     public int getId() {
         return id;
     }

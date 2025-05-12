@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 //import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 //@Getter
@@ -53,6 +54,9 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Card> cards;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Link> links = new ArrayList<>();
+
     public Person(int id, String username, String email, String password, String role, List<Project> projects, List<Card> cards) {
         this.id = id;
         this.username = username;
@@ -64,6 +68,14 @@ public class Person {
     }
 
     public Person() {}
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
 
     public LocalDate getBirthDate() {
         return birthDate;
