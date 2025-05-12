@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../css/registration-page.css';
 import '../css/log-reg.css';
-import logo from '../img/logo.png';
+import logo from '../img/logo.svg';
+import picture from '../img/reg-picture.png';
 import { register } from '../services/authService';
 
 export default function RegistrationPage() {
@@ -79,46 +79,37 @@ export default function RegistrationPage() {
 
   return (
     <div className='page'>
-      <div className='log-reg-title-container'>
-        <Link to="/"><img src={logo} className='logo' alt="Лого сайта" /></Link>
-        <h1 className="log-reg-title">Регистрация</h1>
-      </div>
-      <div className="content log-reg-page">
-        <form onSubmit={handleSubmit} className="log-reg-form registration-form">
-          <div className="input-group">
-            <label className='registration-lable' htmlFor="email">Электронная почта</label>
+      <div className='log-reg-container'>
+        <div className="log-reg-content">
+          <Link to="/"><img src={logo} className='logo' alt="Лого сайта" /></Link>
+          <h1 className="log-reg-title">Регистрация</h1>
+          <form onSubmit={handleSubmit} className="log-reg-form registration-form">
             <div className="input-wrapper">
               <input
                 type="text"
                 id="email"
                 value={email}
                 onChange={handleEmailChange}
-                placeholder="Введите ваш email"
+                placeholder="Введите электронную почту"
                 className={`${emailError ? 'input-error' : ''}`}
               />
               {emailError && (
                   <span className="error-message">{emailError}</span>
               )}
             </div>
-          </div>
-          <div className="input-group">
-            <label className='registration-lable' htmlFor="name">ФИО</label>
             <div className="input-wrapper">
               <input
                 type="text"
                 id="name"
                 value={userName}
                 onChange={handleNameChange}
-                placeholder="Введите свои фамилию, имя и отчество"
+                placeholder="Введите свои ФИО"
                 className={`${nameError ? 'input-error' : ''}`}
               />
               {nameError && (
                   <span className="error-message">{nameError}</span>
               )}
             </div>
-          </div>
-          <div className="input-group">
-            <label className='registration-lable' htmlFor="password">Пароль</label>
             <div className="input-wrapper">
               <input
                 type="password"
@@ -132,9 +123,6 @@ export default function RegistrationPage() {
                   <span className="error-message">{passwordError}</span>
               )}
             </div>
-          </div>
-          <div className="input-group">
-            <label className='registration-lable' htmlFor="passwordAgain">Пароль (ещё раз)</label>
             <div className="input-wrapper">
               <input
                 type="password"
@@ -148,13 +136,16 @@ export default function RegistrationPage() {
                   <span className="error-message">{passwordAgainError}</span>
               )}
             </div>
-          </div>
-          <div className="log-reg-link">
-            <span>У Вас уже есть аккаунт? </span>
-            <Link to="/login">Войти</Link>
-          </div>        
-        </form>
-        <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегистрироваться</button>
+            <div className="log-reg-link">
+              <span>У Вас уже есть аккаунт? </span>
+              <Link to="/login">Войти</Link>
+            </div>        
+          </form>
+          <button type="submit" className="log-reg-button registration-button" onClick={handleSubmit} disabled={!isFormValid}>Зарегистрироваться</button>
+        </div>
+        <div className='log-reg-picture-container'>
+          <img src={picture} alt='Красивая картинка:)'></img>
+        </div>
       </div>
     </div>
   );

@@ -1,130 +1,181 @@
-.user-page {
-    padding: 20px;
+  .user-page {
+    padding: 0;
+    height: calc(100vh - 60px);
   }
   
-  .user-info, .user-info-edit {
-    max-width: 600px;
+  .user-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 65%;
+    height: 50%;
+    padding: 40px 0;
     margin: 0 auto;
-    background-color: #fff;
-    padding: 30px;
+  }
+  
+  .user-info {
+    width: 30%;
+    height: calc(100% - 80px);
+    background: #fff;
+    padding: 40px 30px;
     border-radius: 15px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .user-photo {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(0, 119, 255, 0.3);
   }
   
   .user-info h2 {
     font-size: 32px;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 20px;
-  }
-    
-  .user-info-edit h3 {
-    font-size: 24px;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 20px;
+    color: rgba(0, 119, 255, 1);
   }
   
-  .user-info p {
-    font-size: 18px;
-    margin: 0;
-    padding: 0;
-    margin-bottom: 20px;
-  }
-
-  .description-title {
-    font-weight: 600;
-  }
-
-  .user-discription {
+  .user-data {
+    width: 55%;
+    height: calc(100% - 80px);
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    justify-content: center;
+    gap: 32px;
+  }
+  
+  .user-data-title {
+    margin: 0;
+    font-size: 40px;
+    color: rgba(0, 119, 255, 1);
+    border-bottom: 3px solid rgba(0,119,255,0.3);
+    padding-bottom: 12px;
+  }
+
+  .user-description {
+    text-align: left;
     width: fit-content;
+    height: 152px;
     margin: 0 auto;
+    white-space: nowrap;
   }
   
-  .user-photo {
-    display: block;
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
+  .user-description p {
+    font-size: 20px;
+    color: #000;
+    margin: 20px 0;
   }
 
-  .edit-user-description {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 20px;
+  .user-input-wrapper p {
+    margin: 13px 0;
   }
   
-  .user-photo-edit {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .user-info-edit label {
-    display: block;
-    font-size: 18px;
+  .description-title, .user-input-wrapper .description-title {
     font-weight: 600;
+    color: rgba(0, 119, 255, 1);
   }
   
-  .user-info-edit input {
+  .user-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
     width: 100%;
-    padding: 8px;
+  }
+
+  .user-input-wrapper input, .user-info input {
+    width: 100%;
+    padding: 7px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 119, 255, 0.3);
     border-radius: 10px;
+    transition: border-color 0.3s;
+  }
+
+  .user-info input {
+    font-size: 20px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  .user-input-wrapper input:focus {
+    border-color: rgba(0, 119, 255, 1);
     outline: none;
   }
   
-  .user-info-actions {
-    text-align: center;
-  }
-  
-  .user-info-actions button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 0 10px;
-    border: none;
-    border-radius: 10px;
+  .user-data-save-button, .user-data-cancel-button, .edit-info-button, .user-photo-change {
+    padding: 11.5px 30px;
+    font-size: 20px;
+    margin: 0 12px;
+    border-radius: 15px;
     cursor: pointer;
-  }
-  
-  .save-button {
-    background-color: #5cb85c;
-    color: #fff;
-    transition: background-color 0.2s;
-  }
-  
-  .cancel-button {
-    background-color: #f0ad4e;
-    color: #fff;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   }
 
-  .save-button:hover {
-    background-color: #26ac26;
-  }
-
-  .cancel-button:hover {
-    background-color: #f09618;
+  .user-photo-change {
+    padding: 8px 20px;
+    font-size: 20px;
   }
   
-  .edit-info-button, .user-photo-edit button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #155DA4;
+  .user-data-save-button:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .user-data-save-button:not(:disabled), .user-photo-change {
+    background-color: transparent;
+    color: rgba(0, 119, 255, 1);
+    border: 2px solid rgba(0,119,255,1);
+  }
+  
+  .user-data-save-button:hover, .user-photo-change:hover {
+    background-color: rgba(0, 119, 255, 1);
     color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-
-  .edit-info-button:hover, .user-photo-edit button:hover {
-    background-color: #0f4a7e;
   }
   
+  .user-data-cancel-button:hover {
+    background-color: rgba(172, 29, 29, 1);
+    color: #fff;    
+  }
+  
+  .user-data-cancel-button {
+    background-color: transparent;
+    color: rgba(172, 29, 29, 1);
+    border: 2px solid rgba(172, 29, 29, 1);
+  }
+
+  .user-error-message {
+    position: absolute;
+    color: rgba(172, 29, 29, 1);
+    font-size: 16px;
+    text-align: left;
+    margin-top: -15px;
+    margin-left: 110px;
+  }
+
+  .user-input-wrapper .input-error {
+    background-color: rgba(172, 29, 29, 0.3);
+    border: 1px solid rgba(172, 29, 29, 1);
+  }
+  
+  .user-photo-edit button,
+  .edit-info-button {
+    background-color: transparent;
+    color: rgba(0,119,255,1);
+    border: 2px solid rgba(0,119,255,1);
+  }
+  
+  .user-photo-edit button:hover,
+  .edit-info-button:hover {
+    color: #fff;
+    background: rgba(0,119,255,1);
+  }

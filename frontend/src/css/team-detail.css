@@ -1,0 +1,75 @@
+.team-detail-page {
+    min-height: 100vh;
+    background: #f5f7fa;
+  }
+  .team-detail-container {
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .team-back {
+    display: inline-block;
+    margin-top: 16px;
+    color: #0077ff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .team-back:hover {
+    color: #005acc;
+  }
+  .team-title {
+    font-size: 28px;
+    color: #0077ff;
+    margin: 16px 0;
+  }
+  .team-members-section {
+    margin-top: 24px;
+  }
+  .team-members-heading {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  .team-members-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .team-member-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  .member-name {
+    font-size: 16px;
+    color: #000;
+  }
+  .member-email {
+    font-size: 14px;
+    color: #555;
+  }
+  .team-no-members {
+    color: #777;
+    font-size: 14px;
+  }
+  .team-actions {
+    margin: 20px 0;
+    text-align: right;
+  }
+  .team-delete-btn {
+    padding: 8px 16px;
+    background: #ac1d1d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .team-delete-btn:hover {
+    background: #8a1919;
+  }

@@ -6,7 +6,7 @@ body {
   font-optical-sizing: auto;
   text-align: center;
   -ms-overflow-style: none;
-  background-color: rgba(212, 230, 244, 1);
+  background-color: rgba(246, 246, 246, 1);
 }
 
 img {
@@ -37,7 +37,7 @@ code {
 .page-title {
   font-size: 40px;
   font-weight: 600;
-  color: rgba(21, 93, 164, 1);
+  color: rgba(0, 119, 255, 1);
   margin: 0 auto 20px;
   padding: 0;
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import userIcon from '../img/user-icon.png';
+import NotificationComponent from './notificationComponent.js';
+import userIcon from '../img/user-icon.svg';
 import '../css/header.css';
 import { AuthContext } from '../context/AuthContext.js';
 import { logout } from '../services/authService';
-import logo from '../img/logo.png';
-import { getPersonById } from '../services/PersonService';
+import logo from '../img/logo.svg';
+import notificationsIcon from '../img/notifications-icon.svg';
 
 export default class Header extends React.Component {
   static contextType = AuthContext;
@@ -14,23 +15,14 @@ export default class Header extends React.Component {
     super(props);
     this.state = {
       isDropdownOpen: false,
-      person: null,
+      isNotificationsOpen: false
     };
     this.dropdownRef = React.createRef();
+    this.notificationsRef = React.createRef();
   }
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
-    const { user } = this.context;
-    if (user && user.id) {
-      getPersonById(user.id)
-        .then((personData) => {
-          this.setState({ person: personData });
-        })
-        .catch((err) => {
-          console.error('Ошибка получения данных пользователя:', err);
-        });
-    }
   }
 
   componentWillUnmount() {
@@ -43,16 +35,33 @@ export default class Header extends React.Component {
       this.dropdownRef.current &&
       !this.dropdownRef.current.contains(event.target)
     ) {
-      this.setState({ isDropdownOpen: false });
+      this.closeDropdown();
+    }
+    if (
+      this.state.isNotificationsOpen &&
+      this.notificationsRef.current &&
+      !this.notificationsRef.current.contains(event.target)
+    ) {
+      this.closeNotifications();
     }
   };
 
   toggleDropdown = () => {
+    this.closeNotifications();
     this.setState(prevState => ({ isDropdownOpen: !prevState.isDropdownOpen }));
+  };
+
+  toggleNotifications = () => {
+    this.closeDropdown();
+    this.setState(prevState => ({ isNotificationsOpen: !prevState.isNotificationsOpen }));
   };
 
   closeDropdown = () => {
     this.setState({ isDropdownOpen: false });
+  };
+
+  closeNotifications = () => {
+    this.setState({ isNotificationsOpen: false });
   };
 
   handleLogout = () => {
@@ -71,10 +80,6 @@ export default class Header extends React.Component {
 
   render() {
     const { user } = this.context;
-    const { person } = this.state;
-    const userPhoto = person && person.imageName 
-      ? `http://localhost:8080/uploads/${person.imageName}` 
-      : userIcon;
 
     return (
       <nav className="header">
@@ -86,7 +91,6 @@ export default class Header extends React.Component {
             <li>
               <NavLink
                 to="/"
-                end
                 className={({ isActive }) => "header-link" + (isActive ? " active" : "")}
               >
                 Проекты
@@ -116,61 +120,62 @@ export default class Header extends React.Component {
                 Достижения
               </NavLink>
             </li>
-            {user && (
-              <li>
-                <NavLink
-                  to="/notification"
-                  className={({ isActive }) => "header-link" + (isActive ? " active" : "")}
-                >
-                  Уведомления
-                </NavLink>
-              </li>
-            )}
           </ul>
         </div>
-        <div className="header-user-dropdown" ref={this.dropdownRef}>
-          <div onClick={this.toggleDropdown} className="header-user-icon">
-            <img src={userPhoto} alt="Аватарка пользователя" />
-          </div>
-          {this.state.isDropdownOpen && (
-            <div className="dropdown-menu">
-              {user ? (
-                <>
-                  <NavLink
-                    to="/user"
-                    onClick={this.closeDropdown}
-                    className="dropdown-item authorized"
-                  >
-                    Личный кабинет
-                  </NavLink>
-                  <div
-                    onClick={this.handleLogout}
-                    className="dropdown-item authorized"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Выйти
-                  </div>
-                </>
-              ) : (
-                <>
-                  <NavLink
-                    to="/login"
-                    onClick={this.closeDropdown}
-                    className="dropdown-item"
-                  >
-                    Войти
-                  </NavLink>
-                  <NavLink
-                    to="/register"
-                    onClick={this.closeDropdown}
-                    className="dropdown-item"
-                  >
-                    Зарегистрироваться
-                  </NavLink>
-                </>
-              )}
+        <div className='user-controllers'>
+          {user && (
+            <div className="header-user-notifications" ref={this.notificationsRef}>
+                <div onClick={this.toggleNotifications} className="header-notifications-icon">
+                  <img src={notificationsIcon} alt="Иконка уведомлений" />
+                </div>
+                {this.state.isNotificationsOpen && (
+                  <NotificationComponent notifications={user.notifications} />
+                )}
             </div>
           )}
+          <div className="header-user-dropdown" ref={this.dropdownRef}>
+            <div onClick={this.toggleDropdown} className="header-user-icon">
+              <img src={userIcon} alt="Аватарка пользователя" />
+            </div>
+            {this.state.isDropdownOpen && (
+              <div className="dropdown-menu">
+                {user ? (
+                  <>
+                    <NavLink
+                      to="/user"
+                      onClick={this.closeDropdown}
+                      className="dropdown-item authorized"
+                    >
+                      Личный кабинет
+                    </NavLink>
+                    <div
+                      onClick={this.handleLogout}
+                      className="dropdown-item authorized"
+                    >
+                      Выйти
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <NavLink
+                      to="/login"
+                      onClick={this.closeDropdown}
+                      className="dropdown-item"
+                    >
+                      Войти
+                    </NavLink>
+                    <NavLink
+                      to="/register"
+                      onClick={this.closeDropdown}
+                      className="dropdown-item"
+                    >
+                      Зарегистрироваться
+                    </NavLink>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </nav>
     );

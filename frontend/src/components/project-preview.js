@@ -6,7 +6,7 @@ export default function ProjectPreview({ title, image }) {
   return (
     <div className='item-preview'>
       <div className='preview-title-container'>
-        <h3>{title || 'Новый проект/карточка'}</h3>
+        <h3>{title}</h3>
       </div>
       <div className='preview-container'>
         <img 

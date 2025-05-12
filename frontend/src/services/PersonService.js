@@ -31,4 +31,24 @@ export const getPersonById = (id) => {
       })
       .then((data) => data.updatedPerson);
   };
+
+  export const getAllPeople = async () => {
+    try {
+      const response = await fetch('/person/profile/all', {
+        method: 'GET',
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Ошибка при получении пользователей');
+      }
+  
+      const data = await response.json();
+      return data.persons;
+    } catch (error) {
+      console.error('Ошибка в getAllPeople:', error);
+      throw error;
+    }
+  };  
   

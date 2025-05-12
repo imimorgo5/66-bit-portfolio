@@ -1,114 +1,308 @@
+.project-detail-page {
+  min-height: 100vh;
+}
+
 .project-detail-content {
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    word-break: break-all;
-  }
-  
-  .project-detail-content h2 {
-    font-size: 32px;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 20px;
-  }
+  padding: 15px;
+}
 
-  .project-detail-content h3 {
-    font-size: 24px;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 10px;
-  }
+.project-detail-container {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
 
-  .project-detail-content p {
-    font-size: 18px;
-    padding: 0;
-    margin: 0;
-  }
+.back-to-project-container {
+  width: 16%;
+  height: 100%;
+}
 
-  .project-detail-content .project-description {
-    margin-bottom: 20px;
-  }
-  
-  .project-detail-actions {
-    max-width: 800px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .project-detail-actions button {
-    padding: 10px 20px;
-    font-size: 24px;
-    cursor: pointer;
-    border: none;
-    border-radius: 15px;
-  }
-  
-  .edit-button {
-    background-color: #155DA4;
-    color: #fff;
-  }
-  
-  .delete-button {
-    background-color: #d9534f;
-    color: #fff;
-  }
-  
-  .save-button {
-    background-color: #5cb85c;
-    color: #fff;
-  }
-  
-  .cancel-button {
-    background-color: #f0ad4e;
-    color: #fff;
-  }
+.back-to-project-container a {
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-align: left;
+  color: rgba(0, 119, 255, 1);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
 
-  .edit-title, .edit-description {
-    width: 100%;
-    font-size: 18px;
-    padding: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-  }
+.back-to-project-container a span {
+  font-size: 24px;
+}
 
-  .edit-description {
-    min-height: 100px;
-    resize: vertical;
-  }
+.back-to-project-container a:hover, .folder-title:hover, .project-link:hover {
+  text-decoration-color: rgba(0, 119, 255, 0.5);
+  color: rgba(0, 119, 255, 0.5);
+}
 
-  .project-preview-img {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    margin-bottom: 10px;
-    border-radius: 15px;
-  }
-  
-  .edit-photo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .change-project-photo-button {
-    padding: 8px 12px;
-    font-size: 18px;
-    background-color: #155DA4;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .change-project-photo-button:hover {
-    background-color: #0f4a7e;
-  }
-  
+.project-description-container, .edit-project-description-container {
+  background-color: #fff;
+  border-radius: 15px;
+  height: 795px;
+  width: calc(60% - 130px);
+  line-height: 30px;
+  padding: 35px 50px;
+  text-align: justify;
+}
+
+.edit-project-description-container {
+  text-align: left;
+  width: calc(60% - 115px);
+}
+
+.project-description-container {
+  text-align: left;
+  width: calc(60% - 130px);
+}
+
+.project-description-container h2 {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px;
+  font-size: 32px;
+  color: rgba(0, 119, 255, 1);
+  font-weight: 600;
+}
+
+.project-description-container label, .edit-project-description-container label {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.project-description-container p {
+  margin: 0;
+  padding: 0;
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+.project-appendices-container, .edit-project-appendices-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 24%;
+}
+
+.edit-project-appendices-container {
+  width: 40%;
+}
+
+.project-image-container, .project-link-container, .project-files-container, 
+.edit-project-image-container, .edit-project-link-container, .edit-project-files-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  width: calc(100% - 60px);
+}
+
+.project-image-container, .edit-project-image-container{
+  height: 265px;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-link-container, .edit-project-link-container {
+  display: flex;
+  justify-content: center;
+  height: 40px;
+}
+
+.project-files-container, .edit-project-files-container {
+  height: 245px;
+}
+
+.project-preview-img, .edit-project-preview-img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+}
+
+.edit-project-preview-img {
+  width: 50%;
+  max-height: 80%;
+}
+
+.project-detail-actions, .edit-project-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 10px 25px;
+  height: 70px;
+  width: calc(100% - 50px);
+}
+
+.project-appendices-container h3, .edit-project-appendices-container h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+}
+
+.project-appendices-container ul, .edit-project-appendices-container ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  list-style: none;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: calc(100% - 17px);
+  overflow-y: auto;
+}
+
+.edit-project-appendices-container ul {
+  width: 100%;
+}
+
+.project-folder-item, .edit-project-folder-item, .project-link-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  width: 100%;
+}
+
+.project-link-item {  
+  justify-content: center;
+}
+
+.folder-title, .project-link {
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+  cursor: pointer;
+}
+
+.project-link {
+  color: rgba(0, 119, 255, 1);
+}
+
+.project-empty-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.project-detail-actions button, .edit-project-detail-actions button {
+  width: 180px;
+  padding: 11.5px 0;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.edit-project-detail-actions button {
+  width: 300px;
+}
+
+.project-edit-button, .project-save-button {
+  background-color: transparent;
+  color: rgba(0, 119, 255, 1);
+  border: 2px solid rgba(0, 119, 255, 1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.project-delete-button, .project-cancel-button {
+  background-color: transparent;
+  color: rgba(172, 29, 29, 1);
+  border: 2px solid rgba(172, 29, 29, 1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.project-edit-button:hover, .project-save-button:hover {
+  background-color: rgba(0, 119, 255, 1);
+  color: #fff;
+}
+
+.project-delete-button:hover, .project-cancel-button:hover {
+  background-color: rgba(172, 29, 29, 1);
+  color: #fff;
+}
+
+.remove-folder-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: transparent;
+  color: rgba(172, 29, 29, 1);
+  border: none;
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.edit-project-title, .edit-project-description, .project-link-input, .folder-name-input {
+  width: calc(100% - 18px);
+  font-size: 20px;
+  padding: 8px;
+  border: 1px solid rgba(0, 119, 255, 0.3);
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.edit-project-title {
+  margin-bottom: 15px;
+}
+
+.edit-project-description {
+  font-family: 'Inter', serif;
+  min-height: 675px;
+  max-height: 675px;
+  min-width: calc(100% - 18px);
+  max-width: calc(100% - 18px);
+  margin-top: 15px;
+}
+
+.edit-project-title:focus, .edit-project-description:focus, .project-link-input:focus, .folder-name-input:focus {
+  border-color: rgba(0, 119, 255, 1);
+  outline: none;
+}
+
+.change-project-photo-button, .add-folder-button {
+  padding: 5px 30px;
+  font-size: 20px;
+  min-width: fit-content;
+  background-color: transparent;
+  color: rgba(0, 119, 255, 1);
+  border: 2px solid rgba(0, 119, 255, 1);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.change-project-photo-button, .add-folder-button {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.change-project-photo-button:hover, .add-folder-button:hover {
+  background-color: rgba(0, 119, 255, 1);
+  color: #fff;
+}
