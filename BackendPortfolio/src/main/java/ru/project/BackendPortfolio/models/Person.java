@@ -36,6 +36,12 @@ public class Person {
     @Column(name = "password")
     private String password;
 
+    @Column(unique = true)
+    private String shareToken;
+
+    @Column(nullable = false)
+    private boolean isPublic = false;
+
     @Column(name = "role")
     private String role;
 
@@ -68,6 +74,22 @@ public class Person {
     }
 
     public Person() {}
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
 
     public List<Link> getLinks() {
         return links;

@@ -13,4 +13,6 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
     List<Card> findByOwner(Person owner);
 
     Optional<Card> findById(int id);
+
+    Optional<Card> findByShareToken(String token);
 }

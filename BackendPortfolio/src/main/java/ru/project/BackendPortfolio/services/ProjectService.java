@@ -13,6 +13,7 @@ import ru.project.BackendPortfolio.repositories.ProjectRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
@@ -41,6 +42,11 @@ public class ProjectService {
         project.setTitle(projectDTO.getTitle());
         project.setDescription(projectDTO.getDescription());
         project.setOwner(person);
+
+        // Токен
+        var token = UUID.randomUUID().toString();
+        project.setShareToken(token);
+        project.setPublic(true);
 
         if (projectDTO.getImageFile() != null) {
             var fileName = fileStorageService.save(projectDTO.getImageFile());

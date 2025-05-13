@@ -26,6 +26,8 @@ public class PersonDTO {
 
     private String password;
 
+    private String shareToken;
+
     private String imageName;
 
     private MultipartFile imageFile;
@@ -39,6 +41,14 @@ public class PersonDTO {
     private List<CardDTO> cardDTOs;
 
     private List<LinkDTO> linkDTOs;
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
 
     public List<LinkDTO> getLinkDTOs() {
         return linkDTOs;

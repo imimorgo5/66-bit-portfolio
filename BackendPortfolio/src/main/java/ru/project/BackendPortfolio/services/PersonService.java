@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.project.BackendPortfolio.dto.CardDTO;
-import ru.project.BackendPortfolio.dto.CardFileDTO;
-import ru.project.BackendPortfolio.dto.PersonDTO;
-import ru.project.BackendPortfolio.dto.ProjectDTO;
+import ru.project.BackendPortfolio.dto.*;
+import ru.project.BackendPortfolio.dto.to_share.PublicPersonDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
 import ru.project.BackendPortfolio.models.Link;
 import ru.project.BackendPortfolio.models.Person;
@@ -111,6 +109,17 @@ public class PersonService {
         return personDTOs;
     }
 
+    public PublicPersonDTO mapToPublicDTO(Person person) {
+        var publicPersonDTO = modelMapper.map(person, PublicPersonDTO.class);
+        List<LinkDTO> linkDTOs = new ArrayList<>();
+        for(var link : person.getLinks()) {
+            var linkDTO = modelMapper.map(link, LinkDTO.class);
+            linkDTOs.add(linkDTO);
+        }
+        publicPersonDTO.setLinkDTOs(linkDTOs);
+        return publicPersonDTO;
+    }
+
     public PersonDTO mapToDTO(Person person) {
         var personDTO = modelMapper.map(person, PersonDTO.class);
         personDTO.setPassword("No");
@@ -135,6 +144,13 @@ public class PersonService {
             cardDTOs.add(cardDTO);
         }
         personDTO.setCardDTOs(cardDTOs);
+
+        List<LinkDTO> linkDTOs = new ArrayList<>();
+        for(var link : person.getLinks()) {
+            var linkDTO = modelMapper.map(link, LinkDTO.class);
+            linkDTOs.add(linkDTO);
+        }
+        personDTO.setLinkDTOs(linkDTOs);
 
         return personDTO;
     }

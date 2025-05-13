@@ -14,6 +14,8 @@ public class CardDTO {
 
     private String description;
 
+    private String shareToken;
+
     // Проекты
     private List<ProjectDTO> projects;
 
@@ -24,6 +26,15 @@ public class CardDTO {
     private LocalDateTime createdAt;
 
     // Геттеры и сеттеры проектов
+
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
 
     public List<ProjectDTO> getProjects() {
         return projects;

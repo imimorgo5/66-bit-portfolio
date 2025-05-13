@@ -19,6 +19,8 @@ public class ProjectDTO {
 
     private String description;
 
+    private String shareToken;
+
     private List<ProjectLinkDTO> projectLinks;
 
     private MultipartFile imageFile;
@@ -29,6 +31,14 @@ public class ProjectDTO {
 
     private List<FolderDTO> folders;
 
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
 
     public List<ProjectLinkDTO> getProjectLinks() {
         return projectLinks;

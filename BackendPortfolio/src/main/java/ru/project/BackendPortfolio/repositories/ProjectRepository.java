@@ -13,7 +13,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     List<Project> findByOwner(Person person);
 
-    List<Project> findByTitle(String itemName);
-
     Optional<Project> findById(int id);
+
+    Optional<Project> findByShareToken(String token);
 }

@@ -24,6 +24,12 @@ public class Card {
     @Column(name = "description")
     private String description;
 
+    @Column(unique = true)
+    private String shareToken;
+
+    @Column(nullable = false)
+    private boolean isPublic = false;
+
     @OneToMany(mappedBy = "card")
     private List<CardFile> cardFiles;
 
@@ -55,6 +61,22 @@ public class Card {
         this.description = description;
         this.owner = owner;
         this.createdAt = createdAt;
+    }
+
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public List<ProjectCard> getProjectCards() {

@@ -8,6 +8,8 @@ import ru.project.BackendPortfolio.exceptions.RegistrationException;
 import ru.project.BackendPortfolio.models.Person;
 import ru.project.BackendPortfolio.repositories.PeopleRepository;
 
+import java.util.UUID;
+
 @Service
 public class RegistrationService {
 
@@ -29,6 +31,12 @@ public class RegistrationService {
         var encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);
         person.setRole("ROLE_USER");
+
+        // Токен
+        var token = UUID.randomUUID().toString();
+        person.setShareToken(token);
+        person.setPublic(true);
+
         peopleRepository.save(person);
     }
 }

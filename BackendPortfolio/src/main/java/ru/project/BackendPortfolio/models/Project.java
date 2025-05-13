@@ -2,21 +2,12 @@ package ru.project.BackendPortfolio.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-//import lombok.AllArgsConstructor;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Entity(name = "project")
 public class Project {
 
@@ -32,14 +23,17 @@ public class Project {
     @Column(name = "description")
     private String description;
 
+    @Column(unique = true)
+    private String shareToken;
+
+    @Column(nullable = false)
+    private boolean isPublic = false;
+
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectLink> projectLinks = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Folder> folders = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ProjectCard> projectCards = new ArrayList<>();
 
     @Column(name = "image_name")
     private String imageName;
@@ -73,6 +67,21 @@ public class Project {
         folder.setProject(null);
     }
 
+    public String getShareToken() {
+        return shareToken;
+    }
+
+    public void setShareToken(String shareToken) {
+        this.shareToken = shareToken;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
 
     public List<ProjectLink> getProjectLinks() {
         return projectLinks;

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.CardDTO;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
+import ru.project.BackendPortfolio.dto.to_share.PublicCardDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
 import ru.project.BackendPortfolio.models.Card;
 import ru.project.BackendPortfolio.models.Project;
@@ -15,6 +16,7 @@ import ru.project.BackendPortfolio.repositories.ProjectCardRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CardService {
@@ -44,6 +46,12 @@ public class CardService {
     public Card create(CardDTO cardDTO){
         var person = personService.getActivePerson();
         var card = modelMapper.map(cardDTO, Card.class);
+
+        // Добавляем токен
+        var token = UUID.randomUUID().toString();
+        card.setShareToken(token);
+        card.setPublic(true);
+
         card.setOwner(person);
         card = cardRepository.save(card);
 
@@ -225,6 +233,27 @@ public class CardService {
         cardDTO.setProjects(projectDTOs);
 
         return cardDTO;
+    }
+
+    public PublicCardDTO mapToPublicDTO(Card card){
+        var publicCardDTO = modelMapper.map(card, PublicCardDTO.class);
+
+        var projectCards = card.getProjectCards();
+        List<ProjectDTO> projectDTOs = new ArrayList<>();
+        for(var projectCard : projectCards) {
+            var project = projectCard.getProject();
+            var projectDTO = modelMapper.map(project, ProjectDTO.class);
+            projectDTOs.add(projectDTO);
+        }
+
+        publicCardDTO.setProjects(projectDTOs);
+
+        var owner = card.getOwner();
+        var publicPersonDTO = personService.mapToPublicDTO(owner);
+        publicCardDTO.setPublicPerson(publicPersonDTO);
+
+
+        return publicCardDTO;
     }
 
     public Card getCardById(int id){
