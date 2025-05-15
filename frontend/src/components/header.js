@@ -4,7 +4,7 @@ import NotificationComponent from './notificationComponent.js';
 import userIcon from '../img/user-icon.svg';
 import '../css/header.css';
 import { AuthContext } from '../context/AuthContext.js';
-import { logout } from '../services/authService';
+import { logout } from '../services/auth-service.js';
 import logo from '../img/logo.svg';
 import notificationsIcon from '../img/notifications-icon.svg';
 

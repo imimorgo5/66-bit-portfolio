@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../css/log-reg.css';
 import logo from '../img/logo.svg';
 import picture from '../img/reg-picture.png';
-import { register } from '../services/authService';
+import { register } from '../services/auth-service';
 
 export default function RegistrationPage() {
   const [email, setEmail] = useState('');
@@ -86,10 +86,11 @@ export default function RegistrationPage() {
           <form onSubmit={handleSubmit} className="log-reg-form registration-form">
             <div className="input-wrapper">
               <input
-                type="text"
+                type="email"
                 id="email"
                 value={email}
                 onChange={handleEmailChange}
+                maxLength={50}
                 placeholder="Введите электронную почту"
                 className={`${emailError ? 'input-error' : ''}`}
               />
@@ -103,6 +104,7 @@ export default function RegistrationPage() {
                 id="name"
                 value={userName}
                 onChange={handleNameChange}
+                maxLength={75}
                 placeholder="Введите свои ФИО"
                 className={`${nameError ? 'input-error' : ''}`}
               />
@@ -116,6 +118,7 @@ export default function RegistrationPage() {
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
+                maxLength={25}
                 placeholder="Придумайте пароль (не менее 8 символов)"
                 className={`${passwordError ? 'input-error' : ''}`}
               />
@@ -129,6 +132,7 @@ export default function RegistrationPage() {
                 id="passwordAgain"
                 value={passwordAgain}
                 onChange={handlePasswordAgainChange}
+                maxLength={25}
                 placeholder="Повторите пароль"
                 className={`${passwordAgainError ? 'input-error' : ''}`}
               />

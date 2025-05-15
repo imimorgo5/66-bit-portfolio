@@ -4,7 +4,7 @@ import '../css/log-reg.css';
 import logo from '../img/logo.svg';
 import picture from '../img/login-picture.png';
 import { AuthContext } from '../context/AuthContext';
-import { login } from '../services/authService';
+import { login } from '../services/auth-service';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -72,6 +72,7 @@ export default function LoginPage() {
                 id="email"
                 value={email}
                 onChange={handleEmailChange}
+                maxLength={50}
                 placeholder="Введите электронную почту"
                 className={`${emailError ? 'input-error' : ''}`}
               />
@@ -85,6 +86,7 @@ export default function LoginPage() {
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
+                maxLength={25}
                 placeholder="Введите пароль"
                 className={`${passwordError ? 'input-error' : ''}`}
               />

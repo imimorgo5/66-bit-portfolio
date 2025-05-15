@@ -8,19 +8,20 @@ import '../css/preview-pages.css';
 import '../css/projects-page.css';
 import EmptyArrow from '../img/empty-arrow.svg';
 import EmptyPicture from '../img/empty-items-picture.png';
-import { getProjects, createProject } from '../services/projectService';
+import { getProjects, createProject } from '../services/project-service';
 
 export default function ProjectsPage() {
-  const { user } = useContext(AuthContext);
+  const { user, isLoading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [sortMode, setSortMode] = useState('date');
 
   useEffect(() => {
     getProjects()
       .then(fetched => setProjects(fetched))
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleAddProject = () => {
@@ -43,7 +44,7 @@ export default function ProjectsPage() {
       (proj.description === null || proj.description === '') &&
       (proj.imageName == null || proj.imageName === '') &&
       (proj.projectLinks === null || (Array.isArray(proj.projectLinks) && proj.projectLinks.length === 0)) &&
-      typeof proj.title === 'string' && proj.title.trim() !== ''
+      typeof proj.title === 'string' && proj.title === 'Новый проект'
     );
   };
 
@@ -51,6 +52,8 @@ export default function ProjectsPage() {
     if (sortMode === 'name') return a.title.localeCompare(b.title);
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
+
+  if (loading || authLoading) return <div className="loading-container">Загрузка...</div>;
 
   return (
     <div className="page">

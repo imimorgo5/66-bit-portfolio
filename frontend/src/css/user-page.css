@@ -6,123 +6,250 @@
   .user-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 65%;
-    height: 50%;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    height: 43%;
     padding: 40px 0;
     margin: 0 auto;
   }
   
-  .user-info {
-    width: 30%;
-    height: calc(100% - 80px);
+  .user-info, .edit-user-info {
+    width: calc(22.5% - 60px);
+    height: calc(100% - 70px);
     background: #fff;
-    padding: 40px 30px;
+    padding: 35px 30px;
     border-radius: 15px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
   }
 
-  .user-photo {
-    width: 200px;
-    height: 200px;
+  .user-photo, .edit-user-photo {
+    width: 250px;
+    height: 250px;
     margin: 0 auto;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(0, 119, 255, 0.3);
+    border: 2px solid rgba(0, 0, 0, 0.5);
   }
   
   .user-info h2 {
-    font-size: 32px;
+    margin: auto;
+    padding: 0;
+    font-size: 24px;
     color: rgba(0, 119, 255, 1);
   }
   
-  .user-data {
-    width: 55%;
-    height: calc(100% - 80px);
+  .user-data, .edit-user-data {
+    width: calc(34% - 150px);
+    height: calc(100% - 70px);
     background: #fff;
-    padding: 40px;
+    padding: 35px 75px;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 32px;
   }
   
-  .user-data-title {
+  .user-data-title, .user-links-title {
     margin: 0;
-    font-size: 40px;
-    color: rgba(0, 119, 255, 1);
-    border-bottom: 3px solid rgba(0,119,255,0.3);
-    padding-bottom: 12px;
+    font-size: 24px;
   }
 
   .user-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     text-align: left;
-    width: fit-content;
+    width: 100%;
     height: 152px;
-    margin: 0 auto;
+    margin: auto;
     white-space: nowrap;
   }
   
   .user-description p {
+    display: flex;
+    height: 35px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
     font-size: 20px;
-    color: #000;
-    margin: 20px 0;
+    color: rgba(0, 119, 255, 1);
   }
 
   .user-input-wrapper p {
-    margin: 13px 0;
+    min-width: 250px;
   }
   
   .description-title, .user-input-wrapper .description-title {
-    font-weight: 600;
+    font-weight: 500;
+    color: black;
+  }
+
+  .user-links-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+  }
+
+  .user-links-item::before {
+    content: '•';
+    font-size: 20px;
     color: rgba(0, 119, 255, 1);
+  }
+
+  .user-links, .edit-user-links {
+    width: calc(56.5% - 10px);
+    height: calc(35% - 70px);
+    margin: 0 auto;
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-links-list, .edit-user-links-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 0;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .edit-user-links-list {
+    width: 100%;
+  }
+
+  .edit-user-link-item {
+    width: 100%;
+  }
+
+  .user-link-title, .edit-user-link-title {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(0, 119, 255, 1);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 0.2s, text-decoration-color 0.2s;
+    cursor: pointer;
+  }
+
+  .user-link-title:hover, .edit-user-link-title:hover {
+    text-decoration-color: rgba(0, 119, 255, 0.5);
+    color: rgba(0, 119, 255, 0.5);
+  }
+
+  .edit-user-link-title {
+    min-width: 340px;
+    font-size: 16px;
+  }
+
+  .edit-user-link-item-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .remove-user-link-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: transparent;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  .remove-user-link-button:hover {
+    color: red;
+  }
+
+  .user-empty-list {
+    margin: auto;
+    font-size: 20px;
+  }
+
+  .user-link-input-group {
+    display: flex;
+    gap: 10px;
+    width: 60%;
+  }
+
+  .edit-user-info {
+    justify-content: space-between;
+  }
+
+  .edit-user-photo {
+    width: 210px;
+    height: 210px;
   }
   
   .user-input-wrapper {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 15px;
     width: 100%;
   }
 
-  .user-input-wrapper input, .user-info input {
+  .user-input-wrapper input, .edit-user-info input, .link-input, .user-link-description-input, .user-link-input {
     width: 100%;
-    padding: 7px;
+    padding: 10px;
     font-size: 16px;
     border: 1px solid rgba(0, 119, 255, 0.3);
     border-radius: 10px;
     transition: border-color 0.3s;
   }
 
-  .user-info input {
+  .user-link-description-input {
+    width: 340px;
+    padding: 5px;
+  }
+
+  .edit-user-info input {
     font-size: 20px;
     width: 90%;
     text-align: center;
   }
   
-  .user-input-wrapper input:focus {
+  .user-input-wrapper input:focus, .user-link-description-input:focus, .edit-user-info input:focus, .user-link-input:focus {
     border-color: rgba(0, 119, 255, 1);
     outline: none;
   }
   
-  .user-data-save-button, .user-data-cancel-button, .edit-info-button, .user-photo-change {
+  .user-data-save-button, .user-data-cancel-button, .edit-info-button, .user-photo-change, .add-user-link-button {
     padding: 11.5px 30px;
     font-size: 20px;
+    font-weight: 600;
     margin: 0 12px;
     border-radius: 15px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   }
 
-  .user-photo-change {
-    padding: 8px 20px;
-    font-size: 20px;
+  .user-photo-change, .add-user-link-button {
+    padding: 5px 20px;
   }
   
   .user-data-save-button:disabled {
@@ -131,13 +258,13 @@
     cursor: not-allowed;
   }
   
-  .user-data-save-button:not(:disabled), .user-photo-change {
+  .user-data-save-button:not(:disabled), .user-photo-change, .add-user-link-button {
     background-color: transparent;
     color: rgba(0, 119, 255, 1);
     border: 2px solid rgba(0,119,255,1);
   }
   
-  .user-data-save-button:hover, .user-photo-change:hover {
+  .user-data-save-button:hover, .user-photo-change:hover, .add-user-link-button:hover {
     background-color: rgba(0, 119, 255, 1);
     color: #fff;
   }
@@ -173,9 +300,17 @@
     color: rgba(0,119,255,1);
     border: 2px solid rgba(0,119,255,1);
   }
+
+  .edit-info-button {
+    margin-top: 40px;
+  }
   
   .user-photo-edit button:hover,
   .edit-info-button:hover {
     color: #fff;
     background: rgba(0,119,255,1);
+  }
+
+  .user-info-actions {
+    margin-top: 40px;
   }

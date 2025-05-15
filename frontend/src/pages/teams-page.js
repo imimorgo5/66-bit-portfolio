@@ -3,146 +3,105 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/header';
 import '../css/teams-page.css';
 import { AuthContext } from '../context/AuthContext';
-import { getAllPersonTeams, createTeam } from '../services/teamService';
-import { getAllPeople } from '../services/PersonService';
+import { getAllPersonTeams, createTeam } from '../services/team-service';
+import userIcon from '../img/user-icon.svg';
+import EmptyArrow from '../img/empty-arrow.svg';
+import EmptyPicture from '../img/empty-items-picture.png';
 
 export default function TeamsPage() {
-  const { user } = useContext(AuthContext);
+  const { user, isLoading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
-
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [allPeople, setAllPeople] = useState([]);
-  const [title, setTitle] = useState('');
-  const [selectedEmails, setSelectedEmails] = useState([]);
-
   useEffect(() => {
     getAllPersonTeams()
-        .then(list => setTeams(list))
-        .catch(console.error)
-        .finally(() => setLoading(false));
-    }, []);
+      .then(teams => setTeams(teams))
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const openForm = () => {
+  const isNew = (team) => team.persons.length === 1 && team.title === 'Новая команда';
+
+  const handleCreateDefaultTeam = () => {
     if (!user) return navigate('/register');
-    setIsFormOpen(true);
-    getAllPeople().then(list => setAllPeople(list)).catch(console.error);
-  };
-
-  const closeForm = () => {
-    setIsFormOpen(false);
-    setTitle('');
-    setSelectedEmails([]);
-  };
-
-  const handleSubmit = () => {
-    createTeam({ title, emails: selectedEmails })
-        .then(response => {
+    createTeam({ title: 'Новая команда', emails: [] })
+      .then(response => {
         const newTeam = response.team ?? response;
-        const members = allPeople
-            .filter(p => selectedEmails.includes(p.email));
-        if (user && !selectedEmails.includes(user.email)) {
-            members.unshift(user);
-        }
-        newTeam.persons = members;
+        newTeam.persons = [user];
         setTeams(prev => [...prev, newTeam]);
-        closeForm();
-        })
-        .catch(console.error);
+      })
+      .catch(err => console.error(err));
   };
 
-  const toggleEmail = email => {
-    setSelectedEmails(prev =>
-      prev.includes(email)
-        ? prev.filter(e => e !== email)
-        : [...prev, email]
-    );
-  };
+  if (loading || authLoading) return <div className="loading-container">Загрузка...</div>;
 
   return (
     <div className="teams-page-wrapper">
       <Header />
       <div className="teams-page-content">
-        <div className="teams-title-container">
-          <h1 className="teams-title">Мои команды</h1>
-        </div>
-        <div className='teams-items-container'>
-          {loading ? (
-          <p className="teams-loading">Загрузка команд...</p>
-            ) : teams.length > 0 ? (
+        {teams.length > 0 ? (
+          <div className='teams-items-container'>
             <ul className="teams-list">
-                {teams.map(team => (
-                <li
+              {teams.map(team => {
+                const sortedMembers = [...team.persons].sort((a, b) => {
+                  if (a.email === user.email) return -1;
+                  if (b.email === user.email) return 1;
+                  return 0;
+                });
+                return (
+                  <li
                     key={team.id}
-                    className="teams-list-item"
+                    className={"teams-list-item" + (isNew(team) ? ' new-team' : '')}
                     onClick={() => navigate(`/teams/${team.id}`)}
-                >
+                  >
                     <span className="teams-item-title">{team.title}</span>
-                    <span className="teams-item-count">
-                        Участников: {team.persons?.length || 0}
-                    </span>
-                </li>
-                ))}
+                    <ul className="team-persons-list">
+                      {sortedMembers.map(person => (
+                        <li key={person.id} className="team-persons-list-item">
+                          <img
+                            src={
+                              person.imageName
+                                ? `http://localhost:8080/uploads/${person.imageName}`
+                                : userIcon
+                            }
+                            alt="Фото пользователя"
+                            className="team-person-photo"
+                          />
+                          <div className='team-person-info-container'>
+                            <p className='team-person-username'>{person.username}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+              )})}
             </ul>
-            ) : (
-            <p className="teams-empty">У вас нет команд. Создайте первую!</p>
-            )}
-        </div>
-        <div className='teams-create-btn-container'>
-          <button className="teams-create-btn"  onClick={openForm}>
-            Создать команду
-          </button>
-        </div>
-        {isFormOpen && (
-          <div className="teams-form-overlay">
-            <div className="teams-form-container">
-              <h2 className="teams-form-title">Новая команда</h2>
-
-              <label className="teams-form-field">
-                Заголовок
-                <input
-                  type="text"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  className="teams-form-input"
-                  placeholder="Название команды"
-                />
-              </label>
-
-              <fieldset className="teams-form-field">
-                <legend>Участники</legend>
-                <div className="teams-people-list">
-                  {allPeople.map(p => (
-                    <label key={p.id} className="teams-checkbox-label">
-                      <input
-                        type="checkbox"
-                        value={p.email}
-                        checked={selectedEmails.includes(p.email)}
-                        onChange={() => toggleEmail(p.email)}
-                      />
-                      {p.username} — {p.email}
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
-              <div className="teams-form-buttons">
-                <button
-                  className="teams-submit-btn"
-                  onClick={handleSubmit}
-                  disabled={!title.trim() || selectedEmails.length === 0}
-                >
-                  Создать
-                </button>
-                <button className="teams-cancel-btn" onClick={closeForm}>
-                  Отмена
-                </button>
-              </div>
+          </div>
+        ) : (
+          <div className="empty-previews">
+            <img
+              src={EmptyPicture}
+              alt="Красивая картинка"
+              className="empty-items-picture"
+            />
+            <p className="empty-title">
+              У Вас пока нет команд - <span>Создайте первую!</span>
+            </p>
+            <div className="arrow-to-add">
+              <img
+                src={EmptyArrow}
+                className="empty-arrow"
+                alt="Стрелка к кнопке"
+              />
             </div>
           </div>
         )}
+        <div className='teams-create-btn-container'>
+          <button className="teams-create-btn" onClick={handleCreateDefaultTeam}>
+            Создать команду
+          </button>
+        </div>
       </div>
     </div>
   );

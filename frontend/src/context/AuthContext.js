@@ -4,6 +4,8 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch('/person/profile/my', {
@@ -18,11 +20,12 @@ export function AuthProvider({ children }) {
           setUser(null);
         }
       })
-      .catch(() => setUser(null));
+      .catch((err) => setError(err))
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, isLoading, error }}>
       {children}
     </AuthContext.Provider>
   );
