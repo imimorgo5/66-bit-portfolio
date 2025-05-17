@@ -6,8 +6,17 @@ public class CreateTeamDTO {
 
     private String title;
 
-    private List<String> emails;
+    private String myRole;
 
+    private List<PersonTeamDTO> persons;
+
+    public String getMyRole() {
+        return myRole;
+    }
+
+    public void setMyRole(String myRole) {
+        this.myRole = myRole;
+    }
 
     public String getTitle() {
         return title;
@@ -17,11 +26,11 @@ public class CreateTeamDTO {
         this.title = title;
     }
 
-    public List<String> getEmails() {
-        return emails;
+    public List<PersonTeamDTO> getPersons() {
+        return persons;
     }
 
-    public void setEmails(List<String> emails) {
-        this.emails = emails;
+    public void setPersons(List<PersonTeamDTO> persons) {
+        this.persons = persons;
     }
 }

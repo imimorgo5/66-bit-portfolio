@@ -21,24 +21,14 @@ public class TeamController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createTeam(@RequestBody CreateTeamDTO createTeamDTO) {
-        var teamDTO = teamService.createTeam(
-                createTeamDTO.getTitle(),
-                createTeamDTO.getEmails()
-        );
+        var teamDTO = teamService.createTeam(createTeamDTO);
         return ResponseEntity.ok(Map.of("team", teamDTO));
     }
 
-    @GetMapping("/team/{id}")
+    @GetMapping("/show/{id}")
     public ResponseEntity<?> getTeamById(@PathVariable("id") int id) {
         var teamDTO = teamService.getTeamById(id);
         return ResponseEntity.ok(Map.of("team", teamDTO));
-    }
-
-    // Метод для получения всех команд пользователя
-    @GetMapping("/team/all")
-    public ResponseEntity<?> getAllPersonTeam() {
-        var teamsDTO = teamService.getAllPersonTeams();
-        return ResponseEntity.ok(Map.of("teams", teamsDTO));
     }
 
     @PutMapping("/update/{id}")
@@ -51,5 +41,11 @@ public class TeamController {
     public ResponseEntity<?> deleteTeamById(@PathVariable("id") int id) {
         teamService.deleteTeam(id);
         return ResponseEntity.ok(Map.of("message", "Команда успешно удалена"));
+    }
+
+    @GetMapping("/show/all")
+    public ResponseEntity<?> getAllPersonTeam() {
+        var teamsDTO = teamService.getAllPersonTeams();
+        return ResponseEntity.ok(Map.of("teams", teamsDTO));
     }
 }

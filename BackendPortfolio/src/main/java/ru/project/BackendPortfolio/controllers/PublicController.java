@@ -29,7 +29,7 @@ public class PublicController {
     }
 
     @GetMapping("/card/{token}")
-    public ResponseEntity<?> getSharedCard(@PathVariable String token) {
+    public ResponseEntity<?> getSharedCard(@PathVariable("token") String token) {
         var card = tokenService.getCardByShareToken(token);
         var cardDTO = cardService.mapToPublicDTO(card);
         return ResponseEntity.ok(Map.of("card", cardDTO));

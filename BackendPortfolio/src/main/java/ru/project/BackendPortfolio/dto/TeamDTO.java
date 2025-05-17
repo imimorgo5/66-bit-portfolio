@@ -8,7 +8,17 @@ public class TeamDTO {
 
     private String title;
 
-    private List<PersonDTO> persons;
+    private int adminId;
+
+    private List<PersonTeamDTO> persons;
+
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
+    }
 
     public int getId() {
         return id;
@@ -26,11 +36,11 @@ public class TeamDTO {
         this.title = title;
     }
 
-    public List<PersonDTO> getPersons() {
+    public List<PersonTeamDTO> getPersons() {
         return persons;
     }
 
-    public void setPersons(List<PersonDTO> persons) {
+    public void setPersons(List<PersonTeamDTO> persons) {
         this.persons = persons;
     }
 }

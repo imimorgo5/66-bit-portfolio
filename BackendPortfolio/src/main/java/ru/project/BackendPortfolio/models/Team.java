@@ -17,6 +17,9 @@ public class Team {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "admin_id")
+    private int adminId;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PersonTeam> personTeams = new ArrayList<>();
 
@@ -27,6 +30,14 @@ public class Team {
     }
 
     public Team() {}
+
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
+    }
 
     public int getId() {
         return id;

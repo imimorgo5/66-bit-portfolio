@@ -18,7 +18,22 @@ public class PersonTeam {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Column(name = "role")
+    private String role;
+
     private boolean isAdmin;
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public int getId() {
         return id;
