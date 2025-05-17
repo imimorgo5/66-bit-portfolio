@@ -23,6 +23,9 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Card> cards;
 
+    @OneToMany(mappedBy = "team")
+    private List<Project> projects;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PersonTeam> personTeams = new ArrayList<>();
 
@@ -33,6 +36,14 @@ public class Team {
     }
 
     public Team() {}
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
 
     public List<Card> getCards() {
         return cards;

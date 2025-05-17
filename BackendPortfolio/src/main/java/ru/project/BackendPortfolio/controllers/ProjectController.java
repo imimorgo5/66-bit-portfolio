@@ -24,27 +24,42 @@ public class ProjectController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createProject(@ModelAttribute ProjectDTO projectDTO) {
-        var project = projectService.createProject(projectDTO);
-        var newProjectDTO = projectService.mapToDTO(project);
-        return ResponseEntity.ok(Map.of(
-                "message", "Проект успешно создан",
-                "project", newProjectDTO));
+    // Создание проекта от имени пользователя (автоматически подставляет авторизованного пользователя)
+    @PostMapping(value = "/create-by-person", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createProjectByPerson(@ModelAttribute ProjectDTO projectDTO) {
+        var newProjectDTO = projectService.createByPerson(projectDTO);
+        return ResponseEntity.ok(Map.of("project", newProjectDTO));
     }
 
-    @GetMapping("/show")
+    // Создание проекта от имени команды (необходимо передавать teamId для корректного формирования связи)
+    @PostMapping(value = "/create-by-team", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createProjectByTeam(@ModelAttribute ProjectDTO projectDTO) {
+        var newProjectDTO = projectService.createByTeam(projectDTO);
+        return ResponseEntity.ok(Map.of("project", newProjectDTO));
+    }
+
+    // Получение командных проектов по id команды
+    @GetMapping("/show-by-team/{id}")
+    public ResponseEntity<?> getByTeam(@PathVariable("id") int id){
+        var projectDTOs = projectService.getAllProjectsByTeam(id);
+        return ResponseEntity.ok(Map.of("projects", projectDTOs));
+    }
+
+    // Получение проектов текущего пользователя
+    @GetMapping("/show-by-person")
     public Map<String, List<ProjectDTO>> getUserProjects() {
         var projects = projectService.getProjectsByUser();
         return Map.of("projects", projects);
     }
 
+    // Получение проекта по id
     @GetMapping("/project/{id}")
     public ResponseEntity<?> getProjectById(@PathVariable("id") int id) {
         var project = projectService.getProjectDTOById(id);
         return ResponseEntity.ok(Map.of("project", project));
     }
 
+    // Обновление проекта (независимо от того, командная она или пользовательская)
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateProjectWithFile(@PathVariable("id") int id, @ModelAttribute ProjectDTO projectDTO) {
         var updatedProject = projectService.updateProject(id, projectDTO);
@@ -52,11 +67,23 @@ public class ProjectController {
         return ResponseEntity.ok(newProjectDTO);
     }
 
+    // Удаление проекта
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable("id") int id) {
         projectService.deleteProject(id);
         return ResponseEntity.ok("Проект успешно удалён");
     }
+
+    // НЕ ИСПОЛЬЗУЕТСЯ
+
+//    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<?> createProject(@ModelAttribute ProjectDTO projectDTO) {
+//        var project = projectService.createProject(projectDTO);
+//        var newProjectDTO = projectService.mapToDTO(project);
+//        return ResponseEntity.ok(Map.of(
+//                "message", "Проект успешно создан",
+//                "project", newProjectDTO));
+//    }
 
     @GetMapping("/image/{projectId}")
     public ResponseEntity<byte[]> getProjectImage(@PathVariable("projectId") int projectId) {

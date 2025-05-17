@@ -46,6 +46,10 @@ public class Project {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team team;
+
     public Project(int id, String title, String description, String imageName, LocalDateTime createdAt, Person owner) {
         this.id = id;
         this.title = title;
@@ -56,6 +60,14 @@ public class Project {
     }
 
     public Project() {}
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 
     public void addFolder(Folder folder) {
         folders.add(folder);

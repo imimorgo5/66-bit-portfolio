@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
+    List<Project> findByTeamId(int teamId);
 
     List<Project> findByOwner(Person person);
 

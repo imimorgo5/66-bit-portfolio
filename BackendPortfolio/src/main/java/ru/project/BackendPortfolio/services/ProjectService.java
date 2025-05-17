@@ -4,12 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.project.BackendPortfolio.dto.CardDTO;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
 import ru.project.BackendPortfolio.models.Folder;
 import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.models.ProjectFile;
 import ru.project.BackendPortfolio.repositories.ProjectRepository;
+import ru.project.BackendPortfolio.repositories.TeamRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,24 +25,81 @@ public class ProjectService {
     private final FileStorageService fileStorageService;
     private final PersonService personService;
     private final ProjectLinkService projectLinkService;
+    private final TeamRepository teamRepository;
 
     @Autowired
     public ProjectService(ModelMapper modelMapper, ProjectRepository projectRepository,
                           FileStorageService fileStorageService, PersonService personService,
-                          ProjectLinkService projectLinkService) {
+                          ProjectLinkService projectLinkService, TeamRepository teamRepository) {
         this.modelMapper = modelMapper;
         this.projectRepository = projectRepository;
         this.fileStorageService = fileStorageService;
         this.personService = personService;
         this.projectLinkService = projectLinkService;
+        this.teamRepository = teamRepository;
     }
 
     @Transactional
-    public Project createProject(ProjectDTO projectDTO) {
+    public ProjectDTO createByPerson(ProjectDTO projectDTO){
+        var project = new Project();
         var person = personService.getActivePerson();
+        project.setOwner(person);
+        return create(projectDTO, project);
+    }
+
+    @Transactional
+    public ProjectDTO createByTeam(ProjectDTO projectDTO){
+        var project = new Project();
+        var teamId = projectDTO.getTeamId();
+        var team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Команда не найдена"));
+        project.setTeam(team);
+        return create(projectDTO, project);
+    }
+
+    @Transactional
+    public ProjectDTO create(ProjectDTO projectDTO, Project project) {
+        project.setTitle(projectDTO.getTitle());
+        project.setDescription(projectDTO.getDescription());
+
+        // Токен
+        var token = UUID.randomUUID().toString();
+        project.setShareToken(token);
+        project.setPublic(true);
+
+        if (projectDTO.getImageFile() != null) {
+            var fileName = fileStorageService.save(projectDTO.getImageFile());
+            project.setImageName(fileName);
+        }
+
+        project = projectRepository.save(project);
+
+        var newProjectLinks = projectDTO.getProjectLinks();
+        if (newProjectLinks != null) {
+            for (var newProjectLink : newProjectLinks) {
+                projectLinkService.create(newProjectLink, project);
+            }
+        }
+
+        if (projectDTO.getFolders() != null) {
+            createFolders(projectDTO, project);
+        }
+
+        var result = projectRepository.save(project);
+
+        return mapToDTO(result);
+    }
+
+
+    @Transactional
+    public Project createProject(ProjectDTO projectDTO) {
+
         var project = new Project();
         project.setTitle(projectDTO.getTitle());
         project.setDescription(projectDTO.getDescription());
+
+        // Задаём пользователя
+        var person = personService.getActivePerson();
         project.setOwner(person);
 
         // Токен
@@ -67,6 +126,15 @@ public class ProjectService {
         }
 
         return projectRepository.save(project);
+    }
+
+    public List<ProjectDTO> getAllProjectsByTeam(int id){
+        var projects = projectRepository.findByTeamId(id);
+        List<ProjectDTO> projectDTOs = new ArrayList<>();
+        for (var project : projects) {
+            projectDTOs.add(mapToDTO(project));
+        }
+        return projectDTOs;
     }
 
     @Transactional
