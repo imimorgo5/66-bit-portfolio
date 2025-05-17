@@ -13,6 +13,7 @@ import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.models.ProjectCard;
 import ru.project.BackendPortfolio.repositories.CardRepository;
 import ru.project.BackendPortfolio.repositories.ProjectCardRepository;
+import ru.project.BackendPortfolio.repositories.TeamRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,13 @@ public class CardService {
     private final PersonService personService;
     private final CardLinkService cardLinkService;
     private final ProjectService projectService;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public CardService(CardFileService cardFileService, CardRepository cardRepository, ProjectCardRepository projectCardRepository,
-                       ModelMapper modelMapper, PersonService personService,
-                       CardLinkService cardLinkService, ProjectService projectService) {
+    public CardService(CardFileService cardFileService, CardRepository cardRepository,
+                       ProjectCardRepository projectCardRepository, ModelMapper modelMapper,
+                       PersonService personService, CardLinkService cardLinkService,
+                       ProjectService projectService, TeamRepository teamRepository) {
         this.cardFileService = cardFileService;
         this.cardRepository = cardRepository;
         this.projectCardRepository = projectCardRepository;
@@ -40,21 +43,43 @@ public class CardService {
         this.personService = personService;
         this.cardLinkService = cardLinkService;
         this.projectService = projectService;
+        this.teamRepository = teamRepository;
     }
 
     @Transactional
-    public Card create(CardDTO cardDTO){
-        var person = personService.getActivePerson();
-        var card = modelMapper.map(cardDTO, Card.class);
+    public CardDTO createByTeam(CardDTO cardDTO){
+        var teamId = cardDTO.getTeamId();
+        var team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Команда не найдена"));
+        var card = new Card();
+        card.setTitle(cardDTO.getTitle());
+        card.setDescription(cardDTO.getDescription());
+        card.setTeam(team);
+        cardRepository.save(card);
+        var result = create(card, cardDTO);
+        return mapToDTO(result);
+    }
 
-        // Добавляем токен
+    @Transactional
+    public CardDTO createByPerson(CardDTO cardDTO) {
+        var person = personService.getActivePerson();
+        var card = new Card();
+        card.setTitle(cardDTO.getTitle());
+        card.setDescription(cardDTO.getDescription());
+        card.setOwner(person);
+        cardRepository.save(card);
+        var result = create(card, cardDTO);
+        return mapToDTO(result);
+    }
+
+    @Transactional
+    public Card create(Card card, CardDTO cardDTO){
+
         var token = UUID.randomUUID().toString();
         card.setShareToken(token);
         card.setPublic(true);
 
-        card.setOwner(person);
         card = cardRepository.save(card);
-
         var cardFileDTOs = cardDTO.getCardFiles();
         if (cardFileDTOs != null) {
             for (var cardFileDTO : cardFileDTOs) {
@@ -105,67 +130,19 @@ public class CardService {
         return cardDTOs;
     }
 
-//    @Transactional
-//    public CardDTO update(int id, CardDTO cardDTO) {
-//        var person = personService.getActivePerson();
-//        var card = getCardById(id);
-//
-//        if (!card.getOwner().equals(person)) {
-//            throw new ForbiddenException("Вы не можете редактировать чужие карточки");
-//        }
-//
-//
-//        card.setTitle(cardDTO.getTitle());
-//        card.setDescription(cardDTO.getDescription());
-//
-//        var oldLinks = card.getCardLinks();
-//        var newLinks = cardDTO.getCardLinks();
-//
-//        if (oldLinks != null) {
-//            for(var oldLink : oldLinks) {
-//                cardLinkService.delete(oldLink);
-//            }
-//        }
-//
-//        // Удаление старых проектов из карточек
-//        var oldProjectCards = card.getProjectCards();
-//        projectCardRepository.deleteAll(oldProjectCards);
-//
-//        var projectDTOs = cardDTO.getProjects();
-//        List<ProjectCard> projectCards = new ArrayList<>();
-//        if (projectDTOs != null) {
-//            for (var projectDTO : projectDTOs) {
-//                var projectId = projectDTO.getId();
-//                var project = projectService.getProjectById(projectId);
-//                var projectCard = mapProjectCard(project, card);
-//                projectCards.add(projectCard);
-//                projectCardRepository.save(projectCard);
-//            }
-//        }
-//
-//        card.setProjectCards(projectCards);
-//
-//
-//        if (newLinks != null) {
-//            for (var newCardLinkDTO : newLinks) {
-//                cardLinkService.create(newCardLinkDTO, card);
-//            }
-//        }
-//
-//        cardFileService.update(card, cardDTO.getCardFiles());
-//        cardRepository.save(card);
-//        return mapToDTO(card);
-//    }
+    public List<CardDTO> getAllCardsByTeam(int id) {
+        var cards = cardRepository.findByTeamId(id);
+        List<CardDTO> cardDTOs = new ArrayList<>();
+        cards.forEach(card -> cardDTOs.add(mapToDTO(card)));
+        return cardDTOs;
+    }
 
     @Transactional
     public CardDTO update(int id, CardDTO cardDTO) {
-        var person = personService.getActivePerson();
+
+        // Временно отключил проверку прав, теперь можно удалять чужие карточки.
+
         var card = getCardById(id);
-
-        if (!card.getOwner().equals(person)) {
-            throw new ForbiddenException("Вы не можете редактировать чужие карточки");
-        }
-
         card.setTitle(cardDTO.getTitle());
         card.setDescription(cardDTO.getDescription());
 

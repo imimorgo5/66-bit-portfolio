@@ -52,6 +52,10 @@ public class Card {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team team;
+
     public Card() {
     }
 
@@ -61,6 +65,14 @@ public class Card {
         this.description = description;
         this.owner = owner;
         this.createdAt = createdAt;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public String getShareToken() {

@@ -20,25 +20,34 @@ public class CardController {
         this.cardService = cardService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createCard(@ModelAttribute CardDTO cardDTO) {
-        var card = cardService.create(cardDTO);
-        var newCardDTO = cardService.mapToDTO(card);
-        return ResponseEntity.ok(Map.of(
-                "message", "Карточка успешно создана",
-                "card", newCardDTO));
+    @PostMapping("/create-by-person")
+    public ResponseEntity<?> createCardByPerson(@ModelAttribute CardDTO cardDTO) {
+        var newCardDTO = cardService.createByPerson(cardDTO);
+        return ResponseEntity.ok(Map.of("card", newCardDTO));
+    }
+
+    @PostMapping("/create-by-team")
+    public ResponseEntity<?> createCardByTeam(@ModelAttribute CardDTO cardDTO) {
+        var newCardDTO = cardService.createByTeam(cardDTO);
+        return ResponseEntity.ok(Map.of("card", newCardDTO));
+    }
+
+    @GetMapping("/show-by-team/{id}")
+    public ResponseEntity<?> getByTeam(@PathVariable("id") int id){
+        var cardDTOs = cardService.getAllCardsByTeam(id);
+        return ResponseEntity.ok(Map.of("cards", cardDTOs));
+    }
+
+    @GetMapping("/show-by-person")
+    public ResponseEntity<?> getByPerson(){
+        var cardDTOs = cardService.getAllCardsByPerson();
+        return ResponseEntity.ok(Map.of("cards", cardDTOs));
     }
 
     @GetMapping("/card/{id}")
     public ResponseEntity<?> getCardById(@PathVariable("id") int id) {
         var cardDTO = cardService.getCardDTOById(id);
         return ResponseEntity.ok(Map.of("card", cardDTO));
-    }
-
-    @GetMapping("/show")
-    public ResponseEntity<?> showCards(){
-        var cardDTOs = cardService.getAllCardsByPerson();
-        return ResponseEntity.ok(Map.of("cards", cardDTOs));
     }
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

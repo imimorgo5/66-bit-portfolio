@@ -25,8 +25,18 @@ public class CardDTO {
 
     private LocalDateTime createdAt;
 
+    private Integer teamId;
+
     // Геттеры и сеттеры проектов
 
+
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
 
     public String getShareToken() {
         return shareToken;

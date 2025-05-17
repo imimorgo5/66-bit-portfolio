@@ -20,6 +20,9 @@ public class Team {
     @Column(name = "admin_id")
     private int adminId;
 
+    @OneToMany(mappedBy = "team")
+    private List<Card> cards;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PersonTeam> personTeams = new ArrayList<>();
 
@@ -30,6 +33,14 @@ public class Team {
     }
 
     public Team() {}
+
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
 
     public int getAdminId() {
         return adminId;
