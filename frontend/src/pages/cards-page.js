@@ -9,12 +9,12 @@ import '../css/preview-pages.css';
 import '../css/cards-page.css';
 import EmptyArrow from '../img/empty-arrow.svg';
 import EmptyPicture from '../img/empty-items-picture.png';
-import { getCards, createCard } from '../services/cardService';
+import { getCards, createCard } from '../services/card-service';
 
 export default function CardsPage() {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-
+  const { user, isLoading: authLoading } = useContext(AuthContext);
+  const navigate = useNavigate();  
+  const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [sortMode, setSortMode] = useState('date');
   const [teamMode, setTeamMode] = useState(false);
@@ -22,7 +22,8 @@ export default function CardsPage() {
   useEffect(() => {
     getCards()
       .then(fetched => setCards(fetched))
-      .catch(err => console.error(err));
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleAddCard = () => {
@@ -36,7 +37,9 @@ export default function CardsPage() {
   };
 
   const handleSortChange = mode => setSortMode(mode);
+  
   const handleTeamSwitchChange = option => setTeamMode(option === 'team');
+
   const goToCardDetail = card => navigate(`/cards/${card.id}`, { state: { card } });
 
   const isNew = (card) => {
@@ -44,7 +47,7 @@ export default function CardsPage() {
       (card.description === null || card.description === '') &&
       (card.cardFiles === null || (Array.isArray(card.cardFiles) && card.cardFiles.length === 0)) &&
       (card.cardLinks === null || (Array.isArray(card.cardLinks) && card.cardLinks.length === 0)) &&
-      typeof card.title === 'string' && card.title.trim() !== ''
+      typeof card.title === 'string' && card.title === 'Новая карточка'
     );
   };
 
@@ -52,6 +55,8 @@ export default function CardsPage() {
     if (sortMode === 'name') return a.title.localeCompare(b.title);
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
+
+  if (loading || authLoading) return <div className="loading-container">Загрузка...</div>;
 
   return (
     <div className="page">

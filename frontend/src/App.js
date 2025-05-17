@@ -10,6 +10,8 @@ import AchievementsPage from './pages/achievements-page.js';
 import UserPage from './pages/user-page.js';
 import LoginPage from './pages/login-page.js';
 import RegistrationPage from './pages/registration-page.js';
+import PublicProjectPage from './pages/public-project-page.js';
+import PublicCardPage from './pages/public-card-page.js';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/user" element={<UserPage />} />
+          <Route path="cards/shared/:token" element={<PublicCardPage />} />
+          <Route path="projects/shared/:token" element={<PublicProjectPage />} />
         </Routes>
       </Router>
     </div>

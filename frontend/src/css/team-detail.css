@@ -1,75 +1,434 @@
 .team-detail-page {
-    min-height: 100vh;
-    background: #f5f7fa;
-  }
-  .team-detail-container {
-    max-width: 640px;
-    margin: 40px auto;
-    padding: 30px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  .team-back {
-    display: inline-block;
-    margin-top: 16px;
-    color: #0077ff;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
-  .team-back:hover {
-    color: #005acc;
-  }
-  .team-title {
-    font-size: 28px;
-    color: #0077ff;
-    margin: 16px 0;
-  }
-  .team-members-section {
-    margin-top: 24px;
-  }
-  .team-members-heading {
-    font-size: 20px;
-    margin-bottom: 12px;
-    color: #333;
-  }
-  .team-members-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .team-member-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 12px;
-    border-bottom: 1px solid #eee;
-  }
-  .member-name {
-    font-size: 16px;
-    color: #000;
-  }
-  .member-email {
-    font-size: 14px;
-    color: #555;
-  }
-  .team-no-members {
-    color: #777;
-    font-size: 14px;
-  }
-  .team-actions {
-    margin: 20px 0;
-    text-align: right;
-  }
-  .team-delete-btn {
-    padding: 8px 16px;
-    background: #ac1d1d;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .team-delete-btn:hover {
-    background: #8a1919;
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.team-detail-content {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.team-view,
+.team-edit {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.team-title {
+  font-size: 28px;
+  color: #0077ff;
+  margin-bottom: 16px;
+}
+
+.team-members-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.member-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.member-info .member-name {
+  font-size: 16px;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel,
+.btn-remove {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-edit {
+  background: transparent;
+  color: #0077ff;
+  border-color: #0077ff;
+}
+.btn-edit:hover {
+  background: #0077ff;
+  color: #fff;
+}
+
+.btn-delete {
+  background: transparent;
+  color: #c00;
+  border-color: #c00;
+}
+.btn-delete:hover {
+  background: #c00;
+  color: #fff;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.field input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.field input[type="text"]:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.search-results {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.search-results li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-results li:hover {
+  background: #f0f0f0;
+}
+
+.search-results li.already-added {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.search-results li .tag {
+  font-size: 12px;
+  background: #e0e0e0;
+  color: #555;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.member-item-edit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.member-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-controls input[type="text"] {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  color: #c00;
+  font-size: 14px;
+}
+.btn-remove:hover {
+  color: #900;
+}
+
+.btn-save {
+  background: transparent;
+  color: #0077ff;
+  border-color: #0077ff;
+}
+.btn-save:hover {
+  background: #0077ff;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #777;
+  border: 2px solid #777;
+}
+.btn-cancel:hover {
+  background: #777;
+  color: #fff;
+}
+
+.team-detail-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.team-detail-content {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.team-view,
+.team-edit {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.team-title {
+  font-size: 28px;
+  color: #0077ff;
+  margin-bottom: 16px;
+}
+
+.team-members-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.member-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.member-info .member-name {
+  font-size: 16px;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel,
+.btn-remove {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-edit {
+  background: transparent;
+  color: #0077ff;
+  border-color: #0077ff;
+}
+.btn-edit:hover {
+  background: #0077ff;
+  color: #fff;
+}
+
+.btn-delete {
+  background: transparent;
+  color: #c00;
+  border-color: #c00;
+}
+.btn-delete:hover {
+  background: #c00;
+  color: #fff;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.field input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.field input[type="text"]:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.search-results {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.search-results li {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-results li:hover {
+  background: #f0f0f0;
+}
+
+.search-results li.already-added {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.search-results li .tag {
+  font-size: 12px;
+  background: #e0e0e0;
+  color: #555;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.member-item-edit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.member-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-controls input[type="text"] {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.btn-remove {
+  background: transparent;
+  border: none;
+  color: #c00;
+  font-size: 14px;
+}
+
+.btn-remove:hover {
+  color: #900;
+}
+
+.btn-save {
+  background: transparent;
+  color: #0077ff;
+  border-color: #0077ff;
+}
+
+.btn-save:hover {
+  background: #0077ff;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #777;
+  border: 2px solid #777;
+}
+
+.btn-cancel:hover {
+  background: #777;
+  color: #fff;
+}

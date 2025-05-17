@@ -1,35 +1,44 @@
-export const getPersonById = (id) => {
-    return fetch(`/person/profile/${id}`, { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Ошибка при получении информации о пользователе');
-        }
-        return res.json();
-      })
-      .then((data) => data.person);
+export const getPersonById = async (id) => {
+  const res = await fetch(`/person/profile/${id}`, { credentials: 'include' });
+
+  if (!res.ok) {
+    throw new Error('Ошибка при получении информации о пользователе');
+  }
+
+  const data = await res.json();
+    return data.person;
   };
   
-  export const updatePerson = (id, personData) => {
+  export const updatePerson = async (id, personData) => {
     const formData = new FormData();
     formData.append('username', personData.username);
     formData.append('email', personData.email);
     formData.append('phoneNumber', personData.phoneNumber);
     formData.append('birthDate', personData.birthDate);
+
     if (personData.imageFile) {
       formData.append('imageFile', personData.imageFile);
     }
-    return fetch(`/person/update/${id}`, {
+
+    if (personData.linkDTOs && Array.isArray(personData.linkDTOs)) {
+        personData.linkDTOs.forEach((link, index) => {
+            formData.append(`linkDTOs[${index}].link`, link.link || '');
+            formData.append(`linkDTOs[${index}].description`, link.description || '');
+        });
+    }
+
+    const res = await fetch(`/person/update/${id}`, {
       method: 'PUT',
       credentials: 'include',
       body: formData,
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Ошибка при обновлении профиля');
-        }
-        return res.json();
-      })
-      .then((data) => data.updatedPerson);
+    });
+
+    if (!res.ok) {
+      throw new Error('Ошибка при обновлении профиля');
+    }
+
+    const data = await res.json();
+    return data.updatedPerson;
   };
 
   export const getAllPeople = async () => {

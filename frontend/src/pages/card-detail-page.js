@@ -3,23 +3,24 @@ import { useParams, useNavigate, NavLink, Link  } from 'react-router-dom';
 import Header from '../components/header';
 import '../css/card-detail.css';
 import { AuthContext } from '../context/AuthContext';
-import { getCardById, updateCard, deleteCard } from '../services/cardService.js';
-import { getProjects } from '../services/projectService.js';
+import { getCardById, updateCard, deleteCard } from '../services/card-service.js';
+import { getProjects } from '../services/project-service.js';
 import userIcon from '../img/user-icon.svg';
 import fileIcon from '../img/file_icon.svg';
 import linkIcon from '../img/link_icon.svg';
 
 export default function CardDetailPage() {
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
   const navigate = useNavigate();
   const [card, setCard] = useState(null);
-  const [isCardLoading,   setIsCardLoading]   = useState(true);
+  const [loading, setLoading]   = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(null);
   const [filesLoaded, setFilesLoaded] = useState(false);
   const [projects, setProjects] = useState([]);
   const [showProjectsList, setShowProjectsList] = useState(false);
+  const [copied, setCopied] = useState(false);
   const fileInputRef = React.useRef(null);
   const projectsListRef = useRef(null);
   const projectsButtonRef = useRef(null);
@@ -32,10 +33,8 @@ export default function CardDetailPage() {
       .catch((error) => {
         console.error('Ошибка получения карточки:', error);
       })
-      .finally(() => {
-        setIsCardLoading(false);
-      });
-  }, [id]);
+      .finally(() => setLoading(false));
+  }, [id, authLoading]);
 
   useEffect(() => {
     if (isEditing) {
@@ -120,6 +119,14 @@ export default function CardDetailPage() {
     }
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`http://localhost:3000/cards/shared/${card.shareToken}`)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1000);
+      })
+  }
+
   const handleEditClick = () => {
     setEditData({
       ...card,
@@ -134,7 +141,6 @@ export default function CardDetailPage() {
       ...card,
       projects: card.projects ? card.projects.map(p => p.id) : []
      });
-    setLinkInput('');
     setShowProjectsList(false);
   };
 
@@ -207,35 +213,6 @@ export default function CardDetailPage() {
     });
   };
 
-  const handleLinkDescriptionChange = (index, value) => {
-    setEditData(prev => {
-      const updatedLinks = prev.cardLinks.map((link, i) => 
-        i === index ? { ...link, description: value } : link
-      );
-      return { ...prev, cardLinks: updatedLinks };
-    });
-  }
-
-  const [linkInput, setLinkInput] = useState('');
-  const addLink = () => {
-    const trimmed = linkInput.trim();
-    if (trimmed !== '') {
-      const newLink = { link: trimmed, description: '' };
-      setEditData(prev => ({
-        ...prev,
-        cardLinks: prev.cardLinks ? [...prev.cardLinks, newLink] : [newLink]
-      }));
-      setLinkInput('');
-    }
-  };
-
-  const removeLink = (index) => {
-    setEditData(prev => ({
-      ...prev,
-      cardLinks: prev.cardLinks.filter((_, i) => i !== index)
-    }));
-  };
-
   const addProjectToCard = projectId => {
     setEditData(prev => {
       const arr = prev.projects || [];
@@ -252,12 +229,11 @@ export default function CardDetailPage() {
     }));
   };
 
-  if (isCardLoading) {
-    return <div>Загрузка...</div>;
-  }
-
-  if (!card) {
-    return <div>Карточка не найдена</div>;
+  if (loading || authLoading) return <div className='loading-container'>Загрузка...</div>;
+  if (!card || authError) return <div className='error-container'>Ошибка получения данных...</div>;
+  if (!user) {
+    navigate('/login');
+    return null;
   }
 
   return (
@@ -271,7 +247,7 @@ export default function CardDetailPage() {
                     type="text"
                     name="title"
                     value={editData.title}
-                    maxLength={25}
+                    maxLength={24}
                     onChange={handleChange}
                     className="edit-card-title"
                 />
@@ -340,7 +316,7 @@ export default function CardDetailPage() {
                                 <input
                                   type="text"
                                   value={file.description}
-                                  maxLength={38}
+                                  maxLength={24}
                                   onChange={(e) => handleFileDescriptionChange(index, e.target.value)}
                                   placeholder="Описание файла"
                                   className="file-description-input"
@@ -358,38 +334,6 @@ export default function CardDetailPage() {
                         style={{ display: 'none' }}
                     />
                 </div>
-                <div className="edit-card-links">
-                    <h3>Ссылки:</h3>
-                    {editData.cardLinks && editData.cardLinks.length > 0 ? (
-                        <ul className="card-links-list">
-                          {editData.cardLinks.map((link, index) => (
-                            <li key={index} className="edit-card-link-item">
-                              <button type="button" onClick={() => removeLink(index)} className="remove-card-link-button">×</button>
-                              <div className='edit-link-item-container'>
-                                <a className="edit-link-title" href={link.link} target="_blank" rel="noopener noreferrer">{link.link}</a>
-                                <input
-                                  type="text"
-                                  value={link.description}
-                                  maxLength={38}
-                                  onChange={(e) => handleLinkDescriptionChange(index, e.target.value)}
-                                  placeholder="Описание ссылки"
-                                  className="link-description-input"
-                                />
-                              </div>
-                            </li>))}
-                        </ul>) : <p className='card-empty-list'>Ссылки не указаны</p>}
-                    <div className="card-link-input-group">
-                        <input
-                          type="text"
-                          value={linkInput}
-                          maxLength={200}
-                          onChange={(e) => setLinkInput(e.target.value)}
-                          placeholder="Введите ссылку"
-                          className="link-input"
-                        />
-                        <button type="button" onClick={addLink} className="add-card-link-button">Добавить</button>
-                    </div>
-                </div>
                 <div className="edit-card-detail-actions">
                   <button type="button" className="save-button" onClick={handleSaveEdit}>Сохранить</button>
                   <button type="button" className="cancel-button" onClick={handleCancelEdit}>Отменить изменения</button>
@@ -399,7 +343,7 @@ export default function CardDetailPage() {
         ) : (
           <div className='card-detail-container'>
             <div className='card-user-container'>
-              <NavLink to='/cards'><span>←</span> Назад к карточкам</NavLink>
+              <NavLink to='/cards' className='back-to-cards'><span>←</span> Назад к карточкам</NavLink>
               <div className='card-user-info-container'>
                 <div className="card-user-info">
                   <img
@@ -411,9 +355,27 @@ export default function CardDetailPage() {
                 </div>
                 <div className='card-user-description'>
                   <p><span className='card-user-description-title'>Email: </span>{user.email}</p>
-                  <p><span className='card-user-description-title'>Телефон: </span>{user.phoneNumber ? user.phoneNumber : 'Не указан' }</p>
                   <p><span className='card-user-description-title'>Дата рождения: </span>{user.birthDate ? user.birthDate : 'Не указана'}</p>
+                  <p><span className='card-user-description-title'>Телефон: </span>{user.phoneNumber ? user.phoneNumber : 'Не указан' }</p>
                 </div>
+              </div>
+              <div className="card-links">
+                <h3>Способы связи:</h3>
+                {user.linkDTOs && user.linkDTOs.length > 0 ? (
+                  <ul className="card-links-list">
+                    {user.linkDTOs.map((link, index) => (
+                      <li key={index} className='card-links-item'>
+                        <a
+                          className="link-title"
+                          href={link.link}
+                        >
+                          {link.description || link.link}
+                        </a>
+                        <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
+                      </li>
+                    ))}
+                  </ul>
+                ) : <p className='card-empty-list'>Не указано</p>}
               </div>
             </div>
             <div className='card-description-container'>
@@ -452,27 +414,12 @@ export default function CardDetailPage() {
                   </ul>
                 ) : <p className='card-empty-list'>Файлы не прикреплены</p>}
               </div>
-              <div className="card-links">
-                <h3>Ссылки:</h3>
-                {card.cardLinks && card.cardLinks.length > 0 ? (
-                  <ul className="card-links-list">
-                    {card.cardLinks.map((link, index) => (
-                      <li key={index} className='card-links-item'>
-                        <a
-                          className="link-title"
-                          href={link.link}
-                        >
-                          {link.description || link.link}
-                        </a>
-                        <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
-                      </li>
-                    ))}
-                  </ul>
-                ) : <p className='card-empty-list'>Ссылки не указаны</p>}
-              </div>
               <div className="card-detail-actions">
-                <button type="button" className="edit-button" onClick={handleEditClick}>Изменить</button>
-                <button type="button" className="delete-button" onClick={handleDelete}>Удалить</button>
+                <button type="button" className="share-button" onClick={handleCopy}>{copied ? 'Ссылка скопирована!' : 'Поделиться'}</button>
+                <div className='card-detail-actions-container'>
+                  <button type="button" className="edit-button" onClick={handleEditClick}>Изменить</button>
+                  <button type="button" className="delete-button" onClick={handleDelete}>Удалить</button>
+                </div>
               </div>              
             </div>
           </div>

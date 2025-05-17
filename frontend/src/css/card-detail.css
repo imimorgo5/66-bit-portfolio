@@ -21,7 +21,6 @@
 
   .card-user-container a {
     font-size: 20px;
-    margin-bottom: 15px;
     text-align: left;
     color: rgba(0, 119, 255, 1);
     text-decoration: underline;
@@ -30,11 +29,15 @@
     transition: color 0.2s, text-decoration-color 0.2s;
   }
 
-  .card-user-container a span {
+  .back-to-cards a span {
     font-size: 24px;
   }
 
-  .card-user-container a:hover, .link-title:hover, .edit-card-link-item a:hover, .file-title:hover, .project-title:hover {
+  .back-to-cards {
+    margin-bottom: 15px;
+  }
+
+  .card-user-container a:hover, .link-title:hover, .file-title:hover, .project-title:hover {
     text-decoration-color: rgba(0, 119, 255, 0.5);
     color: rgba(0, 119, 255, 0.5);
   }
@@ -140,7 +143,7 @@
     width: 40%;
   }
 
-  .card-projects, .card-files, .card-links, .edit-card-projects, .edit-card-files, .edit-card-links {
+  .card-projects, .card-files, .card-links, .edit-card-projects, .edit-card-files {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -148,8 +151,16 @@
     background-color: #fff;
     border-radius: 15px;
     padding: 30px;
-    height: 190px;
+    height: 322.5px;
     width: calc(100% - 60px);
+  }
+
+  .card-links {
+    height: 190px;
+  }
+
+  .card-projects, .card-files {
+    height: 295px;
   }
 
   .card-detail-actions, .edit-card-detail-actions {
@@ -164,13 +175,19 @@
     width: calc(100% - 50px);
   }
 
-  .card-appendices-container h3, .edit-card-appendices-container h3 {
+  .card-detail-actions {
+    flex-direction: column;
+    height: 105px;
+    gap: 10px;
+  }
+
+  .card-appendices-container h3, .edit-card-appendices-container h3, .card-links h3 {
     margin: 0;
     padding: 0;
     font-size: 24px;
   }
 
-  .card-appendices-container ul, .edit-card-appendices-container ul {
+  .card-appendices-container ul, .edit-card-appendices-container ul, .card-links ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -192,7 +209,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    position: relative;
   }
 
   .card-links-item::before, .card-projects-item::before {
@@ -201,7 +217,7 @@
     color: rgba(0, 119, 255, 1);
   }
 
-  .project-title, .file-title, .edit-file-title, .edit-link-title, .edit-card-project-title, .link-title {
+  .project-title, .file-title, .edit-file-title, .edit-card-project-title, .link-title {
     margin: 0;
     padding: 0;
     font-size: 20px;
@@ -214,12 +230,8 @@
     cursor: pointer;
   }
 
-  .link-title, .edit-card-link-item a {
+  .link-title {
     color: rgba(0, 119, 255, 1);
-  }
-
-  .edit-card-link-item a {
-    font-size: 16px;
   }
 
   .card-empty-list {
@@ -233,7 +245,7 @@
     height: 100%;
   }
 
-  .card-detail-actions button, .edit-card-detail-actions button {
+  .card-detail-actions-container button, .edit-card-detail-actions button, .share-button {
     width: 156.5px;
     padding: 11.5px 0;
     font-size: 20px;
@@ -245,14 +257,18 @@
     width: 250px;
   }
 
-  .edit-card-file-item, .edit-card-link-item, .card-projects-item, .edit-card-projects-item {
+  .share-button {
+    width: 100%;
+  }
+
+  .edit-card-file-item, .card-projects-item, .edit-card-projects-item {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
   }
 
-  .edit-file-item-container, .edit-link-item-container {
+  .edit-file-item-container{
     width: 100%;
     display: flex;
     gap: 10px;
@@ -267,11 +283,18 @@
     cursor: default;
   }
 
-  .edit-file-title, .edit-link-title {
+  .edit-file-title {
     min-width: 50%;
   }
+
+   .edit-button {
+    background-color: transparent;
+    color: rgba(255, 132, 0, 1);
+    border: 2px solid rgba(255, 132, 0, 1);
+    transition: background-color 0.3s, color 0.3s;
+  }
   
-  .edit-button, .save-button {
+  .share-button, .save-button {
     background-color: transparent;
     color: rgba(0, 119, 255, 1);
     border: 2px solid rgba(0, 119, 255, 1);
@@ -284,8 +307,13 @@
     border: 2px solid rgba(172, 29, 29, 1);
     transition: background-color 0.3s, color 0.3s;
   }
+
+  .edit-button:hover {
+    background-color: rgba(255, 132, 0, 1);
+    color: #fff;
+  }
   
-  .edit-button:hover, .save-button:hover {
+  .share-button:hover, .save-button:hover {
     background-color: rgba(0, 119, 255, 1);
     color: #fff;
   }
@@ -295,7 +323,7 @@
     color: #fff;
   }
 
-  .edit-card-title, .edit-card-description, .link-input, .file-description-input, .link-description-input {
+  .edit-card-title, .edit-card-description, .file-description-input {
     width: calc(100% - 18px);
     font-size: 20px;
     padding: 8px;
@@ -308,17 +336,6 @@
     margin-bottom: 15px;
   }
 
-  .card-link-input-group {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-  }
-
-  .link-input {
-    width: 100%;
-  }
-
   .edit-card-description {
     font-family: 'Inter', serif;
     min-height: 675px;
@@ -328,20 +345,21 @@
     margin-top: 15px;
   }
 
-  .file-description-input, .link-description-input {
+  .file-description-input {
     padding: 5px;
     font-size: 16px;
   }
 
-  .edit-card-title:focus, .edit-card-description:focus, .link-input:focus, .file-description-input:focus, .link-description-input:focus {
+  .edit-card-title:focus, .edit-card-description:focus, .file-description-input:focus {
     border-color: rgba(0, 119, 255, 1);
     outline: none;
   }
 
-  .add-card-link-button, .file-upload-button, .project-upload-button {
+  .file-upload-button, .project-upload-button {
     padding: 5px 30px;
     font-size: 20px;
-    min-width: fit-content;
+    width: 515px;
+    margin: 0 auto;
     background-color: transparent;
     color: rgba(0, 119, 255, 1);
     border: 2px solid rgba(0, 119, 255, 1);
@@ -350,11 +368,7 @@
     transition: background-color 0.3s, color 0.3s;
   }
 
-  .file-upload-button, .project-upload-button {
-    width: 100%;
-  }
-
-  .add-card-link-button:hover, .file-upload-button:hover, .project-upload-button:hover {
+  .file-upload-button:hover, .project-upload-button:hover {
     background-color: rgba(0, 119, 255, 1);
     color: #fff;
   }
@@ -363,19 +377,24 @@
     margin-top: 20px;
   }
 
-  .remove-card-link-button, .remove-card-file-button, .remove-card-project-button {
+  .remove-card-file-button, .remove-card-project-button {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 40px;
     background: transparent;
-    color: rgba(172, 29, 29, 1);
+    color: black;
     border: none;
     border-radius: 5px;
     width: 20px;
     height: 20px;
     cursor: pointer;
     margin-left: 5px;
+    transition: color 0.2s;
+  }
+
+  .remove-card-file-button:hover, .remove-card-project-button:hover {
+    color: rgba(172, 29, 29, 1);
   }
   
   .edit-card-projects .project-suggestions-list, .projects-empty-dropdown {
@@ -383,6 +402,7 @@
     padding: 7px;
     border: 1px solid rgba(0, 119, 255, 0.5);
     border-radius: 15px;
+    height: fit-content;
     max-height: 204px;
     width: 255px;
     overflow-y: auto;
@@ -428,4 +448,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .card-detail-actions-container {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .public-card-links {
+    height: 310px;
+  }
+
+  .public-card-description-container {
+    height: 855px;
+  }
+
+  .public-card-projects, .public-card-files {
+    height: 395px;
   }
