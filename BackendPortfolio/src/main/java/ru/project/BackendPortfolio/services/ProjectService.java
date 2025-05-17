@@ -151,12 +151,12 @@ public class ProjectService {
 
     @Transactional
     public Project updateProject(int projectId, ProjectDTO projectDTO) {
-        var person = personService.getActivePerson();
+//        var person = personService.getActivePerson();
         var project = getProjectById(projectId);
 
-        if (!project.getOwner().equals(person)) {
-            throw new ForbiddenException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
-        }
+//        if (!project.getOwner().equals(person)) {
+//            throw new ForbiddenException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
+//        }
 
         project.setTitle(projectDTO.getTitle());
         project.setDescription(projectDTO.getDescription());
