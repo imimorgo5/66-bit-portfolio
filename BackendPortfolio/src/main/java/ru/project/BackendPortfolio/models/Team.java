@@ -26,6 +26,9 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Project> projects;
 
+    @OneToMany(mappedBy = "team")
+    private List<Notification> notifications;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PersonTeam> personTeams = new ArrayList<>();
 
@@ -36,6 +39,18 @@ public class Team {
     }
 
     public Team() {}
+
+    public void addPersonTeam(PersonTeam personTeam) {
+        personTeams.add(personTeam);
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
 
     public List<Project> getProjects() {
         return projects;

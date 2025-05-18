@@ -33,8 +33,8 @@ public class TeamController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateTeamById(@PathVariable("id") int id, @RequestBody CreateTeamDTO createTeamDTO) {
-        var teamDTO = teamService.updateTeam(id, createTeamDTO);
-        return ResponseEntity.ok(Map.of("team", teamDTO));
+        teamService.updateTeam(id, createTeamDTO);
+        return ResponseEntity.ok("YEEES");
     }
 
     @DeleteMapping("/delete/{id}")

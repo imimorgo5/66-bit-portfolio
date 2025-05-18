@@ -60,6 +60,9 @@ public class Person {
     @OneToMany(mappedBy = "owner")
     private List<Card> cards;
 
+    @OneToMany(mappedBy = "person")
+    private List<Notification> notifications;
+
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Link> links = new ArrayList<>();
 
@@ -74,6 +77,14 @@ public class Person {
     }
 
     public Person() {}
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
 
     public String getShareToken() {
         return shareToken;
