@@ -10,7 +10,17 @@ public class PersonTeamDTO {
 
     private String role;
 
+    private String imageName;
+
     public PersonTeamDTO() {
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public int getPersonId() {

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.NotificationDTO;
+import ru.project.BackendPortfolio.dto.PersonDTO;
 import ru.project.BackendPortfolio.enums.NotificationType;
 import ru.project.BackendPortfolio.models.Notification;
 import ru.project.BackendPortfolio.models.Person;
@@ -35,6 +36,10 @@ public class NotificationService {
     @Transactional
     public void sendInvitation(Person person, Team team, String creatorName, String role){
         var notification = new Notification();
+        if (notificationRepository.existsByPersonAndTeamAndAcceptedFalseAndReadFalse(person, team)) {
+            throw new RuntimeException("Вы уже приглашали пользователя " + person.getEmail() + "в команду " + team.getTitle());
+        }
+
         notification.setMessage(String.format(
                 "Пользователь %s пригласил вас в команду «%s». Ваша будущая роль: %s",
                 creatorName, team.getTitle(), role));
@@ -46,6 +51,18 @@ public class NotificationService {
         notification.setPerson(person);
         notification.setTeam(team);
         notificationRepository.save(notification);
+    }
+
+    public List<PersonDTO> getAllInvitedPersons(int id){
+        var team = teamService.getTeamById(id);
+        var notifications = notificationRepository.findByTeamAndAcceptedFalseAndReadFalse(team);
+        List<PersonDTO> persons = new ArrayList<>();
+        for (var notification : notifications) {
+            var person = notification.getPerson();
+            var personDTO = personService.mapToDTO(person);
+            persons.add(personDTO);
+        }
+        return persons;
     }
 
     public List<NotificationDTO> getAllNotifications(){
@@ -93,6 +110,12 @@ public class NotificationService {
 
         teamService.addPersonToTeam(person, team, role);
     }
+
+    @Transactional
+    public void deleteAllByTeam(Team team) {
+        notificationRepository.deleteAllByTeam(team);
+    }
+
 
     public NotificationDTO getById(int id){
         var notification = notificationRepository.findById(id)

@@ -29,6 +29,8 @@ public class TeamMapper {
         personTeamDTO.setUsername(person.getUsername());
         personTeamDTO.setEmail(person.getEmail());
         personTeamDTO.setRole(role);
+        personTeamDTO.setImageName(person.getImageName());
+        System.out.println("Image name: " + person.getImageName());
         return personTeamDTO;
     }
 
@@ -54,6 +56,8 @@ public class TeamMapper {
             personTeamDTO.setEmail(person.getEmail());
             personTeamDTO.setUsername(person.getUsername());
             personTeamDTO.setRole(personTeam.getRole());
+            personTeamDTO.setImageName(person.getImageName());
+            System.out.println("Image name: " + person.getImageName());
             personTeamDTOs.add(personTeamDTO);
         }
         teamDTO.setPersons(personTeamDTOs);

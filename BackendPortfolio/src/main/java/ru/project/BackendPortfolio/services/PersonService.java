@@ -49,6 +49,11 @@ public class PersonService {
         return mapToDTO(person);
     }
 
+    public Person getPersonById(int id) {
+        return peopleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    }
+
 
     @Transactional
     public Person updateProfile(int personId, PersonDTO personDTO) {
@@ -71,6 +76,11 @@ public class PersonService {
         if (personDTO.getImageFile() != null) {
             var fileName = fileStorageService.save(personDTO.getImageFile());
             person.setImageName(fileName);
+        }
+
+        var newEmail = personDTO.getEmail();
+        if (newEmail != null) {
+            person.setEmail(newEmail);
         }
 
         if (personDTO.getBirthDate() != null && !personDTO.getBirthDate().isBlank()) {

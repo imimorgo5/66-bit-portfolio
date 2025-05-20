@@ -139,24 +139,13 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(int projectId) {
-        var person = personService.getActivePerson();
         var project = getProjectById(projectId);
-
-        if (!project.getOwner().equals(person)) {
-            throw new ForbiddenException("Вы не можете удалить этот проект, так как он вам не принадлежит.");
-        }
-
         projectRepository.delete(project);
     }
 
     @Transactional
     public Project updateProject(int projectId, ProjectDTO projectDTO) {
-//        var person = personService.getActivePerson();
         var project = getProjectById(projectId);
-
-//        if (!project.getOwner().equals(person)) {
-//            throw new ForbiddenException("Вы не можете редактировать этот проект, так как он вам не принадлежит.");
-//        }
 
         project.setTitle(projectDTO.getTitle());
         project.setDescription(projectDTO.getDescription());

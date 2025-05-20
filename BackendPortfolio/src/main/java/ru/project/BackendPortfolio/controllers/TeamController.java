@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.project.BackendPortfolio.dto.CreateTeamDTO;
+import ru.project.BackendPortfolio.services.NotificationService;
 import ru.project.BackendPortfolio.services.TeamService;
 
 import java.util.Map;
@@ -13,10 +14,12 @@ import java.util.Map;
 public class TeamController {
 
     private final TeamService teamService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, NotificationService notificationService) {
         this.teamService = teamService;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("/create")
@@ -27,7 +30,7 @@ public class TeamController {
 
     @GetMapping("/show/{id}")
     public ResponseEntity<?> getTeamById(@PathVariable("id") int id) {
-        var teamDTO = teamService.getTeamById(id);
+        var teamDTO = teamService.getTeamDTOById(id);
         return ResponseEntity.ok(Map.of("team", teamDTO));
     }
 
@@ -47,5 +50,12 @@ public class TeamController {
     public ResponseEntity<?> getAllPersonTeam() {
         var teamsDTO = teamService.getAllPersonTeams();
         return ResponseEntity.ok(Map.of("teams", teamsDTO));
+    }
+
+    // Получение всех пользователей, приглашённых в эту команду
+    @GetMapping("/{id}/show-invited")
+    public ResponseEntity<?> getInvitedPersonTeam(@PathVariable("id") int id) {
+        var personDTOs = notificationService.getAllInvitedPersons(id);
+        return ResponseEntity.ok(Map.of("persons", personDTOs));
     }
 }

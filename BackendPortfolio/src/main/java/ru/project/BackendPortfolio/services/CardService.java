@@ -12,6 +12,7 @@ import ru.project.BackendPortfolio.models.Card;
 import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.models.ProjectCard;
 import ru.project.BackendPortfolio.repositories.CardRepository;
+import ru.project.BackendPortfolio.repositories.PersonTeamRepository;
 import ru.project.BackendPortfolio.repositories.ProjectCardRepository;
 import ru.project.BackendPortfolio.repositories.TeamRepository;
 
@@ -30,12 +31,14 @@ public class CardService {
     private final CardLinkService cardLinkService;
     private final ProjectService projectService;
     private final TeamRepository teamRepository;
+    private final PersonTeamRepository personTeamRepository;
 
     @Autowired
     public CardService(CardFileService cardFileService, CardRepository cardRepository,
                        ProjectCardRepository projectCardRepository, ModelMapper modelMapper,
                        PersonService personService, CardLinkService cardLinkService,
-                       ProjectService projectService, TeamRepository teamRepository) {
+                       ProjectService projectService, TeamRepository teamRepository,
+                       PersonTeamRepository personTeamRepository) {
         this.cardFileService = cardFileService;
         this.cardRepository = cardRepository;
         this.projectCardRepository = projectCardRepository;
@@ -44,6 +47,7 @@ public class CardService {
         this.cardLinkService = cardLinkService;
         this.projectService = projectService;
         this.teamRepository = teamRepository;
+        this.personTeamRepository = personTeamRepository;
     }
 
     @Transactional
@@ -179,12 +183,12 @@ public class CardService {
 
     @Transactional
     public void delete(int id) {
-        var person = personService.getActivePerson();
+//        var person = personService.getActivePerson();
         var card = getCardById(id);
 
-        if (!card.getOwner().equals(person)) {
-            throw new ForbiddenException("Вы не можете удалять чужие карточки");
-        }
+//        if (!card.getOwner().equals(person)) {
+//            throw new ForbiddenException("Вы не можете удалять чужие карточки");
+//        }
 
         var cardFiles = card.getCardFiles();
         if (cardFiles != null) {
@@ -194,6 +198,20 @@ public class CardService {
         }
 
         cardRepository.delete(card);
+    }
+
+    public List<CardDTO> getAllTeamsCards(int id){
+        var person = personService.getPersonById(id);
+        var personTeams = personTeamRepository.findByPerson(person);
+        List<CardDTO> cardDTOs = new ArrayList<>();
+        for(var personTeam : personTeams){
+            var team = personTeam.getTeam();
+            var teamCards = team.getCards();
+            for(var teamCard : teamCards){
+                cardDTOs.add(mapToDTO(teamCard));
+            }
+        }
+        return cardDTOs;
     }
 
     public CardDTO mapToDTO(Card card){
@@ -214,7 +232,6 @@ public class CardService {
 
     public PublicCardDTO mapToPublicDTO(Card card){
         var publicCardDTO = modelMapper.map(card, PublicCardDTO.class);
-
         var projectCards = card.getProjectCards();
         List<ProjectDTO> projectDTOs = new ArrayList<>();
         for(var projectCard : projectCards) {
@@ -226,9 +243,10 @@ public class CardService {
         publicCardDTO.setProjects(projectDTOs);
 
         var owner = card.getOwner();
-        var publicPersonDTO = personService.mapToPublicDTO(owner);
-        publicCardDTO.setPublicPerson(publicPersonDTO);
-
+        if (card.getOwner() != null) {
+            var publicPersonDTO = personService.mapToPublicDTO(owner);
+            publicCardDTO.setPublicPerson(publicPersonDTO);
+        }
 
         return publicCardDTO;
     }

@@ -58,10 +58,15 @@ public class TeamService {
         return teamMapper.mapTeamDTO(team);
     }
 
-    public TeamDTO getTeamById(int id){
+    public TeamDTO getTeamDTOById(int id){
         var team = teamRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Команда с таким ID не найдена"));
         return teamMapper.mapTeamDTO(team);
+    }
+
+    public Team getTeamById(int id){
+        return teamRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Команда с таким ID не найдена"));
     }
 
     @Transactional
@@ -119,6 +124,7 @@ public class TeamService {
         var team = teamRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Команда с таким ID не найдена"));
         checkRights(team);
+        notificationService.deleteAllByTeam(team);
         teamRepository.delete(team);
     }
 

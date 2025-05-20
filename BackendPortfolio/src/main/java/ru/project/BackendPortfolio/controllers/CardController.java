@@ -48,6 +48,13 @@ public class CardController {
         return ResponseEntity.ok(Map.of("cards", cardDTOs));
     }
 
+    // Получение командных карточек из команд пользователя по id пользователя
+    @GetMapping("/show-team-cards-by-person/{id}")
+    public ResponseEntity<?> getCardsByTeam(@PathVariable("id") int id){
+        var cardDTOs = cardService.getAllTeamsCards(id);
+        return ResponseEntity.ok(Map.of("cards", cardDTOs));
+    }
+
     // Получение карточки по id
     @GetMapping("/card/{id}")
     public ResponseEntity<?> getCardById(@PathVariable("id") int id) {
