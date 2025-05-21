@@ -68,7 +68,7 @@ export default class Header extends React.Component {
     logout()
       .then(() => {
         this.context.setUser(null);
-        window.location.href = '/';
+        window.location.href = '/login';
       })
       .catch(error => {
         console.error('Ошибка выхода:', error);
@@ -95,15 +95,7 @@ export default class Header extends React.Component {
               >
                 Проекты
               </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/teams"
-                className={({ isActive }) => "header-link" + (isActive ? " active" : "")}
-              >
-                Команды
-              </NavLink>
-            </li>
+            </li>            
             <li>
               <NavLink
                 to="/cards"
@@ -114,10 +106,10 @@ export default class Header extends React.Component {
             </li>
             <li>
               <NavLink
-                to="/achievements"
+                to="/teams"
                 className={({ isActive }) => "header-link" + (isActive ? " active" : "")}
               >
-                Достижения
+                Команды
               </NavLink>
             </li>
           </ul>

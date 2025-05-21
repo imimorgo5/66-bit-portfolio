@@ -57,29 +57,112 @@
 
 .notification-title {
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
     padding: 0;
 }
 
 .notification-date {
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
     padding: 0;
 }
 
 .notifications-list li:hover {
-    background-color: rgba(0, 119, 255, 0.2);
+    background-color: rgba(0, 119, 255, 0.1);
 }
 
 .notifications-list li:active {
-    background-color: rgba(0, 119, 255, 1);
+    background-color: rgba(0, 119, 255, 0.4);
 }
 
-.notifications-empty-title {
+.notifications-empty-title, .notifications-loading {
     font-size: 20px;
     font-weight: 300;
     margin: 0;
     padding: 13px 0;
+}
+
+.notification-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.notification-modal {
+  background: white;
+  border-radius: 15px;
+  width: 500px;
+  padding: 30px;
+  position: relative;
+}
+
+.notification-modal-title {
+  margin: 10px 0 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.notification-modal-content {
+  font-size: 20px;
+  margin: 30px 0;
+}
+
+.notification-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.notification-modal-actions button {
+  padding: 8px 20px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 15px;
+  background-color: transparent;
+  border: 2px solid;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.notification-modal-actions .accept-notification-button {
+  color: rgba(0, 119, 255, 1);
+  border-color: rgba(0, 119, 255, 1);
+}
+
+.notification-modal-actions .reject-notification-button {
+  color: rgba(172, 29, 29, 1);
+  border-color: rgba(172, 29, 29, 1);
+}
+
+.accept-notification-button:hover {
+  background-color: rgba(0, 119, 255, 1);
+  color: white;
+}
+
+.reject-notification-button:hover {
+  background-color: rgba(172, 29, 29, 1);
+  color: white;
+}
+
+.notification-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 40px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.notification-modal-close:hover {
+  color: rgba(172, 29, 29, 1);
 }

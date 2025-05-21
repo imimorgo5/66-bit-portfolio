@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, NavLink, Link  } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, NavLink, Link  } from 'react-router-dom';
 import Header from '../components/header';
 import '../css/card-detail.css';
 import { AuthContext } from '../context/AuthContext';
 import { getCardById, updateCard, deleteCard } from '../services/card-service.js';
-import { getProjects } from '../services/project-service.js';
+import { getPersonProjects, getTeamProjects } from '../services/project-service.js';
+import { getTeamById } from '../services/team-service.js';
 import userIcon from '../img/user-icon.svg';
 import fileIcon from '../img/file_icon.svg';
 import linkIcon from '../img/link_icon.svg';
@@ -12,37 +13,72 @@ import linkIcon from '../img/link_icon.svg';
 export default function CardDetailPage() {
   const { id } = useParams();
   const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const location = useLocation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const backTo = params.get('from');
   const [card, setCard] = useState(null);
-  const [loading, setLoading]   = useState(true);
+  const [team, setTeam] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [isTeamCard, setIsTeamCard] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(null);
   const [filesLoaded, setFilesLoaded] = useState(false);
   const [projects, setProjects] = useState([]);
-  const [showProjectsList, setShowProjectsList] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const suggestionsRef = useRef(null);
   const fileInputRef = React.useRef(null);
-  const projectsListRef = useRef(null);
-  const projectsButtonRef = useRef(null);
+
 
   useEffect(() => {
     getCardById(id)
       .then((fetchedCard) => {
         setCard(fetchedCard);
+        setIsTeamCard(Boolean(fetchedCard.teamId));
       })
-      .catch((error) => {
-        console.error('Ошибка получения карточки:', error);
-      })
+      .catch(console.error)
       .finally(() => setLoading(false));
-  }, [id, authLoading]);
+  }, [id]);
+
+  useEffect(() => {
+    if (!loading && card && isTeamCard) {
+      getTeamById(card.teamId)
+        .then(setTeam)
+        .catch(console.error)
+        .finally(() => setTeamLoading(false));
+    }
+  }, [loading, isTeamCard, card])
+
+  useEffect(() => {
+    if (!loading && !isEditing && card) {
+      if (isTeamCard) {
+        getTeamProjects(card.teamId)
+          .then(setProjects)
+          .catch(console.error);
+      } else {
+        getPersonProjects()
+          .then(setProjects)
+          .catch(console.error);
+      }
+    }
+  }, [loading, isEditing, isTeamCard, card]);
 
   useEffect(() => {
     if (isEditing) {
-      getProjects()
-        .then(data => setProjects(data))
-        .catch(err => console.error(err));
+      setSearchTerm('');
+      setSuggestions([]);
     }
   }, [isEditing]);
+
+  useEffect(() => {
+    const filtered = projects
+      .filter(p => p.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      .slice(0, 5);
+    setSuggestions(searchTerm.length > 1 ? filtered : []);
+  }, [searchTerm, projects]);
 
   useEffect(() => {
     if (isEditing && !filesLoaded && editData && editData.cardFiles && editData.cardFiles.some(file => !file.file)) {
@@ -75,24 +111,14 @@ export default function CardDetailPage() {
   }, [isEditing, filesLoaded, editData]);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        projectsListRef.current &&
-        !projectsListRef.current.contains(event.target) &&
-        projectsButtonRef.current &&
-        !projectsButtonRef.current.contains(event.target)
-      ) {
-        setShowProjectsList(false);
+    function handleClickOutside(e) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target)) {
+        setSuggestions([]);
       }
     }
-  
-    if (showProjectsList) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showProjectsList]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleFileClick = async (file) => {
     try {
@@ -135,31 +161,14 @@ export default function CardDetailPage() {
     setIsEditing(true);
   };
 
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditData({
-      ...card,
-      projects: card.projects ? card.projects.map(p => p.id) : []
-     });
-    setShowProjectsList(false);
-  };
-
-  const handleSaveEdit = () => {
-    const payload = {
-      ...editData,
-      projects: editData.projects
-    };
-    updateCard(card.id, payload)
-      .then(() => {
-        return getCardById(card.id);
-      })
-      .then((updatedCard) => {
-        setCard(updatedCard);
+  const handleSave = () => {
+    updateCard(card.id, editData)
+      .then(() => getCardById(card.id))
+      .then(updated => {
+        setCard(updated);
         setIsEditing(false);
       })
-      .catch((error) => {
-        console.error('Ошибка при обновлении карточки:', error);
-      });
+      .catch(console.error);
   };
 
   const handleDelete = () => {
@@ -213,13 +222,12 @@ export default function CardDetailPage() {
     });
   };
 
-  const addProjectToCard = projectId => {
-    setEditData(prev => {
-      const arr = prev.projects || [];
-      return arr.includes(projectId)
-        ? prev
-        : { ...prev, projects: [...arr, projectId] };
-    });
+  const addProject = p => {
+    if (!editData.projects.includes(p.id)) {
+      setEditData(prev => ({ ...prev, projects: [...prev.projects, p.id] }));
+    }
+    setSearchTerm('');
+    setSuggestions([]);
   };
 
   const removeProject = idx => {
@@ -229,8 +237,8 @@ export default function CardDetailPage() {
     }));
   };
 
-  if (loading || authLoading) return <div className='loading-container'>Загрузка...</div>;
-  if (!card || authError) return <div className='error-container'>Ошибка получения данных...</div>;
+  if (loading || (isTeamCard && teamLoading) || authLoading) return <div className='loading-container'>Загрузка...</div>;
+  if (!card || (isTeamCard && !team) || authError) return <div className='error-container'>Ошибка получения данных...</div>;
   if (!user) {
     navigate('/login');
     return null;
@@ -257,52 +265,48 @@ export default function CardDetailPage() {
                       value={editData.description}
                       maxLength={2000}
                       onChange={handleChange}
+                      placeholder='Введите описание карточки'
                       className="edit-card-description"
                 />
             </div>
             <div className='edit-card-appendices-container'>
-                <div className='edit-card-projects'>
-                    <h3>Проекты:</h3>
-                    {editData.projects && editData.projects.length > 0 ? (
-                      <ul className="card-projects-list">
-                        {editData.projects.map((projId, idx) => {
-                          const proj = projects.find(p => p.id === projId);
-                          return (
-                            <li key={idx} className="edit-card-projects-item">
-                              <button
-                                onClick={() => removeProject(idx)}
-                                className="remove-card-project-button"
-                              >×</button>
-                              <h4 className="edit-card-project-title">
-                                {proj ? proj.title : '...'}
-                              </h4>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    ) : (
-                      <p className="card-empty-list">Проекты не прикреплены</p>
-                    )}
-                    <div className='project-upload-button-container'>
-                      <button
-                        ref={projectsButtonRef}
-                        onClick={() => setShowProjectsList(o => !o)}
-                        className="project-upload-button"
-                      >
-                        Добавить проект
-                      </button>
-
-                      {showProjectsList && (
-                        projects ? (
-                        <ul className="project-suggestions-list" ref={projectsListRef}>
-                          {projects.map(project => (
-                            <li key={project.id} onClick={() => addProjectToCard(project.id)}>
-                              {project.title}
-                            </li>
-                          ))}
-                        </ul>)
-                        : <div className="projects-empty-dropdown" ref={projectsListRef}><p>Проектов нет</p></div>)}
-                    </div>
+              <div className='edit-card-projects'>
+                  <h3>Проекты:</h3>
+                  <input
+                    type='text'
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    placeholder='Введите название проекта'
+                    className='card-project-search-input'
+                  />
+                  {suggestions.length > 0 && (
+                    <ul className='card-project-suggestions-list' ref={suggestionsRef}>
+                      {suggestions.map(p => {
+                        const already = editData.projects.includes(p.id);
+                        return (
+                          <li
+                            key={p.id}
+                            className={already ? 'already-added' : ''}
+                            onClick={() => !already && addProject(p)}
+                          >
+                            <h4 className='edit-card-project-title'>{p.title}</h4>
+                            {already && <span className='tag'>Уже добавлен</span>}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                  <ul className='selected-card-projects-list'>
+                    {editData.projects.map((pid, idx) => {
+                      const pr = projects.find(p => p.id === pid);
+                      return (
+                        <li key={idx} className='selected-card-project-item'>
+                          <h4 className="edit-card-project-title">{pr?.title || '...'}</h4>
+                          <button className='remove-card-project-button' onClick={() => removeProject(idx)}>×</button>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
                 <div className="edit-card-files">
                     <h3>Файлы:</h3>
@@ -335,49 +339,77 @@ export default function CardDetailPage() {
                     />
                 </div>
                 <div className="edit-card-detail-actions">
-                  <button type="button" className="save-button" onClick={handleSaveEdit}>Сохранить</button>
-                  <button type="button" className="cancel-button" onClick={handleCancelEdit}>Отменить изменения</button>
+                  <button type="button" className="save-button" onClick={handleSave}>Сохранить</button>
+                  <button type="button" className="cancel-button" onClick={() => setIsEditing(false)}>Отменить изменения</button>
                 </div>
             </div>
         </div>
         ) : (
           <div className='card-detail-container'>
-            <div className='card-user-container'>
-              <NavLink to='/cards' className='back-to-cards'><span>←</span> Назад к карточкам</NavLink>
-              <div className='card-user-info-container'>
-                <div className="card-user-info">
-                  <img
-                    src={user.imageName ? `http://localhost:8080/uploads/${user.imageName}` : userIcon}
-                    alt="Фото пользователя"
-                    className="card-user-photo"
-                  />
-                  <h2>{user.username}</h2>
-                </div>
-                <div className='card-user-description'>
-                  <p><span className='card-user-description-title'>Email: </span>{user.email}</p>
-                  <p><span className='card-user-description-title'>Дата рождения: </span>{user.birthDate ? user.birthDate : 'Не указана'}</p>
-                  <p><span className='card-user-description-title'>Телефон: </span>{user.phoneNumber ? user.phoneNumber : 'Не указан' }</p>
-                </div>
-              </div>
-              <div className="card-links">
-                <h3>Способы связи:</h3>
-                {user.linkDTOs && user.linkDTOs.length > 0 ? (
-                  <ul className="card-links-list">
-                    {user.linkDTOs.map((link, index) => (
-                      <li key={index} className='card-links-item'>
-                        <a
-                          className="link-title"
-                          href={link.link}
-                        >
-                          {link.description || link.link}
-                        </a>
-                        <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
+            {isTeamCard ? (
+              <div className='card-team-container'>
+                <NavLink to={backTo} className='back-to-team'><span>←</span> Назад</NavLink>
+                <div className='card-team-main'>
+                  <h1 className="team-title">{team.title}</h1>
+                  <ul className="team-members-list">
+                    {team.persons.map(member => (
+                      <li key={member.personId} className="member-item">
+                        <img
+                          src={member.imageName
+                            ? `http://localhost:8080/uploads/${member.imageName}`
+                            : userIcon}
+                          alt="Изображение пользователя"
+                          className="member-photo"
+                        />
+                        <div className="member-info">
+                          <h2 className='team-person-username'>{member.username}</h2>
+                          {member.role && <h3 className='team-person-role'>{member.role}</h3>}
+                        </div>
                       </li>
                     ))}
                   </ul>
-                ) : <p className='card-empty-list'>Не указано</p>}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className='card-user-container'>
+                <NavLink to={backTo} className='back-to-cards'><span>←</span> Назад к карточкам</NavLink>
+                <div className='card-user-info-container'>
+                  <div className="card-user-info">
+                    <img
+                      src={user.imageName ? `http://localhost:8080/uploads/${user.imageName}` : userIcon}
+                      alt="Фото пользователя"
+                      className="card-user-photo"
+                    />
+                    <h2>{user.username}</h2>
+                  </div>
+                  <div className='card-user-description'>
+                    <p><span className='card-user-description-title'>Email: </span>{user.email}</p>
+                    <p><span className='card-user-description-title'>Дата рождения: </span>{user.birthDate ? user.birthDate : 'Не указана'}</p>
+                    <p><span className='card-user-description-title'>Телефон: </span>{user.phoneNumber ? user.phoneNumber : 'Не указан' }</p>
+                  </div>
+                </div>
+                <div className="card-links">
+                  <h3>Способы связи:</h3>
+                  {user.linkDTOs && user.linkDTOs.length > 0 ? (
+                    <ul className="card-links-list">
+                      {user.linkDTOs.map((link, index) => (
+                        <li key={index} className='card-links-item'>
+                          <Link
+                            to={link.link}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="link-title"
+                          >
+                            {link.description || link.link}
+                          </Link>
+                          <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : <p className='card-empty-list'>Не указано</p>}
+                </div>
+              </div>
+            )}
             <div className='card-description-container'>
               <h2>{card.title}</h2>
               <label>Описание карточки:</label>
@@ -390,7 +422,7 @@ export default function CardDetailPage() {
                   <ul className="card-projects-list">
                       {card.projects.map((project, index) => (
                         <li key={index} className="card-projects-item">
-                          <Link to={`/projects/${project.id}`} className="project-title">{project.title}</Link>
+                          <Link to={`/projects/${project.id}?from=${encodeURIComponent(`/cards/${card.id}?from=${backTo}`)}`} className="project-title">{project.title}</Link>
                           <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
                         </li>
                       ))}

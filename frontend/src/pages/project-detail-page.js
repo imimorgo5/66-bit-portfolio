@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef  } from 'react';
-import { useParams, useNavigate, NavLink } from 'react-router-dom';
+import { useLocation, useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import Header from '../components/header';
 import '../css/project-detail.css';
 import { AuthContext } from '../context/AuthContext';
@@ -12,7 +12,10 @@ import { getProjectById, updateProject, deleteProject } from '../services/projec
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const location = useLocation();
   const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const backTo = params.get('from');
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +29,9 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     getProjectById(id)
-      .then((fetchedProject) => setProject(fetchedProject))
+      .then((fetchedProject) => {
+        setProject(fetchedProject);
+      })
       .catch((error) => console.error('Ошибка получения проекта:', error))
       .finally(() => setLoading(false));
   }, [id]);
@@ -301,7 +306,8 @@ export default function ProjectDetailPage() {
                         <li key={index} className="edit-project-link-item">
                           <button type="button" onClick={() => removeLink(index)} className="remove-project-link-button">×</button>
                           <div className='edit-project-link-item-container'>
-                            <a className="edit-project-link-title" href={link.link} target="_blank" rel="noopener noreferrer">{link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}</a>
+                            <Link to={link.link} target="_blank" rel="noopener noreferrer" className="edit-project-link-title">
+                              {link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}</Link>
                             <input
                               type="text"
                               value={link.description}
@@ -375,7 +381,7 @@ export default function ProjectDetailPage() {
                                   ×
                                 </button>
                                 <div className='edit-folder-file-item-container'>
-                                  <h4 className='edit-folder-file-title'>{f.fileTitle.split('_').at(-1).split(0, 28)}</h4>
+                                  <h4 className='edit-folder-file-title'>{f.fileTitle.split('_').at(-1).slice(0, 28)}</h4>
                                     <input
                                       type="text"
                                       placeholder="Описание файла"
@@ -426,7 +432,7 @@ export default function ProjectDetailPage() {
         ) : (
           <div className='project-detail-container'>
             <div className='project-appendices-container'>
-              <NavLink to='/' className='back-to-project'><span>←</span> Назад к проектам</NavLink>
+              <NavLink to={backTo} className='back-to-project'><span>←</span> Назад</NavLink>
               <div className='project-image-container'>
                 <img 
                   src={project.imageName
@@ -442,12 +448,9 @@ export default function ProjectDetailPage() {
                   <ul className="project-links-list">
                     {project.projectLinks.map((link, index) => (
                       <li key={index} className='project-links-item'>
-                        <a
-                          className="project-link-title"
-                          href={link.link}
-                        >
-                          {link.description || link.link}
-                        </a>
+                        <Link to={link.link} target="_blank" rel="noopener noreferrer" className="project-link-title">
+                          {link.description ? link.description : link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}
+                        </Link>
                         <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
                       </li>
                     ))}
@@ -481,15 +484,17 @@ export default function ProjectDetailPage() {
             </div>
             {isModalOpen && selectedFolder !== null && (
               <div className="modal-folder-overlay">
-                <button className="modal-folder-close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+                <div className='modal-folder-header'>
+                   <h3>{project.folders[selectedFolder].title}</h3>
+                   <button className="modal-folder-close-btn" onClick={() => setIsModalOpen(false)}>×</button>
+                </div>
                 <div className="modal-folder-content">
-                  <h3>{project.folders[selectedFolder].title}</h3>
                   {project.folders[selectedFolder].files.length > 0 ? (
                     <ul className="modal-folder-files-list">
                       {project.folders[selectedFolder].files.map((file, fi) => (
                         <li key={fi} className="modal-folder-file-item">
                           <img src={fileIcon} className='file-icon' alt='Иконка файла'></img>
-                          <h4 className="folder-file-title" onClick={() => handleFileClick(file)}>{file.description ? file.description : file.fileTitle.split('_').at(-1).split(0, 28)}</h4>
+                          <h4 className="folder-file-title" onClick={() => handleFileClick(file)}>{file.description ? file.description : file.fileTitle.split('_').at(-1).slice(0, 28)}</h4>
                         </li>
                       ))}
                     </ul>

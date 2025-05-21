@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from '../components/header';
 import '../css/user-page.css';
 import { AuthContext } from '../context/AuthContext';
@@ -147,11 +147,15 @@ export default function UserPage() {
           username: updatedPerson.username,
           phoneNumber: updatedPerson.phoneNumber,
           birthDate: updatedPerson.birthDate,
-          imageName: updatedPerson.imageName
+          imageName: updatedPerson.imageName,
         });
         setEditMode(false);
       })
       .catch((error) => {
+        if (error.message.includes("Пользователь с таким email уже существует")) {
+          setEditData({...editData, email: ''});
+          setEmailError("Пользователь с таким email уже существует");
+        }
         console.error('Ошибка обновления профиля:', error);
       });
   };
@@ -217,8 +221,8 @@ export default function UserPage() {
                         onChange={handleEmailChange}
                         className={`${emailError ? 'input-error' : ''}`}
                       />
+                      {emailError && <span className="user-error-message">{emailError}</span>}
                     </div>
-                    {emailError && <span className="user-error-message">{emailError}</span>}
                     <div className='user-input-wrapper'>
                       <p className='description-title'>Дата рождения:</p>
                       <input
@@ -236,10 +240,10 @@ export default function UserPage() {
                         value={editData.phoneNumber || ''}
                         maxLength={12}
                         onChange={handleNumberChange}
-                        className={`${emailError ? 'input-error' : ''}`}
+                        className={`${phoneError ? 'input-error' : ''}`}
                       />
+                      {phoneError && <span className="user-error-message">{phoneError}</span>}
                     </div>
-                    {phoneError && <span className="user-error-message">{phoneError}</span>}
                   </div>
               </div>
             </div>
@@ -251,7 +255,14 @@ export default function UserPage() {
                         <li key={index} className="edit-user-link-item">
                           <div className='edit-user-link-item-container'>
                             <button type="button" onClick={() => removeLink(index)} className="remove-user-link-button">×</button>
-                            <a className="edit-user-link-title" href={link.link} target="_blank" rel="noopener noreferrer">{link.link.length > 35 ? link.link.slice(0, 32) + '...' : link.link}</a>
+                            <Link
+                              to={link.link}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="edit-user-link-title"
+                            >
+                              {link.link.length > 35 ? link.link.slice(0, 32) + '...' : link.link}
+                            </Link>
                             <input
                               type="text"
                               value={link.description}
@@ -306,12 +317,14 @@ export default function UserPage() {
                 <ul className="user-links-list">
                   {user.linkDTOs.map((link, index) => (
                     <li key={index} className='user-links-item'>
-                      <a
-                        className="user-link-title"
-                        href={link.link}
-                      >
-                        {link.description || link.link}
-                      </a>
+                      <Link
+                          to={link.link}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="user-link-title"
+                        >
+                        {link.description ? link.description : link.link.length > 35 ? link.link.slice(0, 32) + '...' : link.link}
+                      </Link>
                       <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
                     </li>
                   ))}

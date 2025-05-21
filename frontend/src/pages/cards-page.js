@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import Header from '../components/header';
 import CardPreview from '../components/card-preview';
 import { AuthContext } from '../context/AuthContext';
@@ -9,38 +9,51 @@ import '../css/preview-pages.css';
 import '../css/cards-page.css';
 import EmptyArrow from '../img/empty-arrow.svg';
 import EmptyPicture from '../img/empty-items-picture.png';
-import { getCards, createCard } from '../services/card-service';
+import { getPersonCards, getPersonTeamsCard, createPersonCard } from '../services/card-service';
 
 export default function CardsPage() {
   const { user, isLoading: authLoading } = useContext(AuthContext);
+  const location = useLocation();
   const navigate = useNavigate();  
   const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [sortMode, setSortMode] = useState('date');
-  const [teamMode, setTeamMode] = useState(false);
+  const [isTeamMode, setIsTeamMode] = useState(new URLSearchParams(location.search).get('mode') === 'team');
 
   useEffect(() => {
-    getCards()
-      .then(fetched => setCards(fetched))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    if (isTeamMode && !authLoading) {
+      getPersonTeamsCard(user.id)
+        .then(fetched => setCards(fetched))
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    } else {
+      getPersonCards()
+        .then(fetched => setCards(fetched))
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    }
+  }, [isTeamMode, user, authLoading]);
 
   const handleAddCard = () => {
     if (!user) {
       navigate('/register');
       return;
     }
-    createCard({ title: 'Новая карточка' })
-      .then(newCard => setCards(prev => [...prev, newCard]))
+    createPersonCard({ title: 'Новая карточка' })
+      .then(newCard => goToCardDetail(newCard))
       .catch(err => console.error(err));
   };
 
   const handleSortChange = mode => setSortMode(mode);
   
-  const handleTeamSwitchChange = option => setTeamMode(option === 'team');
+  const handleTeamSwitchChange = option => {
+    const isTeam = option === 'team';
+    setIsTeamMode(isTeam);
+    navigate(`/cards?mode=${isTeam ? 'team' : 'self'}`, { replace: true });
+  };
 
-  const goToCardDetail = card => navigate(`/cards/${card.id}`, { state: { card } });
+  const goToCardDetail = card => navigate(`/cards/${card.id}?from=${isTeamMode ? '/cards?mode=team' : '/cards'}`);
 
   const isNew = (card) => {
     return (
@@ -66,7 +79,10 @@ export default function CardsPage() {
           <>
             <div className="cards-actions">
               <SortComponent onSortChange={handleSortChange} />
-              <SelfTeamSwitch onOptionChange={handleTeamSwitchChange} />
+              <SelfTeamSwitch 
+                onOptionChange={handleTeamSwitchChange}
+                isTeamMode={isTeamMode}
+              />
             </div>
             <ul className="preview-list">
               {sortedCards.map(card => (
@@ -91,13 +107,15 @@ export default function CardsPage() {
             </div>
           </div>
         )}
-        <button
-          type="button"
-          className={`add-item ${teamMode && sortedCards.length > 0 ? 'disabled' : ''}`}
-          onClick={handleAddCard}
-        >
-          Добавить карточку
-        </button>
+        {!isTeamMode && 
+          <button
+            type="button"
+            className='add-item'
+            onClick={handleAddCard}
+          >
+            Добавить карточку
+          </button>
+        }
       </div>
     </div>
   );

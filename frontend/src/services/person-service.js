@@ -34,7 +34,8 @@ export const getPersonById = async (id) => {
     });
 
     if (!res.ok) {
-      throw new Error('Ошибка при обновлении профиля');
+      const errorData = await res.json();
+      throw new Error(errorData.error)
     }
 
     const data = await res.json();

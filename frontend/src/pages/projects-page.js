@@ -8,7 +8,7 @@ import '../css/preview-pages.css';
 import '../css/projects-page.css';
 import EmptyArrow from '../img/empty-arrow.svg';
 import EmptyPicture from '../img/empty-items-picture.png';
-import { getProjects, createProject } from '../services/project-service';
+import { createPersonProject, getPersonProjects } from '../services/project-service';
 
 export default function ProjectsPage() {
   const { user, isLoading: authLoading } = useContext(AuthContext);
@@ -18,7 +18,7 @@ export default function ProjectsPage() {
   const [sortMode, setSortMode] = useState('date');
 
   useEffect(() => {
-    getProjects()
+    getPersonProjects()
       .then(fetched => setProjects(fetched))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
@@ -29,15 +29,12 @@ export default function ProjectsPage() {
       navigate('/register');
       return;
     }
-    createProject({ title: 'Новый проект' })
-      .then(newProj => setProjects(prev => [...prev, newProj]))
+    createPersonProject({ title: 'Новый проект' })
+      .then(newProj => navigate(`/projects/${newProj.id}?from=${encodeURIComponent('/')}`))
       .catch(err => console.error(err));
   };
 
   const handleSortChange = mode => setSortMode(mode);
-
-  const goToProjectDetail = project =>
-    navigate(`/projects/${project.id}`, { state: { project } });
 
   const isNew = (proj) => {
     return (
@@ -68,7 +65,7 @@ export default function ProjectsPage() {
               {sortedProjects.map(proj => (
                 <li
                   key={proj.id}
-                  onClick={() => goToProjectDetail(proj)}
+                  onClick={() => navigate(`/projects/${proj.id}?from=${encodeURIComponent('/')}`)}
                   className={isNew(proj) ? 'new-item' : ''}
                 >
                   <ProjectPreview

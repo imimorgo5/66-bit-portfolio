@@ -1,9 +1,9 @@
-export const createTeam = async ({ title, emails }) => {
+export const createTeam = async (teamData) => {
     const res = await fetch('/teams/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ title, emails })
+      body: JSON.stringify(teamData)
     });
     if (!res.ok) {
       const err = await res.json();
@@ -15,7 +15,7 @@ export const createTeam = async ({ title, emails }) => {
   
   export const getTeamById = async (id) => {
     try {
-      const response = await fetch(`/teams/team/${id}`, {
+      const response = await fetch(`/teams/show/${id}`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -34,7 +34,7 @@ export const createTeam = async ({ title, emails }) => {
   };
   
   export const getAllPersonTeams = async () => {
-    const res = await fetch('/teams/team/all', {
+    const res = await fetch('/teams/show/all', {
       method: 'GET',
       credentials: 'include'
     });
@@ -51,7 +51,7 @@ export const createTeam = async ({ title, emails }) => {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(teamData), // { title, emails: [...] }
+        body: JSON.stringify(teamData),
       });
   
       if (!response.ok) {
@@ -59,8 +59,8 @@ export const createTeam = async ({ title, emails }) => {
         throw new Error(errorData.error || 'Ошибка при обновлении команды');
       }
   
-      const data = await response.json();
-      return data.team;
+      // const data = await response.json();
+      // return data.team;
     } catch (error) {
       console.error('Ошибка в updateTeamById:', error);
       throw error;
@@ -87,3 +87,12 @@ export const createTeam = async ({ title, emails }) => {
     }
   };
   
+  export const getInvitedPersons = async (teamId) => {
+    const res = await fetch(`/teams//${teamId}/show-invited`, {
+      method: 'GET',
+      credentials: 'include'
+    });
+    if (!res.ok) throw new Error('Не удалось загрузить приглашенных пользователей');
+    const data = await res.json();
+    return data.persons;
+  };  

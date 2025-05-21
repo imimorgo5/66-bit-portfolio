@@ -1,44 +1,73 @@
-export const getCards = () => {
-    return fetch('/cards/show', { credentials: 'include' })
-        .then((res) => {
-        if (!res.ok) {
-            throw new Error('Ошибка при получении карточек');
-        }
-        return res.json();
-        })
-        .then((data) => data.cards || []);
-};
-
-export const getCardById = (id) => {
-    return fetch(`/cards/card/${id}`, { credentials: 'include' })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Ошибка при получении карточки');
-        }
-        return res.json();
-      })
-      .then((data) => data.card);
-};
-
-export const createCard = (cardData) => {
+export const createPersonCard = async (cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
 
-    return fetch('/cards/create', {
+    const res = await fetch('/cards/create-by-person', {
         method: 'POST',
         credentials: 'include',
         body: formData,
-    })
-    .then((res) => {
-        if (!res.ok) {
-            throw new Error('Ошибка при создании карточки');
-        }
-        return res.json();
-    })
-    .then((data) => data.card);
+    });
+    if (!res.ok) {
+        throw new Error('Ошибка при создании карточки');
+    }
+    const data = await res.json();
+    return data.card;
 };
 
-export const updateCard = (id, cardData) => {
+export const getPersonCards = async () => {
+    const res = await fetch('/cards/show-by-person', { credentials: 'include' });
+    if (!res.ok) {
+        throw new Error('Ошибка при получении карточек');
+    }
+    const data = await res.json();
+    return data.cards || [];
+};
+
+export const getTeamCards = async (teamId) => {
+    const res = await fetch(`/cards/show-by-team/${teamId}`, { credentials: 'include' });
+    if (!res.ok) {
+        throw new Error('Ошибка при получении карточек');
+    }
+    const data = await res.json();
+    return data.cards || [];
+};
+
+export const getPersonTeamsCard = async (id) => {
+    const res = await fetch(`/cards/show-team-cards-by-person/${id}`, { credentials: 'include' });
+    if (!res.ok) {
+        throw new Error('Ошибка при получении карточек');
+    }
+    const data = await res.json();
+    return data.cards || [];
+};
+
+export const createTeamCard = async (cardData) => {
+    const formData = new FormData();
+    formData.append('teamId', cardData.teamId);
+    formData.append('title', cardData.title);
+
+    const res = await fetch('/cards/create-by-team', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+    });
+    if (!res.ok) {
+        throw new Error('Ошибка при создании карточки');
+    }
+    const data = await res.json();
+    return data.card;
+};
+
+export const getCardById = async (id) => {
+    const res = await fetch(`/cards/card/${id}`, { credentials: 'include' });
+    if (!res.ok) {
+        throw new Error('Ошибка при получении карточки');
+    }
+    const data = await res.json();
+    return data.card;
+};
+
+export const updateCard = async (id, cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
    
@@ -69,29 +98,25 @@ export const updateCard = (id, cardData) => {
         });
     }
 
-    return fetch(`/cards/update/${id}`, {
+    const res = await fetch(`/cards/update/${id}`, {
         method: 'PUT',
         credentials: 'include',
         body: formData,
-    })
-    .then((res) => {
-        if (!res.ok) {
-            throw new Error('Ошибка при обновлении карточки');
-        }
-        return res.json();
-    })
-    .then((data) => data.card);
+    });
+    if (!res.ok) {
+        throw new Error('Ошибка при обновлении карточки');
+    }
+    const data = await res.json();
+    return data.card;
 };
 
-export const deleteCard = (id) => {
-    return fetch(`/cards/delete/${id}`, {
+export const deleteCard = async (id) => {
+    const res = await fetch(`/cards/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
-    })
-    .then((res) => {
-        if (!res.ok) {
-            throw new Error('Ошибка при удалении карточки');
-        }
-        return res.json();
     });
+    if (!res.ok) {
+        throw new Error('Ошибка при удалении карточки');
+    }
+    return await res.json();
 };

@@ -1,4 +1,4 @@
-export async function getPublicCard(token) {
+export const getPublicCard = async (token) => {
   try {
     const response = await fetch(`/public/card/${token}`);
     if (response.status === 404) {
@@ -11,9 +11,9 @@ export async function getPublicCard(token) {
   } catch (error) {
     throw error;
   }
-}
+};
 
-export async function getPublicProject(token) {
+export const getPublicProject = async (token) => {
   try {
     const response = await fetch(`/public/project/${token}`);
     if (response.status === 404) {
@@ -26,4 +26,4 @@ export async function getPublicProject(token) {
   } catch (error) {
     throw error;
   }
-}
+};

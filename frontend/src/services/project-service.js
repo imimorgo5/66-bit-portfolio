@@ -1,5 +1,53 @@
-export const getProjects = async () => {
-  const res = await fetch('/projects/show', { credentials: 'include' });
+export const createPersonProject = async (projectData) => {
+    const formData = new FormData();
+    formData.append('title', projectData.title);
+
+    const res = await fetch('/projects/create-by-person', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+  if (!res.ok) {
+    throw new Error('Ошибка при создании проекта');
+  }
+
+  const data = await res.json();
+  return data.project;
+};
+
+export const getPersonProjects = async () => {
+  const res = await fetch('/projects/show-by-person', { credentials: 'include' });
+
+  if (!res.ok) {
+    throw new Error('Ошибка при получении проектов');
+  }
+  
+  const data = await res.json();
+  return data.projects || [];
+};
+
+export const createTeamProject = async (projectData) => {
+    const formData = new FormData();
+    formData.append('teamId', projectData.teamId);
+    formData.append('title', projectData.title);
+
+    const res = await fetch('/projects/create-by-team', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+
+  if (!res.ok) {
+    throw new Error('Ошибка при создании проекта');
+  }
+
+  const data = await res.json();
+  return data.project;
+};
+
+export const getTeamProjects = async (teamId) => {
+  const res = await fetch(`/projects/show-by-team/${teamId}`, { credentials: 'include' });
 
   if (!res.ok) {
     throw new Error('Ошибка при получении проектов');
@@ -16,24 +64,6 @@ export const getProjectById = async (id) => {
     throw new Error('Ошибка при получении проекта');
   }
   
-  const data = await res.json();
-  return data.project;
-};
-  
-export const createProject = async (projectData) => {
-    const formData = new FormData();
-    formData.append('title', projectData.title);
-
-    const res = await fetch('/projects/create', {
-      method: 'POST',
-      credentials: 'include',
-      body: formData,
-    });
-
-  if (!res.ok) {
-    throw new Error('Ошибка при создании проекта');
-  }
-
   const data = await res.json();
   return data.project;
 };

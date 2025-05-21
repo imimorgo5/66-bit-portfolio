@@ -63,7 +63,7 @@
     justify-content: space-between;
     text-align: left;
     width: 100%;
-    height: 152px;
+    height: 172px;
     margin: auto;
     white-space: nowrap;
   }
@@ -252,13 +252,7 @@
     padding: 5px 20px;
   }
   
-  .user-data-save-button:disabled {
-    background-color: #ccc;
-    border-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .user-data-save-button:not(:disabled), .user-photo-change, .add-user-link-button {
+  .user-data-save-button, .user-photo-change, .add-user-link-button {
     background-color: transparent;
     color: rgba(0, 119, 255, 1);
     border: 2px solid rgba(0,119,255,1);
@@ -267,6 +261,13 @@
   .user-data-save-button:hover, .user-photo-change:hover, .add-user-link-button:hover {
     background-color: rgba(0, 119, 255, 1);
     color: #fff;
+  }
+
+  .user-data-save-button:disabled {
+    background-color: #ccc;
+    color: white;
+    border-color: #ccc;
+    cursor: not-allowed;
   }
   
   .user-data-cancel-button:hover {
@@ -285,8 +286,10 @@
     color: rgba(172, 29, 29, 1);
     font-size: 16px;
     text-align: left;
-    margin-top: -15px;
-    margin-left: 110px;
+    margin-top: 60px;
+    min-width: 400px;
+    text-align: center;
+    margin-left: 180px;
   }
 
   .user-input-wrapper .input-error {
