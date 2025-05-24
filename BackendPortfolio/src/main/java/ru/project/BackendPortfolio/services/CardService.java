@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.CardDTO;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
 import ru.project.BackendPortfolio.dto.to_share.PublicCardDTO;
-import ru.project.BackendPortfolio.exceptions.ForbiddenException;
+import ru.project.BackendPortfolio.mappers.TeamMapper;
 import ru.project.BackendPortfolio.models.Card;
 import ru.project.BackendPortfolio.models.Project;
 import ru.project.BackendPortfolio.models.ProjectCard;
@@ -32,13 +32,14 @@ public class CardService {
     private final ProjectService projectService;
     private final TeamRepository teamRepository;
     private final PersonTeamRepository personTeamRepository;
+    private final TeamMapper teamMapper;
 
     @Autowired
     public CardService(CardFileService cardFileService, CardRepository cardRepository,
                        ProjectCardRepository projectCardRepository, ModelMapper modelMapper,
                        PersonService personService, CardLinkService cardLinkService,
                        ProjectService projectService, TeamRepository teamRepository,
-                       PersonTeamRepository personTeamRepository) {
+                       PersonTeamRepository personTeamRepository, TeamMapper teamMapper) {
         this.cardFileService = cardFileService;
         this.cardRepository = cardRepository;
         this.projectCardRepository = projectCardRepository;
@@ -48,6 +49,7 @@ public class CardService {
         this.projectService = projectService;
         this.teamRepository = teamRepository;
         this.personTeamRepository = personTeamRepository;
+        this.teamMapper = teamMapper;
     }
 
     @Transactional
@@ -143,9 +145,6 @@ public class CardService {
 
     @Transactional
     public CardDTO update(int id, CardDTO cardDTO) {
-
-        // Временно отключил проверку прав, теперь можно удалять чужие карточки.
-
         var card = getCardById(id);
         card.setTitle(cardDTO.getTitle());
         card.setDescription(cardDTO.getDescription());
@@ -183,13 +182,7 @@ public class CardService {
 
     @Transactional
     public void delete(int id) {
-//        var person = personService.getActivePerson();
         var card = getCardById(id);
-
-//        if (!card.getOwner().equals(person)) {
-//            throw new ForbiddenException("Вы не можете удалять чужие карточки");
-//        }
-
         var cardFiles = card.getCardFiles();
         if (cardFiles != null) {
             for (var cardFile : cardFiles) {
@@ -246,6 +239,12 @@ public class CardService {
         if (card.getOwner() != null) {
             var publicPersonDTO = personService.mapToPublicDTO(owner);
             publicCardDTO.setPublicPerson(publicPersonDTO);
+        }
+
+        var team = card.getTeam();
+        if (card.getTeam() != null) {
+            var teamDTO = teamMapper.mapTeamDTO(team);
+            publicCardDTO.setTeam(teamDTO);
         }
 
         return publicCardDTO;

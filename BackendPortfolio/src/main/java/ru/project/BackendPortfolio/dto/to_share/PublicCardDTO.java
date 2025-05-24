@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import ru.project.BackendPortfolio.dto.CardFileDTO;
 import ru.project.BackendPortfolio.dto.CardLinkDTO;
 import ru.project.BackendPortfolio.dto.ProjectDTO;
+import ru.project.BackendPortfolio.dto.TeamDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,16 @@ public class PublicCardDTO {
     private LocalDateTime createdAt;
 
     private PublicPersonDTO publicPerson;
+
+    private TeamDTO team;
+
+    public TeamDTO getTeam() {
+        return team;
+    }
+
+    public void setTeam(TeamDTO team) {
+        this.team = team;
+    }
 
     public int getId() {
         return id;

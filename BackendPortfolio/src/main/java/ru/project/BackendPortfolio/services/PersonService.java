@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.project.BackendPortfolio.dto.*;
 import ru.project.BackendPortfolio.dto.to_share.PublicPersonDTO;
 import ru.project.BackendPortfolio.exceptions.ForbiddenException;
+import ru.project.BackendPortfolio.exceptions.RegistrationException;
 import ru.project.BackendPortfolio.models.Link;
 import ru.project.BackendPortfolio.models.Person;
 import ru.project.BackendPortfolio.repositories.PeopleRepository;
@@ -78,8 +79,12 @@ public class PersonService {
             person.setImageName(fileName);
         }
 
+        var currentEmail = person.getEmail();
         var newEmail = personDTO.getEmail();
-        if (newEmail != null) {
+        if (newEmail != null && !newEmail.equals(currentEmail)) {
+            if (peopleRepository.findByEmail(newEmail).isPresent()){
+                throw new RegistrationException("Пользователь с таким email уже существует");
+            }
             person.setEmail(newEmail);
         }
 

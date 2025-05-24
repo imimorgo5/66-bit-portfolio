@@ -31,10 +31,11 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+//                .cors(cors -> cors.disable())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/auth/login", "/auth/registration", "/error", "/public/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/registration", "/error", "/public/**", "/uploads/**").permitAll()
                         .anyRequest().hasAnyRole("ADMIN", "USER")
                 )
                 .formLogin(formLogin -> formLogin
@@ -48,8 +49,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .invalidateHttpSession(true)
                                 .deleteCookies("JSESSIONID")
                                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-//                        .sessionManagement(sessionManagement -> sessionManagement
-//                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
 
         return http.build();
