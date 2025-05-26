@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams, NavLink, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Header from '../components/header.js';
+import { useNavigate, useParams, useLocation, NavLink, Link } from 'react-router-dom';
+import Header from '../components/header-component.js';
 import '../css/team-detail.css';
 import { AuthContext } from '../context/AuthContext';
 import { getTeamById, updateTeamById, deleteTeamById, getInvitedPersons } from '../services/team-service.js';
@@ -11,35 +10,59 @@ import { getAllPeople } from '../services/person-service.js';
 import userIcon from '../img/user-icon.svg';
 import adminIcon from '../img/admin-icon.svg';
 import defaultPreview from '../img/defaultPreview.png';
+import ErrorComponent from '../components/error-component.js';
+import LoadingComponent from '../components/loading-component.js';
+import TeamMembersList from '../components/team-members-list-component.js';
 
 export default function TeamDetailPage() {
   const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [loading, setLoading] = useState(true);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [teamProjectsLoading, setTeamProjectsLoading] = useState(true);
+  const [teamCardsLoading, setTeamCardsLoading] = useState(true);
   const [team, setTeam] = useState(null);
-  const [mode, setMode] = useState('view');
-  const [title, setTitle] = useState('');
-  const [members, setMembers] = useState([]);
-  const [roles, setRoles] = useState({});
+  const [isEditMode, setIsEditMode] = useState(state?.isEdit);
+  const [editData, setEditData] = useState({
+    title: '',
+    members: [],
+    roles: {},
+    invited: []
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [projects, setProjects] = useState([]);
   const [cards, setCards] = useState([]);
-  const [invitedPersons, setInvitedPersons] = useState([]);
   const [newInvitesSent, setNewInvitesSent] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
     async function init() {
-      await loadTeam();
-      await loadProjects();
-      await loadCards();
-      setLoading(false);
+      await getTeamById(id).then(setTeam).catch(console.error).finally(() => setTeamLoading(false));
+      await getTeamProjects(id).then(setProjects).catch(console.error).finally(() => setTeamProjectsLoading(false));
+      await getTeamCards(id).then(setCards).catch(console.error).finally(() => setTeamCardsLoading(false));
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (isEditMode && team) {
+      getInvitedPersons(id)
+        .then(invited => {
+          setEditData({
+            title: team.title || '',
+            members: team.persons || [],
+            roles: team.persons.reduce((acc, p) => ({ ...acc, [p.personId]: p.role || '' }), {}),
+            invited: invited
+          });
+          setIsEditMode(true);
+        })
+        .catch(console.error);
+    }
+  }, [isEditMode, team, id]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -52,62 +75,17 @@ export default function TeamDetailPage() {
   }, []);
 
   useEffect(() => {
-    if (mode === 'view' && newInvitesSent) {
-      toast.success('Приглашения отправлены');
+    if (!isEditMode && newInvitesSent) {
       setNewInvitesSent(false);
     }
-  }, [mode, newInvitesSent]);
+  }, [isEditMode, newInvitesSent]);
 
-  const loadTeam = async () => {
-    try {
-      const t = await getTeamById(id);
-      setTeam(t);
-      setTitle(t.title);
-      setMembers(t.persons || []);
-      const initialRoles = {};
-      (t.persons || []).forEach(p => {
-        initialRoles[p.personId] = p.role || '';
-      });
-      setRoles(initialRoles);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const loadTeam = async () => await getTeamById(id).then(setTeam).catch(console.error).finally(() => setTeamLoading(false));
 
-  const loadProjects = async () => {
-    try {
-      const projs = await getTeamProjects(id);
-      setProjects(projs);
-    } catch (e) { console.error(e); }
-  };
-
-  const loadCards = async () => {
-    try {
-      const cds = await getTeamCards(id);
-      setCards(cds);
-    } catch (e) { console.error(e); }
-  };
-
-  const loadInvitedPersons = async () => {
-    try {
-      const invitedPersons = await getInvitedPersons(id);
-      setInvitedPersons(invitedPersons);
-    } catch (e) { console.error(e); }
-  }
-
-  const handleDelete = async () => {
-    await deleteTeamById(id);
-    navigate('/teams');
-  };
-
-  const startEdit = async () => {
-    await loadInvitedPersons();
-    setMode('edit');
-  };
+  const handleDelete = async () => await deleteTeamById(id).then(() => navigate('/teams')).catch(console.error);
 
   const cancelEdit = () => {
-    setMode('view');
-    loadTeam();
+    setIsEditMode(false);
     setSearchTerm('');
     setSearchResults([]);
   };
@@ -115,80 +93,93 @@ export default function TeamDetailPage() {
   const onSearchChange = async e => {
     const term = e.target.value;
     setSearchTerm(term);
-    if (term.length < 2 || members.length >= 6) {
+    if (term.length < 2 || editData.members.length >= 6) {
       setSearchResults([]);
       return;
     }
     try {
-      const people = await getAllPeople();
-      const filtered = people
-        .filter(p =>
-          (p.email.includes(term) || p.username.toLowerCase().includes(term.toLowerCase())) &&
-          p.id !== user.id
-        )
-        .slice(0, 10);
+      const people = await getAllPeople().catch(console.error);
+      const filtered = people.filter(p => (p.email.includes(term) || p.username.toLowerCase().includes(term.toLowerCase())) && p.id !== user.id).slice(0, 10);
       setSearchResults(filtered);
     } catch (err) {
       console.error(err);
     }
   };
 
+  const changeTitle = e => setEditData(d => ({ ...d, title: e.target.value }));
+
   const addMember = person => {
-    if (members.find(m => m.personId === person.id || m.personId === person.id) || members.length >= 6) return;
-    setMembers(prev => [...prev, person]);
-    setRoles(prev => ({ ...prev, [person.id]: '' }));
+    if (editData.members.find(m => m.personId === person.id || m.personId === person.id) || editData.members.length >= 6) return;
+    setEditData(d => ({
+      ...d,
+      members: [...d.members, person],
+      roles: { ...d.roles, [person.id]: '' }
+    }));
     setSearchTerm('');
     setSearchResults([]);
   };
 
   const removeMember = id => {
-    setMembers(prev => prev.filter(m => m.personId !== id && m.id !== id));
-    setRoles(prev => {
-      const copy = { ...prev };
-      delete copy[id];
-      return copy;
-    });
+    setEditData(d => ({
+      ...d,
+      members: d.members.filter(m => m.personId !== id && m.id !== id),
+      roles: Object.fromEntries(
+        Object.entries(d.roles).filter(([k]) => k !== String(id))
+      )
+    }));
   };
 
-  const changeRole = (id, value) => {
-    setRoles(prev => ({ ...prev, [id]: value }));
-  };
+  const changeRole = (id, role) => setEditData(d => ({ ...d, roles: { ...d.roles, [id]: role } }));
 
   const handleSave = async () => {
     const existingIds = team.persons.map(p => p.personId);
-    const added = members.filter(m => !existingIds.includes(m.personId || m.id));
-    const personsPayload = members.map(m => ({ email: m.email, role: roles[m.personId || m.id] || '' }));
-    const myRole = roles[user.id] || '';
-    await updateTeamById(id, { title, myRole, persons: personsPayload });
-    if (added.length > 0) {
-      setNewInvitesSent(true);
+    const added = editData.members.filter(m => !existingIds.includes(m.personId || m.id));
+    const payload = {
+      title: editData.title,
+      myRole: editData.roles[user.id] || '',
+      persons: editData.members.map(m => ({ email: m.email, role: editData.roles[m.personId || m.id] || '' }))
+    };
+    try {
+      await updateTeamById(id, payload);
+      if (added.length > 0) {
+        setToastMessage(`Приглашение в команду отправлены для ${added.length} человек(а)`);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+      setSearchTerm('');
+      setIsEditMode(false);
+      loadTeam();
+    } catch (err) {
+      console.error(err);
     }
-    setMode('view');
-    loadTeam();
   };
 
   const handleCreateProject = async () => {
     try {
       const newProj = await createTeamProject({ teamId: id, title: 'Новый проект' });
-      navigate(`/projects/${newProj.id}?from=${encodeURIComponent(`/teams/${id}`)}`);
-    } catch (e) { console.error(e); }
+      navigate(`/projects/${newProj.id}?from=${encodeURIComponent(`/teams/${id}`)}`, { state: { isEdit: true } });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleCreateCard = async () => {
     try {
       const newCard = await createTeamCard({ teamId: id, title: 'Новая карточка' });
-      navigate(`/cards/${newCard.id}?from=${encodeURIComponent(`/teams/${id}`)}`);
-    } catch (e) { console.error(e); }
+      navigate(`/cards/${newCard.id}?from=${encodeURIComponent(`/teams/${id}`)}`, { state: { isEdit: true } });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  if (loading || authLoading) return <div className="loading-container">Загрузка...</div>;
-  if (!team || authError) return <div className='error-container'>Ошибка получения данных...</div>;
+  if (teamLoading || teamProjectsLoading || teamCardsLoading || authLoading) return <LoadingComponent />;
+  if (!team || authError) return <ErrorComponent />;
   if (!user) {
     navigate('/login');
     return null;
   }
 
-  const baseList = mode === 'view' ? (team.persons || []) : members;
+  const baseList = !isEditMode ? (team.persons || []) : editData.members;
   const sortedMembers = [...baseList].sort((a, b) => {
     if (a.personId === user.id) return -1;
     if (b.personId === user.id) return 1;
@@ -199,37 +190,15 @@ export default function TeamDetailPage() {
     <div className="team-detail-page">
       <Header />
       <div className="team-detail-content">
-        {mode === 'view' ? (
+        {!isEditMode ? (
           <div className="team-view-container">
-            <NavLink to='/teams' className='back-to-teams'><span>←</span> Назад к командам</NavLink>
+            <NavLink to='/teams' className='link back-to team-link'><span>←</span> Назад</NavLink>
             <div className='team-info-container'>
-              <div className='team-main'>
-                <h1 className="team-title">{team.title}</h1>
-                <ul className="team-members-list">
-                  {sortedMembers.map(member => (
-                    <li key={member.personId} className="member-item">
-                      <img
-                        src={member.imageName
-                          ? `http://localhost:8080/uploads/${member.imageName}`
-                          : userIcon}
-                        alt="Изображение пользователя"
-                        className="member-photo"
-                      />
-                      <div className="member-info">
-                        <div className='team-person-name-container'>
-                          <h2 className='team-person-username'>{member.username}</h2>
-                          {member.personId === team.adminId && <img src={adminIcon} alt='Иконка админа' className='admin-icon'/>}
-                        </div>
-                        {member.role && <h3 className='team-person-role'>{member.role}</h3>}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <div className='team-main'><TeamMembersList team={team} /></div>
               {team.adminId === user.id &&
                 <div className="team-info-buttons-conatainer">
-                  <button onClick={startEdit} className="edit-team-button">Редактировать</button>
-                  <button onClick={handleDelete} className="delete-team-button">Удалить</button>
+                  <button onClick={() => setIsEditMode(true)} className="button edit-button edit-team-button">Редактировать</button>
+                  <button onClick={handleDelete} className="button cancel-delete-button delete-team-button">Удалить</button>
                 </div>
               }
             </div>
@@ -240,20 +209,20 @@ export default function TeamDetailPage() {
                   {projects.map(proj => (
                     <Link to={`/projects/${proj.id}?from=${encodeURIComponent(`/teams/${team.id}`)}`} className='team-project-link'>
                       <li key={proj.id} className='team-projects-item'>
-                          <img src={proj.imageNamee ? `http://localhost:8080/uploads/${proj.imageName}` : defaultPreview} 
-                            className='team-project-image' alt="Фото проекта/карточки"/>
-                          <div className='team-project-info-container'>
-                            <h2 className='team-project-title'>{proj.title}</h2>
-                            {proj.description &&
-                              <p className='team-project-description'>{proj.description.length > 30 ? proj.description.slice(0, 27) + '...' : proj.description}</p>}
-                          </div>
+                        <img src={proj.imageName ? `http://localhost:8080/uploads/${proj.imageName}` : defaultPreview}
+                          className='team-project-image' alt="Фото проекта/карточки" />
+                        <div className='team-project-info-container'>
+                          <h2 className='team-project-title'>{proj.title}</h2>
+                          {proj.description &&
+                            <p className='team-project-description'>{proj.description.length > 30 ? proj.description.slice(0, 27) + '...' : proj.description}</p>}
+                        </div>
                       </li>
                     </Link>
                   ))}
                 </ul> :
                 <p className='team-empty-list'>Ещё не создан ни один проект</p>
               }
-              {team.adminId===user.id && <button onClick={handleCreateProject} className='add-team-project-button'>Создать проект</button>}
+              {team.adminId === user.id && <button onClick={handleCreateProject} className='button add-submit-button add-team-project-button'>Создать проект</button>}
             </div>
             <div className='team-cards-container'>
               <h1 className='team-title'>Карточки</h1>
@@ -273,41 +242,36 @@ export default function TeamDetailPage() {
                 </ul> :
                 <p className='team-empty-list'>Ещё не создана ни одна карточка</p>
               }
-              {team.adminId===user.id && <button onClick={handleCreateCard} className='add-team-card-button'>Создать карточку</button>}
+              {team.adminId === user.id && <button onClick={handleCreateCard} className='button add-submit-button add-team-card-button'>Создать карточку</button>}
             </div>
           </div>
-          
         ) : (
           <div className="team-edit-container">
-            <div className='team-edit-main'>
+            <div className='team-main'>
               <input
                 type="text"
-                value={title}
+                value={editData.title}
                 maxLength={30}
-                className='team-name-input'
-                onChange={e => setTitle(e.target.value)}
+                className='text-input team-name-input'
+                onChange={changeTitle}
               />
               <div className="add-person-container">
                 <input
                   type="text"
                   value={searchTerm}
-                  className='add-person-input'
+                  className='text-input add-person-input'
                   onChange={onSearchChange}
-                  disabled={members.length >= 6}                
-                  placeholder={members.length >= 6 ? 'Достигнут максимум участников' : 'Введите email или имя пользователя'}
+                  disabled={editData.members.length + editData.invited.length >= 6}
+                  placeholder={editData.members.length + editData.invited.length >= 6 ? 'Достигнут максимум участников' : 'Введите email или имя пользователя'}
                 />
-                {searchResults.length > 0  && (
+                {searchResults.length > 0 && (
                   <ul className="search-person-results-list" ref={searchRef}>
                     {searchResults.map(p => {
-                      const already = members.some(m=>m.id===p.id || m.personId===p.id) || invitedPersons.some(i=>i.id===p.id);
+                      const already = editData.members.some(m => m.id === p.id || m.personId === p.id) || editData.invited.some(i => i.id === p.id);
                       return (
-                        <li
-                          key={p.id}
-                          onClick={() => !already && addMember(p)}
-                          className={already ? 'already-added' : ''}
-                        >
+                        <li key={p.id} onClick={() => !already && addMember(p)} className={already ? 'already-added' : ''}>
                           {p.username} — {p.email}
-                          {already && <span className="tag">{members.some(m=>m.id===p.id || m.personId===p.id)?'Уже добавлен':'Уже приглашён'}</span>}
+                          {already && <span className="tag">{editData.members.some(m => m.id === p.id || m.personId === p.id) ? 'Уже добавлен' : 'Уже приглашён'}</span>}
                         </li>
                       );
                     })}
@@ -319,55 +283,57 @@ export default function TeamDetailPage() {
                   <li key={member.personId || member.id} className="edit-member-item">
                     <div className="edit-member-info">
                       <img
-                        src={member.imageName
-                          ? `http://localhost:8080/uploads/${member.imageName}`
-                          : userIcon}
+                        src={member.imageName ? `http://localhost:8080/uploads/${member.imageName}` : userIcon}
                         alt=""
-                        className="member-photo"
+                        className="team-member-photo"
                       />
-                      <div className='team-person-name-container'>
-                        <h2 className='team-person-username'>{member.username}</h2>
-                        {member.personId === team.adminId && <img src={adminIcon} alt='Иконка админа' className='admin-icon'/>}
+                      <div className='team-member-name-container'>
+                        <h2 className='team-member-username'>{member.username}</h2>
+                        {member.personId === team.adminId && <img src={adminIcon} alt='Иконка админа' className='admin-icon' />}
                       </div>
                     </div>
                     <div className="member-edit-role-container">
                       <input
                         type="text"
-                        value={roles[member.personId || member.id] || ''}
-                        className={'member-edit-role-input' + (member.personId === team.adminId ? ' my-role' : '')}
+                        value={editData.roles[member.personId || member.id] || ''}
+                        className={`text-input member-edit-role-input ${member.personId === team.adminId ? 'my-role' : ''}`}
                         onChange={e => changeRole(member.personId || member.id, e.target.value)}
                         maxLength={20}
                         placeholder="Введите роль участника"
                       />
                       {member.personId !== user.id && (
-                        <button onClick={() => removeMember(member.personId || member.id)} className="member-remove-button">×</button>
+                        <button onClick={() => removeMember(member.personId || member.id)} className="remove-button">×</button>
                       )}
                     </div>
                   </li>
                 ))}
               </ul>
-              {invitedPersons.length > 0 &&
+              {editData.invited.length > 0 &&
                 <div className="invited-persons-section">
                   <h1 className='team-invited-title'>Приглашенные пользователи</h1>
-                    <ul className="team-invited-list">
-                      {invitedPersons.map(inv => (
-                        <li key={inv.id} className="team-invited-item">
-                          <img src={inv.imageName?`http://localhost:8080/uploads/${inv.imageName}`:userIcon}
-                              className="member-photo" alt="" />
-                          <h2 className='team-person-username'>{inv.username}</h2>
-                        </li>
-                      ))}
-                    </ul>
+                  <ul className="team-invited-list">
+                    {editData.invited.map(inv => (
+                      <li key={inv.id} className="team-invited-item">
+                        <img src={inv.imageName ? `http://localhost:8080/uploads/${inv.imageName}` : userIcon} className="team-member-photo" alt="" />
+                        <h2 className='team-member-username'>{inv.username}</h2>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               }
             </div>
             <div className="team-info-buttons-conatainer">
-              <button onClick={handleSave} className="save-team-button" disabled={!title.trim()}>Сохранить</button>
-              <button onClick={cancelEdit} className="cancel-edit-team-button">Отмена</button>
+              <button onClick={handleSave} className="button add-submit-button save-team-button" disabled={!editData.title.trim()}>Сохранить</button>
+              <button onClick={cancelEdit} className="button cancel-delete-button cancel-edit-team-button">Отмена</button>
             </div>
           </div>
         )}
       </div>
+      {showToast && (
+        <div className="toast-toast">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 }

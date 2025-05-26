@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/notification-component.css';
-import {
-  getUnreadNotifications,
-  acceptInvitation,
-  rejectInvitation
-} from '../services/notification-service';
+import { getUnreadNotifications, acceptInvitation, rejectInvitation } from '../services/notification-service';
 
-export default function NotificationComponent() {
+export default function NotificationComponent({handleRead}) {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -42,6 +38,7 @@ export default function NotificationComponent() {
       await acceptInvitation(selected.id);
       setNotifications(prev => prev.filter(n => n.id !== selected.id));
       closeDetail();
+      handleRead();
     } catch (e) {
       console.error(e);
     }
@@ -55,6 +52,7 @@ export default function NotificationComponent() {
       await rejectInvitation(selected.id);
       setNotifications(prev => prev.filter(n => n.id !== selected.id));
       closeDetail();
+      handleRead();
     } catch (e) {
       console.error(e);
     }
@@ -88,10 +86,10 @@ export default function NotificationComponent() {
             <h3 className="notification-modal-title">Приглашение в команду</h3>
             <p className="notification-modal-content">{selected.message}</p>
             <div className="notification-modal-actions">
-              <button onClick={handleAccept} className='accept-notification-button' disabled={actionLoading}>Принять</button>
-              <button onClick={handleReject} className='reject-notification-button' disabled={actionLoading}>Отклонить</button>
+              <button onClick={handleAccept} className='button add-submit-button accept-notification-button' disabled={actionLoading}>Принять</button>
+              <button onClick={handleReject} className='button cancel-delete-button reject-notification-button' disabled={actionLoading}>Отклонить</button>
             </div>
-            <button className="notification-modal-close" onClick={closeDetail}>×</button>
+            <button className="remove-button notification-modal-close" onClick={closeDetail}>×</button>
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
   .card-detail-page {
     min-height: 100vh;
   }
-  
+
   .card-detail-content {
     padding: 15px;
   }
@@ -12,14 +12,14 @@
     align-items: flex-start;
   }
 
-  .card-user-container,.card-team-container {
+  .card-owner-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 20%;
   }
 
-  .card-user-container a, .card-team-container a {
+  .card-owner-container a {
     font-size: 20px;
     text-align: left;
     color: rgba(0, 119, 255, 1);
@@ -29,79 +29,19 @@
     transition: color 0.2s, text-decoration-color 0.2s;
   }
 
-  .back-to-cards a span, .back-to-team a span {
-    font-size: 24px;
-  }
-
-  .back-to-cards, .back-to-team {
+  .back-to.card-link {
     margin-bottom: 15px;
-  }
-
-  .card-user-container a:hover, .card-team-container a:hover, .link-title:hover, .file-title:hover, .project-title:hover {
-    text-decoration-color: rgba(0, 119, 255, 0.5);
-    color: rgba(0, 119, 255, 0.5);
-  }
-
-  .card-user-info-container, .card-team-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    gap: 50px;
-    background: #fff;
-    border-radius: 15px;
   }
 
   .card-team-main {
     padding: 20px;
-    gap: 0;
+    background: #fff;
+    border-radius: 15px;
     min-height: 560px;
   }
 
-  .card-user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-  }
-
-  .card-user-info img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(0, 119, 255, 0.3);
-  }
-
-  .card-user-info h2 {
-    color: rgba(0, 119, 255, 1);
-    font-size: 32px;
-    font-weight: 600;
-    padding: 0;
-    margin: 0;
-  }
-
-  .card-user-description {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    text-align: left;
-    width: fit-content;
-    white-space: nowrap;
-  }
-
-  .card-user-description p {
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
-  }
-
-  .card-user-description-title {
-    font-weight: 600;
-    color: rgba(0, 119, 255, 1);
-  }
-
-  .card-description-container, .edit-card-description-container {
+  .card-description-container,
+  .edit-card-description-container {
     background-color: #fff;
     border-radius: 15px;
     height: 795px;
@@ -125,7 +65,8 @@
     font-weight: 600;
   }
 
-  .card-description-container label, .edit-card-description-container label {
+  .card-description-container label,
+  .edit-card-description-container label {
     font-size: 24px;
     font-weight: 600;
   }
@@ -137,7 +78,8 @@
     font-size: 20px;
   }
 
-  .card-appendices-container, .edit-card-appendices-container {
+  .card-appendices-container,
+  .edit-card-appendices-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -149,7 +91,10 @@
     width: 40%;
   }
 
-  .card-projects, .card-files, .card-links, .edit-card-projects, .edit-card-files {
+  .card-projects,
+  .card-files,
+  .edit-card-projects,
+  .edit-card-files {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -161,15 +106,13 @@
     width: calc(100% - 60px);
   }
 
-  .card-links {
-    height: 190px;
-  }
-
-  .card-projects, .card-files {
+  .card-projects,
+  .card-files {
     height: 295px;
   }
 
-  .card-detail-actions, .edit-card-detail-actions {
+  .card-detail-actions,
+  .edit-card-detail-actions {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,13 +130,15 @@
     gap: 10px;
   }
 
-  .card-appendices-container h3, .edit-card-appendices-container h3, .card-links h3 {
+  .card-appendices-container h3,
+  .edit-card-appendices-container h3 {
     margin: 0;
     padding: 0;
     font-size: 24px;
   }
 
-  .card-appendices-container ul, .edit-card-appendices-container ul, .card-links ul {
+  .card-appendices-container ul,
+  .edit-card-appendices-container ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -211,52 +156,45 @@
     width: 100%;
   }
 
-  .card-links-item, .card-projects-item, .card-files-item {
+  .card-projects-item,
+  .card-files-item {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  .card-links-item::before, .card-projects-item::before {
+  .card-projects-item::before {
     content: '•';
     font-size: 20px;
     color: rgba(0, 119, 255, 1);
   }
 
-  .project-title, .file-title, .edit-file-title, .edit-card-project-title, .link-title {
+  .project-title,
+  .file-title,
+  .edit-file-title,
+  .edit-card-project-title {
     margin: 0;
     padding: 0;
     font-size: 20px;
     font-weight: 400;
-    color: #000;
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 3px;
-    transition: color 0.2s, text-decoration-color 0.2s;
-    cursor: pointer;
+    color: black;
   }
 
-  .link-title {
+  .project-title {
     color: rgba(0, 119, 255, 1);
   }
 
   .card-empty-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    padding: 0;
+    margin: auto;
     font-size: 20px;
-    width: 100%;
-    height: 100%;
   }
 
-  .card-detail-actions-container button, .edit-card-detail-actions button, .share-button {
+  .card-detail-actions-container button,
+  .edit-card-detail-actions button,
+  .share-button {
     width: 156.5px;
     padding: 11.5px 0;
     font-size: 20px;
-    cursor: pointer;
-    border-radius: 15px;
   }
 
   .edit-card-detail-actions button {
@@ -267,21 +205,24 @@
     width: 100%;
   }
 
-  .edit-card-file-item, .card-projects-item, .selected-card-project-item {
+  .edit-card-file-item,
+  .card-projects-item,
+  .selected-card-project-item {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
   }
 
-  .edit-file-item-container{
+  .edit-file-item-container {
     width: 100%;
     display: flex;
     gap: 10px;
     align-items: center;
   }
 
-  .edit-file-title, .edit-card-project-title {
+  .edit-file-title,
+  .edit-card-project-title {
     margin: 0;
     padding: 0;
     font-size: 16px;
@@ -298,49 +239,13 @@
     min-width: 50%;
   }
 
-   .edit-button {
-    background-color: transparent;
-    color: rgba(255, 132, 0, 1);
-    border: 2px solid rgba(255, 132, 0, 1);
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .share-button, .save-button {
-    background-color: transparent;
-    color: rgba(0, 119, 255, 1);
-    border: 2px solid rgba(0, 119, 255, 1);
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .delete-button, .cancel-button {
-    background-color: transparent;
-    color: rgba(172, 29, 29, 1);
-    border: 2px solid rgba(172, 29, 29, 1);
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .edit-button:hover {
-    background-color: rgba(255, 132, 0, 1);
-    color: #fff;
-  }
-  
-  .share-button:hover, .save-button:hover {
-    background-color: rgba(0, 119, 255, 1);
-    color: #fff;
-  }
-  
-  .delete-button:hover, .cancel-button:hover {
-    background-color: rgba(172, 29, 29, 1);
-    color: #fff;
-  }
-
-  .edit-card-title, .edit-card-description, .file-description-input, .card-project-search-input {
+  .edit-card-title,
+  .edit-card-description,
+  .file-description-input,
+  .card-project-search-input {
     width: calc(100% - 18px);
     font-size: 20px;
     padding: 8px;
-    border: 1px solid rgba(0, 119, 255, 0.3);
-    border-radius: 10px;
-    transition: border-color 0.3s;
   }
 
   .edit-card-title {
@@ -361,11 +266,6 @@
     font-size: 16px;
   }
 
-  .edit-card-title:focus, .edit-card-description:focus, .file-description-input:focus, .card-project-search-input:focus {
-    border-color: rgba(0, 119, 255, 1);
-    outline: none;
-  }
-
   .card-project-search-input {
     font-size: 16px;
     margin: 10px 0;
@@ -376,43 +276,9 @@
     font-size: 20px;
     width: 515px;
     margin: 0 auto;
-    background-color: transparent;
-    color: rgba(0, 119, 255, 1);
-    border: 2px solid rgba(0, 119, 255, 1);
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  .file-upload-button:hover {
-    background-color: rgba(0, 119, 255, 1);
-    color: #fff;
-  }
-
-  .file-upload-button {
     margin-top: 20px;
   }
 
-  .remove-card-file-button, .remove-card-project-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    background: transparent;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-left: 5px;
-    transition: color 0.2s;
-  }
-
-  .remove-card-file-button:hover, .remove-card-project-button:hover {
-    color: rgba(172, 29, 29, 1);
-  }
-  
   .edit-card-projects .card-project-suggestions-list {
     margin: 0;
     padding: 7px;
@@ -428,7 +294,7 @@
     z-index: 1000;
     gap: 0;
   }
-  
+
   .edit-card-projects .card-project-suggestions-list li {
     width: calc(100% - 20px);
     padding: 10px;
@@ -438,7 +304,7 @@
     transition: background-color 0.2s;
     border-bottom: 1px solid rgba(0, 119, 255, 0.5);
   }
-  
+
   .card-project-suggestions-list li:last-child {
     border-radius: 0 0 10px 10px;
     border: none;
@@ -447,11 +313,11 @@
   .card-project-suggestions-list li:first-child {
     border-radius: 10px 10px 0 0;
   }
-  
+
   .card-project-suggestions-list li:hover {
     background: rgba(0, 119, 255, 0.1);
   }
-  
+
   .project-upload-button-container {
     width: 100%;
     display: flex;
@@ -465,15 +331,12 @@
     gap: 15px;
   }
 
-  .public-card-links {
-    height: 310px;
-  }
-
-  .public-card-description-container {
+  .card-detail-page.public .card-description-container {
     height: 855px;
   }
 
-  .public-card-projects, .public-card-files {
+  .card-detail-page.public .card-projects,
+  .card-detail-page.public .card-files {
     height: 395px;
   }
 
@@ -492,7 +355,7 @@
 
   .card-project-suggestions-list li h4 {
     text-align: center;
-  } 
+  }
 
   .card-project-suggestions-list li .tag {
     font-size: 12px;

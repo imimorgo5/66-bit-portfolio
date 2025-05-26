@@ -1,0 +1,75 @@
+.team-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 1.6rem;
+}
+
+.team-title:hover {
+    color: rgba(0, 119, 255, 1);
+    text-decoration-color: rgba(0, 119, 255, 1);
+}
+
+.team-members-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.team-members-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    height: 3.75rem;
+}
+
+.team-members.card .team-members-list-item {
+    height: 4.5rem;
+}
+
+.team-member-photo {
+    width: 3.15rem;
+    height: 3.15rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.team-member-name-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.team-member-username {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: left;
+}
+
+.admin-icon {
+    width: 1.5rem;
+    height: auto;
+}
+
+.team-members.card .admin-icon {
+    display: none;
+}
+
+.team-member-role {
+    margin: 0;
+    margin-top: 8px;
+    padding: 2px 5px;
+    font-size: 20px;
+    font-weight: 400;
+    background-color: rgba(0, 119, 255);
+    color: white;
+    border-radius: 5px;
+    width: fit-content;
+}

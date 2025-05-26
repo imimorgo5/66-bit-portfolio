@@ -1,23 +1,21 @@
-export const login = async (credentials) => {
+export const login = async (userData) => {
     try {
         const response = await fetch('/auth/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password
-        }),
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          credentials: 'include',
+          body: JSON.stringify({
+            email: userData.email,
+            password: userData.password
+          }),
         });
 
+        const data = await response.json();
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error);
+          throw new Error(data.error);
         }
-
-        return await response.json();
+        
+        return data;
     } catch (error) {
         throw error;
     }
@@ -26,8 +24,8 @@ export const login = async (credentials) => {
 export const logout = async () => {
     try {
         const response = await fetch('/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
+          method: 'POST',
+          credentials: 'include'
         });
 
         if (!response.ok) {
@@ -44,23 +42,21 @@ export const register = async (userData) => {
     try {
       const response = await fetch('/auth/registration', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         credentials: 'include',
         body: JSON.stringify({
           email: userData.email,
-          username: userData.userName,
+          username: userData.username,
           password: userData.password
         }),
       });
-  
+
+      const data = await response.json();
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.errors?.join(', '));
+        throw new Error(data.error);
       }
-  
-      return await response.json();
+
+      return data;
     } catch (error) {
       throw error;
     }

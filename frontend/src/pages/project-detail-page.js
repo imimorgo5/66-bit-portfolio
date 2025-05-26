@@ -1,40 +1,90 @@
-import React, { useContext, useState, useEffect, useRef  } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useLocation, useParams, useNavigate, NavLink, Link } from 'react-router-dom';
-import Header from '../components/header';
-import '../css/project-detail.css';
+import Header from '../components/header-component.js';
+import ErrorComponent from '../components/error-component.js';
+import LoadingComponent from '../components/loading-component.js';
 import { AuthContext } from '../context/AuthContext';
+import { getProjectById, updateProject, deleteProject } from '../services/project-service.js';
+import { getPublicProject } from '../services/public-service.js';
+import { getTeamById } from '../services/team-service.js';
+import { normalizeUrl } from '../utils/utils.js';
+import { PageMode } from '../consts.js';
 import defaultPreview from '../img/defaultPreview.png';
 import linkIcon from '../img/link_icon.svg';
 import folderIcon from '../img/folder_icon.png';
 import fileIcon from '../img/file_icon.svg';
-import { getProjectById, updateProject, deleteProject } from '../services/project-service.js';
+import '../css/project-detail.css';
 
-export default function ProjectDetailPage() {
-  const { id } = useParams();
+export default function ProjectDetailPage({ pageMode }) {
+  const { identifier } = useParams();
   const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const backTo = params.get('from');
   const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState(null);
+  const [team, setTeam] = useState(null);
+  const [projectLoading, setProjectLoading] = useState(true);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [isTeamProject, setIsTeamProject] = useState(false);
+  const [isEditing, setIsEditing] = useState(location.state?.isEdit);
+  const [editData, setEditData] = useState({
+    title: '',
+    description: '',
+    projectLinks: [],
+    folders: [],
+    imageName: '',
+    imagePreviewUrl: '',
+  });
   const [linkInput, setLinkInput] = useState('');
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foldersFilesLoaded, setFoldersFilesLoaded] = useState(false);
-
   const photoInputRef = useRef(null);
+  const isPublicProject = pageMode === PageMode.PUBLIC;
 
   useEffect(() => {
-    getProjectById(id)
-      .then((fetchedProject) => {
-        setProject(fetchedProject);
-      })
-      .catch((error) => console.error('Ошибка получения проекта:', error))
-      .finally(() => setLoading(false));
-  }, [id]);
+    async function init() {
+      try {
+        if (isPublicProject) {
+          await getPublicProject(identifier).then(data => setProject(data.project));
+        } else if (pageMode === PageMode.PRIVATE) {
+          await getProjectById(identifier)
+            .then((fetchedProject) => {
+              setProject(fetchedProject);
+              setIsTeamProject(Boolean(fetchedProject.teamId));
+            });
+        } else {
+          throw new Error();
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setProjectLoading(false);
+      }
+    }
+    init();
+  }, [identifier, pageMode, isPublicProject]);
+
+  useEffect(() => {
+    async function init() {
+      if (!projectLoading && project && isTeamProject) {
+        await getTeamById(project.teamId).then(setTeam).catch(console.error).finally(() => setTeamLoading(false));
+      }
+    }
+    init();
+  }, [projectLoading, isTeamProject, project])
+
+  useEffect(() => {
+    if (project && (!isTeamProject || team) && isEditing) {
+      setFoldersFilesLoaded(false);
+      setEditData({
+        ...project,
+        folders: project.folders ? project.folders.map(f => ({ title: f.title, files: f.files ? [...f.files] : [] })) : [],
+        imagePreviewUrl: project.imagePreviewUrl || ''
+      });
+    }
+  }, [isEditing, project, isTeamProject, team]);
 
   useEffect(() => {
     if (
@@ -73,77 +123,58 @@ export default function ProjectDetailPage() {
           return { ...folder, files: filesWithData };
         })
       )
-      .then((foldersWithFiles) => {
-        setEditData(prev => ({ ...prev, folders: foldersWithFiles }));
-        setFoldersFilesLoaded(true);
-      })
-      .catch(err => {
-        console.error('Ошибка загрузки файлов папок для редактирования:', err);
-      });  }
+        .then((foldersWithFiles) => {
+          setEditData(prev => ({ ...prev, folders: foldersWithFiles }));
+          setFoldersFilesLoaded(true);
+        })
+        .catch(err => {
+          console.error('Ошибка загрузки файлов папок для редактирования:', err);
+        });
+    }
   }, [isEditing, foldersFilesLoaded, editData]);
 
-  const handleFileClick = async (file) => {
-    try {
-      const response = await fetch(`http://localhost:8080/uploads/${file.fileTitle}`, {
-        credentials: 'include',
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Ошибка при скачивании файла: ${response.status}`);
-      }
-  
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);  
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = file.fileTitle;
-      document.body.appendChild(link);
-      link.click();
-  
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Ошибка при скачивании файла:', error);
-    }
-  };
-
-  const handleEditClick = () => {
-    setFoldersFilesLoaded(false);
-    setEditData({
-      title: project.title || '',
-      description: project.description || '',
-      projectLinks: project.projectLinks ? [...project.projectLinks] : [],
-      folders: project.folders
-        ? project.folders.map(f => ({
-            title: f.title,
-            files: f.files ? [...f.files] : [],
-          }))
-        : [],
-      imageName: project.imageName,
-      imagePreviewUrl: project.imagePreviewUrl || ''
-    });
-    setIsEditing(true);
-  };
+  const handleEditClick = () => setIsEditing(true);
 
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditData(null);
   };
 
-  const handleSaveEdit = () => {
-    updateProject(project.id, editData)
+  const handleSaveEdit = async () => {
+    await updateProject(project.id, editData)
       .then(() => getProjectById(project.id))
       .then((updatedProject) => {
         setProject(updatedProject);
         setIsEditing(false);
       })
-      .catch((error) => console.error('Ошибка при обновлении проекта:', error));
+      .catch(console.error);
   };
 
-  const handleDelete = () => {
-    deleteProject(project.id)
-      .then(() => navigate(-1))
-      .catch((error) => console.error('Ошибка при удалении проекта:', error));
+  const handleDelete = async () => await deleteProject(project.id).then(() => navigate(backTo)).catch(console.error);
+
+  const handleFileClick = async (file) => {
+    try {
+      const response = await fetch(`http://localhost:8080/uploads/${file.fileTitle}`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка при скачивании файла: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file.fileTitle;
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Ошибка при скачивании файла:', error);
+    }
   };
 
   const handleChange = (e) => {
@@ -168,7 +199,7 @@ export default function ProjectDetailPage() {
 
   const handleLinkDescriptionChange = (index, value) => {
     setEditData(prev => {
-      const updatedLinks = prev.projectLinks.map((link, i) => 
+      const updatedLinks = prev.projectLinks.map((link, i) =>
         i === index ? { ...link, description: value } : link
       );
       return { ...prev, projectLinks: updatedLinks };
@@ -176,6 +207,10 @@ export default function ProjectDetailPage() {
   }
 
   const addLink = () => {
+    if (editData.projectLinks >= 8) {
+      return;
+    }
+
     const trimmed = linkInput.trim();
     if (trimmed !== '') {
       const newLink = { link: trimmed, description: '' };
@@ -193,7 +228,7 @@ export default function ProjectDetailPage() {
       projectLinks: prev.projectLinks.filter((_, i) => i !== index)
     }));
   };
-  
+
   const handleFolderNameChange = (index, newName) => {
     setEditData(prev => {
       const updatedFolders = [...prev.folders];
@@ -201,7 +236,7 @@ export default function ProjectDetailPage() {
       return { ...prev, folders: updatedFolders };
     });
   };
-  
+
   const addFolder = () => {
     if (editData.folders.length >= 4) return;
     setEditData(prev => ({
@@ -209,7 +244,7 @@ export default function ProjectDetailPage() {
       folders: [...prev.folders, { title: 'Новая папка', files: [] }],
     }));
   };
-  
+
   const removeFolder = (index) => {
     setEditData(prev => ({
       ...prev,
@@ -228,68 +263,68 @@ export default function ProjectDetailPage() {
   };
 
   const handleAddFilesToFolder = (folderIdx, fileList) => {
-  const files = Array.from(fileList);
-  setEditData(prev => {
-    const folders = prev.folders.map((f, i) => {
-      if (i !== folderIdx) return f;
-      const existing = f.files || [];
-      const slots = 5 - existing.length;
-      const toAdd = files.slice(0, slots).map(file => ({
-        file,
-        fileTitle: file.name,
-        description: ''
-      }));
-      return {
-        ...f,
-        files: [...existing, ...toAdd]
-      };
+    const files = Array.from(fileList);
+    setEditData(prev => {
+      const folders = prev.folders.map((f, i) => {
+        if (i !== folderIdx) return f;
+        const existing = f.files || [];
+        const slots = 5 - existing.length;
+        const toAdd = files.slice(0, slots).map(file => ({
+          file,
+          fileTitle: file.name,
+          description: ''
+        }));
+        return {
+          ...f,
+          files: [...existing, ...toAdd]
+        };
+      });
+      return { ...prev, folders };
     });
-    return { ...prev, folders };
-  });
-};
+  };
 
   const handleFileDescriptionChange = (folderIdx, fileIdx, newDesc) => {
-  setEditData(prev => {
-    const folders = prev.folders.map((f, i) => {
-      if (i !== folderIdx) return f;
-      const files = f.files.map((file, j) => 
-        j === fileIdx
-          ? { ...file, description: newDesc }
-          : file
-      );
-      return { ...f, files };
+    setEditData(prev => {
+      const folders = prev.folders.map((f, i) => {
+        if (i !== folderIdx) return f;
+        const files = f.files.map((file, j) =>
+          j === fileIdx
+            ? { ...file, description: newDesc }
+            : file
+        );
+        return { ...f, files };
+      });
+      return { ...prev, folders };
     });
-    return { ...prev, folders };
-  });
-};
+  };
 
-  if (loading || authLoading) return <div className='loading-container'>Загрузка...</div>;
-  if (!project || authError) return <div className='error-container'>Ошибка получения данных...</div>;
-  if (!user) {
+  if (projectLoading || (!isPublicProject && (authLoading || (isTeamProject && teamLoading)))) return <LoadingComponent />;
+  if (!project || (!isPublicProject && (authError || (isTeamProject && !team)))) return <ErrorComponent />;
+  if (!isPublicProject && !user) {
     navigate('/login');
     return null;
   }
 
   return (
-    <div className="project-detail-page">
-      <Header />
+    <div className={`project-detail-page ${pageMode}`}>
+      {!isPublicProject && <Header />}
       <div className="project-detail-content">
         {isEditing ? (
           <div className='project-detail-container'>
             <div className='edit-project-appendices-container'>
               <div className='edit-project-image-container'>
-                <img 
+                <img
                   src={
                     editData.imagePreviewUrl
                       ? editData.imagePreviewUrl
                       : (project.imageName
-                        ? `http://localhost:8080/uploads/${project.imageName}` 
+                        ? `http://localhost:8080/uploads/${project.imageName}`
                         : defaultPreview)
                   }
                   className="edit-project-preview-img"
                   alt="Фото проекта"
                 />
-                <button type="button" onClick={triggerPhotoInput} className="change-project-photo-button">Изменить фото</button>
+                <button type="button" onClick={triggerPhotoInput} className="button add-submit-button change-project-photo-button">Изменить фото</button>
                 <input
                   type="file"
                   accept="image/*"
@@ -300,37 +335,38 @@ export default function ProjectDetailPage() {
               </div>
               <div className="edit-project-links">
                 <h3 className='project-links-title'>Ссылки:</h3>
-                {editData.projectLinks && editData.projectLinks.length > 0 ? (
-                    <ul className="project-links-list">
-                      {editData.projectLinks.map((link, index) => (
-                        <li key={index} className="edit-project-link-item">
-                          <button type="button" onClick={() => removeLink(index)} className="remove-project-link-button">×</button>
-                          <div className='edit-project-link-item-container'>
-                            <Link to={link.link} target="_blank" rel="noopener noreferrer" className="edit-project-link-title">
-                              {link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}</Link>
-                            <input
-                              type="text"
-                              value={link.description}
-                              maxLength={38}
-                              onChange={(e) => handleLinkDescriptionChange(index, e.target.value)}
-                              placeholder="Описание ссылки"
-                              className="project-link-description-input"
-                            />
-                          </div>
-                        </li>))}
-                    </ul>) : <p className='project-empty-list'>Не указано</p>}
+                {editData.projectLinks.length > 0 ? (
+                  <ul className="project-links-list">
+                    {editData.projectLinks.map((link, index) => (
+                      <li key={index} className="edit-project-link-item">
+                        <button type="button" onClick={() => removeLink(index)} className="remove-button">×</button>
+                        <div className='edit-project-link-item-container'>
+                          <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link edit-project-link-title">
+                            {link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}</Link>
+                          <input
+                            type="text"
+                            value={link.description}
+                            maxLength={38}
+                            onChange={(e) => handleLinkDescriptionChange(index, e.target.value)}
+                            placeholder="Описание ссылки"
+                            className="text-input project-link-description-input"
+                          />
+                        </div>
+                      </li>))}
+                  </ul>) : <p className='project-empty-list'>Не указано</p>}
                 <div className="project-link-input-group">
-                    <input
-                      type="text"
-                      value={linkInput}
-                      maxLength={200}
-                      onChange={(e) => setLinkInput(e.target.value)}
-                      placeholder="Введите ссылку"
-                      className="project-link-input"
-                    />
-                    <button type="button" onClick={addLink} className="add-project-link-button">Добавить</button>
+                  <input
+                    type="text"
+                    value={linkInput}
+                    maxLength={200}
+                    onChange={(e) => setLinkInput(e.target.value)}
+                    placeholder={editData.projectLinks.length >= 8 ? 'Достигнут максимум ссылок' : 'Введите ссылку'}
+                    className="text-input project-link-input"
+                    disabled={editData.projectLinks.length >= 8}
+                  />
+                  <button type="button" onClick={addLink} disabled={editData.projectLinks.length >= 8} className="button add-submit-button add-project-link-button">Добавить</button>
                 </div>
-            </div>
+              </div>
             </div>
             <div className='edit-project-description-container'>
               <input
@@ -339,7 +375,7 @@ export default function ProjectDetailPage() {
                 value={editData.title}
                 maxLength={24}
                 onChange={handleChange}
-                className="edit-project-title"
+                className="text-input edit-project-title"
               />
               <label>Описание проекта:</label>
               <textarea
@@ -348,7 +384,7 @@ export default function ProjectDetailPage() {
                 placeholder='Введите описание проекта'
                 maxLength={2000}
                 onChange={handleChange}
-                className="edit-project-description"
+                className="text-input edit-project-description"
               />
             </div>
             <div className='edit-project-appendices-container'>
@@ -359,10 +395,10 @@ export default function ProjectDetailPage() {
                     {editData.folders.map((folder, index) => (
                       <li key={index} className="edit-project-folder-item">
                         <div className='folder-name-input-container'>
-                          <button type="button" className="remove-folder-button" onClick={() => removeFolder(index)}>×</button>
+                          <button type="button" className="remove-button" onClick={() => removeFolder(index)}>×</button>
                           <input
                             type="text"
-                            className="folder-name-input"
+                            className="text-input folder-name-input"
                             value={folder.title}
                             maxLength={40}
                             onChange={(e) => handleFolderNameChange(index, e.target.value)}
@@ -373,25 +409,19 @@ export default function ProjectDetailPage() {
                           <ul className="edit-folder-files-list">
                             {folder.files.map((f, fj) => (
                               <li key={fj} className="edit-folder-file-item">
-                                <button
-                                  type="button"
-                                  className="remove-folder-file-button"
-                                  onClick={() => removeFile(index, fj)}
-                                >
-                                  ×
-                                </button>
+                                <button type="button" className="remove-button" onClick={() => removeFile(index, fj)}>×</button>
                                 <div className='edit-folder-file-item-container'>
                                   <h4 className='edit-folder-file-title'>{f.fileTitle.split('_').at(-1).slice(0, 28)}</h4>
-                                    <input
-                                      type="text"
-                                      placeholder="Описание файла"
-                                      value={f.description || ''}
-                                      maxLength={38}
-                                      onChange={e => 
-                                        handleFileDescriptionChange(index, fj, e.target.value)
-                                      }
-                                      className="folder-file-description-input"
-                                    />
+                                  <input
+                                    type="text"
+                                    placeholder="Описание файла"
+                                    value={f.description || ''}
+                                    maxLength={38}
+                                    onChange={e =>
+                                      handleFileDescriptionChange(index, fj, e.target.value)
+                                    }
+                                    className="text-input folder-file-description-input"
+                                  />
                                 </div>
                               </li>
                             ))}
@@ -411,7 +441,7 @@ export default function ProjectDetailPage() {
                           type="button"
                           onClick={() => document.getElementById(`file-input-${index}`).click()}
                           disabled={folder.files.length >= 5}
-                          className="add-folder-files-button"
+                          className="button add-submit-button add-folder-files-button"
                         >
                           Добавить файлы
                         </button>
@@ -421,24 +451,22 @@ export default function ProjectDetailPage() {
                 ) : (
                   <p className='project-empty-list'>Не создано ни одной папки</p>
                 )}
-                <button type="button" className="add-folder-button" onClick={addFolder} disabled={editData.folders.length >= 4}>Создать папку</button>
+                <button type="button" className="button add-submit-button add-folder-button" onClick={addFolder} disabled={editData.folders.length >= 4}>Создать папку</button>
               </div>
               <div className="edit-project-detail-actions">
-                <button type="button" className="project-save-button" onClick={handleSaveEdit}>Сохранить</button>
-                <button type="button" className="project-cancel-button" onClick={handleCancelEdit}>Отменить</button>
+                <button type="button" className="button add-submit-button project-save-button" onClick={handleSaveEdit}>Сохранить</button>
+                <button type="button" className="button cancel-delete-button project-cancel-button" onClick={handleCancelEdit}>Отменить</button>
               </div>
             </div>
           </div>
         ) : (
           <div className='project-detail-container'>
             <div className='project-appendices-container'>
-              <NavLink to={backTo} className='back-to-project'><span>←</span> Назад</NavLink>
+              {!isPublicProject && <NavLink to={backTo} className='link back-to project-link'><span>←</span> Назад</NavLink>}
               <div className='project-image-container'>
-                <img 
-                  src={project.imageName
-                    ? `http://localhost:8080/uploads/${project.imageName}` 
-                    : defaultPreview}
-                  className='project-preview-img' 
+                <img
+                  src={project.imageName ? `http://localhost:8080/uploads/${project.imageName}` : defaultPreview}
+                  className='project-preview-img'
                   alt="Фото проекта"
                 />
               </div>
@@ -448,8 +476,8 @@ export default function ProjectDetailPage() {
                   <ul className="project-links-list">
                     {project.projectLinks.map((link, index) => (
                       <li key={index} className='project-links-item'>
-                        <Link to={link.link} target="_blank" rel="noopener noreferrer" className="project-link-title">
-                          {link.description ? link.description : link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}
+                        <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link project-link-title">
+                          {link.description || (link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link)}
                         </Link>
                         <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
                       </li>
@@ -461,53 +489,55 @@ export default function ProjectDetailPage() {
             <div className='project-description-container'>
               <h2>{project.title}</h2>
               <label>Описание проекта:</label>
-              <p className='project-description'>{project.description}</p>
+              <p className='project-description'>{project.description ? project.description : 'Описание не добавлено'}</p>
             </div>
             <div className='project-appendices-container'>
-              <div className='project-folders-container'>
+              <div className={'project-folders-container' + (isTeamProject && team.adminId !== user.id ? ' not-admin' : '')}>
                 <h3>Папки:</h3>
                 {project.folders && project.folders.length > 0 ? (
-                    <ul className="project-folders-list">
-                      {project.folders.map((folder, index) => (
-                        <li key={index} className="project-folder-item"onClick={() => {
-                            setSelectedFolder(index);
-                            setIsModalOpen(true);
-                          }}>
-                          <img className='folder-icon' src={folderIcon} alt='Иконка папки'></img>
-                          <h4 className="folder-title">{folder.title}</h4>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                <p className="project-empty-list">Не создано ни одной папки</p>
-              )}
-            </div>
-            {isModalOpen && selectedFolder !== null && (
-              <div className="modal-folder-overlay">
-                <div className='modal-folder-header'>
-                   <h3>{project.folders[selectedFolder].title}</h3>
-                   <button className="modal-folder-close-btn" onClick={() => setIsModalOpen(false)}>×</button>
-                </div>
-                <div className="modal-folder-content">
-                  {project.folders[selectedFolder].files.length > 0 ? (
-                    <ul className="modal-folder-files-list">
-                      {project.folders[selectedFolder].files.map((file, fi) => (
-                        <li key={fi} className="modal-folder-file-item">
-                          <img src={fileIcon} className='file-icon' alt='Иконка файла'></img>
-                          <h4 className="folder-file-title" onClick={() => handleFileClick(file)}>{file.description ? file.description : file.fileTitle.split('_').at(-1).slice(0, 28)}</h4>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className='project-empty-list'>В этой папке нет файлов</p>
-                  )}
-                </div>
+                  <ul className="project-folders-list">
+                    {project.folders.map((folder, index) => (
+                      <li key={index} className="project-folder-item" onClick={() => {
+                        setSelectedFolder(index);
+                        setIsModalOpen(true);
+                      }}>
+                        <img className='folder-icon' src={folderIcon} alt='Иконка папки'></img>
+                        <h4 className="link folder-title">{folder.title}</h4>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="project-empty-list">Не создано ни одной папки</p>
+                )}
               </div>
-            )}
-            <div className="project-detail-actions">
-                <button type="button" className="project-edit-button" onClick={handleEditClick}>Изменить</button>
-                <button type="button" className="project-delete-button" onClick={handleDelete}>Удалить</button>
-            </div>
+              {isModalOpen && selectedFolder !== null && (
+                <div className="modal-folder-overlay">
+                  <div className='modal-folder-header'>
+                    <h3>{project.folders[selectedFolder].title}</h3>
+                    <button className="remove-button" onClick={() => setIsModalOpen(false)}>×</button>
+                  </div>
+                  <div className="modal-folder-content">
+                    {project.folders[selectedFolder].files.length > 0 ? (
+                      <ul className="modal-folder-files-list">
+                        {project.folders[selectedFolder].files.map((file, fi) => (
+                          <li key={fi} className="modal-folder-file-item">
+                            <img src={fileIcon} className='file-icon' alt='Иконка файла'></img>
+                            <h4 className="link folder-file-title" onClick={() => handleFileClick(file)}>{file.description ? file.description : file.fileTitle.split('_').at(-1).slice(0, 28)}</h4>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className='project-empty-list'>В этой папке нет файлов</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              {(!isPublicProject && (!isTeamProject || team.adminId === user.id)) &&
+                <div className="project-detail-actions">
+                  <button type="button" className="button edit-button project-edit-button" onClick={handleEditClick}>Изменить</button>
+                  <button type="button" className="button cancel-delete-button project-delete-button" onClick={handleDelete}>Удалить</button>
+                </div>
+              }
             </div>
           </div>
         )}

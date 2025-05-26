@@ -1,4 +1,4 @@
-export async function getAllNotifications() {
+export const getAllNotifications = async () => {
   const res = await fetch('/notifications/show-all', {
     method: 'GET',
     credentials: 'include'
@@ -9,9 +9,9 @@ export async function getAllNotifications() {
   }
   const data = await res.json();
   return data.notifications;
-}
+};
 
-export async function getUnreadNotifications() {
+export const getUnreadNotifications = async () => {
   const res = await fetch('/notifications/show-unread', {
     method: 'GET',
     credentials: 'include'
@@ -22,9 +22,9 @@ export async function getUnreadNotifications() {
   }
   const data = await res.json();
   return data.notifications;
-}
+};
 
-export async function getNotificationById(id) {
+export const getNotificationById = async (id) => {
   const res = await fetch(`/notifications/show/${id}`, {
     method: 'GET',
     credentials: 'include'
@@ -35,9 +35,9 @@ export async function getNotificationById(id) {
   }
   const data = await res.json();
   return data.notifications;
-}
+};
 
-export async function acceptInvitation(id) {
+export const acceptInvitation = async (id) => {
   const res = await fetch(`/notifications/${id}/accept`, {
     method: 'POST',
     credentials: 'include'
@@ -48,9 +48,9 @@ export async function acceptInvitation(id) {
   }
   const data = await res.json();
   return data.message;
-}
+};
 
-export async function rejectInvitation(id) {
+export const rejectInvitation = async (id) => {
   const res = await fetch(`/notifications/${id}/reject`, {
     method: 'POST',
     credentials: 'include'
@@ -61,4 +61,4 @@ export async function rejectInvitation(id) {
   }
   const data = await res.json();
   return data.message;
-}
+};

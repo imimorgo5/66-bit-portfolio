@@ -1,115 +1,75 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/header';
+import Header from '../components/header-component.js';
 import '../css/teams-page.css';
 import { AuthContext } from '../context/AuthContext';
 import { getAllPersonTeams, createTeam } from '../services/team-service';
-import userIcon from '../img/user-icon.svg';
-import emptyArrow from '../img/empty-arrow.svg';
-import emptyPicture from '../img/empty-items-picture.png';
-import adminIcon from '../img/admin-icon.svg';
+import LoadingComponent from '../components/loading-component.js';
+import EmptyItemsComponent from '../components/empty-items-component.js';
+import AddButton from '../components/add-button-component.js';
+import TeamMembersList from '../components/team-members-list-component.js';
+import { isNewTeam } from '../utils/utils.js';
 
 export default function TeamsPage() {
-  const { user, isLoading: authLoading } = useContext(AuthContext);
+  const { isLoading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(8);
 
   useEffect(() => {
-    getAllPersonTeams()
-      .then(teams => setTeams(teams))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
+    setVisibleCount(3);
+    async function init() {
+      await getAllPersonTeams().then(setTeams).catch(console.error).finally(() => setLoading(false));
+    }
+    init();
   }, []);
 
-  const isNew = (team) => team.persons.length === 1 && team.title === 'Новая команда';
+  const handleAddTeam = async () =>
+    await createTeam({ title: 'Новая команда', persons: [] })
+      .then(newTeam => navigate(`/teams/${newTeam.id}`, { state: { isEdit: true } }))
+      .catch(console.error);
 
-  const handleCreateDefaultTeam = () => {
-    if (!user) return navigate('/register');
-    createTeam({ title: 'Новая команда', persons: [] })
-      .then(newTeam => navigate(`/teams/${newTeam.id}`))
-      .catch(err => console.error(err));
-  };
+  const handleLoadMoreButtonClick = () => setVisibleCount(vc => Math.min(vc + 3, sortedTeams.length));
 
-  if (loading || authLoading) return <div className="loading-container">Загрузка...</div>;
+  if (loading || authLoading) return <LoadingComponent />;
 
-  const sortedTeams = teams.sort((a, b) => {
-    if (isNew(a)) return -1;
-    if (isNew(b)) return 1;
+  const sortedTeams = teams.slice().sort((a, b) => {
+    if (isNewTeam(a)) return -1;
+    if (isNewTeam(b)) return 1;
     return 0;
   });
+
+  const visibleTeams = sortedTeams.slice(0, visibleCount);
 
   return (
     <div className="teams-page-wrapper">
       <Header />
-      <div className="teams-page-content">
+      <div className={`teams-page-content${teams.length === 0 ? ' empty-list' : ''}`}>
         {teams.length > 0 ? (
-          <div className='teams-items-container'>
+          <div className="teams-items-container">
             <ul className="teams-list">
-              {sortedTeams.map(team => {
-                const sortedMembers = [...team.persons].sort((a, b) => {
-                  if (a.email === user.email) return -1;
-                  if (b.email === user.email) return 1;
-                  return 0;
-                });
+              {visibleTeams.map(team => {
                 return (
                   <li
                     key={team.id}
-                    className={"teams-list-item" + (isNew(team) ? ' new-team' : '')}
+                    className={`teams-list-item${isNewTeam(team) ? ' new-team' : ''}`}
                     onClick={() => navigate(`/teams/${team.id}`)}
                   >
-                    <h1 className="teams-item-title">{team.title}</h1>
-                    <ul className="team-persons-list">
-                      {sortedMembers.map(member => (
-                        <li key={member.personId} className="team-persons-list-item">
-                          <img
-                            src={
-                              member.imageName
-                                ? `http://localhost:8080/uploads/${member.imageName}`
-                                : userIcon
-                            }
-                            alt="Фото пользователя"
-                            className="team-person-photo"
-                          />
-                          <div className='team-person-info-container'>
-                            <div className='team-person-name-container'>
-                              <h2 className='team-person-username'>{member.username}</h2>
-                              {member.personId === team.adminId && <img src={adminIcon} alt='Иконка админа' className='admin-icon'/>}
-                            </div>
-                            {member.role && <h3 className='team-person-role'>{member.role}</h3>}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                    <TeamMembersList team={team} />
                   </li>
-              )})}
+                );
+              })}
             </ul>
+            {visibleCount < sortedTeams.length &&              
+              <div className='load-more-button-container'>
+                  <button className="button add-submit-button load-more-button" onClick={handleLoadMoreButtonClick}>Загрузить еще</button>
+              </div>
+            }
           </div>
-        ) : (
-          <div className="empty-previews">
-            <img
-              src={emptyPicture}
-              alt="Красивая картинка"
-              className="empty-items-picture"
-            />
-            <p className="empty-title">
-              У Вас пока нет команд - <span>Создайте первую!</span>
-            </p>
-            <div className="arrow-to-add">
-              <img
-                src={emptyArrow}
-                className="empty-arrow"
-                alt="Стрелка к кнопке"
-              />
-            </div>
-          </div>
-        )}
-        <div className='teams-create-btn-container'>
-          <button className="teams-create-btn" onClick={handleCreateDefaultTeam}>
-            Создать команду
-          </button>
-        </div>
+        ) : <EmptyItemsComponent title={<>У Вас пока нет команд – <span>Создайте первую!</span></>} className={'empty-teams-list'} />}
       </div>
+      <AddButton title="Создать команду" onClick={handleAddTeam} />
     </div>
   );
 }

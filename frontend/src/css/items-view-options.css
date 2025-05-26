@@ -1,0 +1,27 @@
+.items-view-options {
+  display: flex;
+  gap: 7px;
+  padding: 7px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.items-view-option {
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 10px;
+  color: rgba(0, 119, 255, 1);
+  font-size: 20px;
+  font-weight: 400;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.items-view-option:hover {
+  background-color: rgba(0, 119, 255, 0.3);
+}
+
+.items-view-option.active {
+  background-color: rgba(0, 119, 255, 1);
+  color: white;
+}
+  

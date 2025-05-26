@@ -12,21 +12,9 @@
   align-items: flex-start;
 }
 
-.back-to-project {
-  font-size: 20px;
+.back-to.project-link {
   margin-bottom: 15px;
   width: 100%;
-  text-align: left;
-  color: rgba(0, 119, 255, 1);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: color 0.2s, text-decoration-color 0.2s;
-}
-
-.back-to-project:hover, .project-link-title:hover, .edit-project-link-title:hover, .folder-file-title:hover {
-  text-decoration-color: rgba(0, 119, 255, 0.5);
-  color: rgba(0, 119, 255, 0.5);
 }
 
 .project-description-container, .edit-project-description-container {
@@ -195,12 +183,7 @@
   margin: 0;
   padding: 0;
   font-size: 20px;
-  font-weight: 400;
   color: black;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: color 0.2s, text-decoration-color 0.2s;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -228,77 +211,16 @@
   width: 180px;
   padding: 11.5px 0;
   font-size: 20px;
-  cursor: pointer;
-  border-radius: 15px;
 }
 
 .edit-project-detail-actions button {
   width: 300px;
 }
 
-.project-save-button {
-  background-color: transparent;
-  color: rgba(0, 119, 255, 1);
-  border: 2px solid rgba(0, 119, 255, 1);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.project-edit-button {
-  background-color: transparent;
-  color: rgba(255, 132, 0, 1);
-  border: 2px solid rgba(255, 132, 0, 1);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.project-delete-button, .project-cancel-button {
-  background-color: transparent;
-  color: rgba(172, 29, 29, 1);
-  border: 2px solid rgba(172, 29, 29, 1);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.project-save-button:hover {
-  background-color: rgba(0, 119, 255, 1);
-  color: #fff;
-}
-
-.project-edit-button:hover {
-  background-color: rgba(255, 132, 0, 1);
-  color: #fff;
-}
-
-.project-delete-button:hover, .project-cancel-button:hover {
-  background-color: rgba(172, 29, 29, 1);
-  color: #fff;
-}
-
-.remove-folder-button, .remove-project-link-button, .modal-folder-close-btn, .add-folder-file-modal-close-btn, .remove-folder-file-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  background: transparent;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  margin-left: 5px;
-  transition: color 0.2s;
-}
-
-.remove-folder-button:hover, .remove-project-link-button:hover, .modal-folder-close-btn:hover, .add-folder-file-modal-close-btn:hover, .remove-folder-file-button:hover {
-   color: red;
-}
-
 .edit-project-title, .edit-project-description, .project-link-input, .folder-name-input, .project-link-description-input, .folder-select, .folder-file-description-input {
   width: calc(100% - 18px);
   font-size: 20px;
   padding: 8px;
-  border: 1px solid rgba(0, 119, 255, 0.3);
-  border-radius: 10px;
-  transition: border-color 0.3s;
 }
 
 .project-link-input {
@@ -324,12 +246,6 @@
   margin-top: 15px;
 }
 
-.edit-project-title:focus, .edit-project-description:focus, .project-link-input:focus, .folder-name-input:focus, .project-link-description-input:focus, 
-.project-link-input:focus, .folder-select:focus, .folder-file-description-input:focus {
-  border-color: rgba(0, 119, 255, 1);
-  outline: none;
-}
-
 .project-link-input-group {
   width: 100%;
   display: flex;
@@ -341,19 +257,8 @@
   padding: 5px 30px;
   font-size: 20px;
   min-width: fit-content;
-  background-color: transparent;
-  color: rgba(0, 119, 255, 1);
-  border: 2px solid rgba(0, 119, 255, 1);
-  border-radius: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
   width: 50%;
   margin: 0 auto;
-}
-
-.change-project-photo-button:hover, .add-folder-button:hover, .add-project-link-button:hover, .add-folder-file-button:hover, .add-folder-files-button:hover {
-  background-color: rgba(0, 119, 255, 1);
-  color: #fff;
 }
 
 .modal-folder-overlay {
@@ -451,21 +356,18 @@
   padding: 5px;
 }
 
-.add-folder-button:disabled, .add-folder-files-button:disabled {
-  color: gray;
-  border-color: gray;
-  background-color: white;
-  cursor: no-drop;
-}
-
-.public-project-links {
+.project-detail-page.public .project-links {
   height: 525px;
 }
 
-.public-project-description-container {
+.project-detail-page.public .project-description-container {
   height: 855px;
 }
 
-.public-project-folders-container {
+.project-detail-page.public .project-folders-container {
   height: 865px;
+}
+
+.project-folders-container.not-admin {
+  height: 805px;
 }

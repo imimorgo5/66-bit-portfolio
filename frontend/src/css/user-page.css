@@ -2,192 +2,27 @@
     padding: 0;
     height: calc(100vh - 60px);
   }
-  
-  .user-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
+
+  .user-links-list.edit {
     width: 100%;
-    height: 43%;
-    padding: 40px 0;
-    margin: 0 auto;
-  }
-  
-  .user-info, .edit-user-info {
-    width: calc(22.5% - 60px);
-    height: calc(100% - 70px);
-    background: #fff;
-    padding: 35px 30px;
-    border-radius: 15px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: flex-start;
   }
 
-  .user-photo, .edit-user-photo {
-    width: 250px;
-    height: 250px;
-    margin: 0 auto;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(0, 0, 0, 0.5);
-  }
-  
-  .user-info h2 {
-    margin: auto;
-    padding: 0;
-    font-size: 24px;
-    color: rgba(0, 119, 255, 1);
-  }
-  
-  .user-data, .edit-user-data {
-    width: calc(34% - 150px);
-    height: calc(100% - 70px);
-    background: #fff;
-    padding: 35px 75px;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .user-data-title, .user-links-title {
-    margin: 0;
-    font-size: 24px;
-  }
-
-  .user-description {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: left;
-    width: 100%;
-    height: 172px;
-    margin: auto;
-    white-space: nowrap;
-  }
-  
-  .user-description p {
-    display: flex;
-    height: 35px;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0;
-    font-size: 20px;
-    color: rgba(0, 119, 255, 1);
-  }
-
-  .user-input-wrapper p {
-    min-width: 250px;
-  }
-  
-  .description-title, .user-input-wrapper .description-title {
-    font-weight: 500;
-    color: black;
-  }
-
-  .user-links-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-  }
-
-  .user-links-item::before {
-    content: '•';
-    font-size: 20px;
-    color: rgba(0, 119, 255, 1);
-  }
-
-  .user-links, .edit-user-links {
-    width: calc(56.5% - 10px);
-    height: calc(35% - 70px);
-    margin: 0 auto;
-    background: #fff;
-    padding: 35px 30px;
-    border-radius: 15px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .user-links-list, .edit-user-links-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    list-style: none;
-    gap: 10px;
-    margin: 0;
-    padding: 10px 0;
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-  }
-
-  .edit-user-links-list {
+  .user-link-item.edit {
     width: 100%;
   }
-
-  .edit-user-link-item {
-    width: 100%;
-  }
-
-  .user-link-title, .edit-user-link-title {
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    font-weight: 400;
-    color: rgba(0, 119, 255, 1);
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 3px;
-    transition: color 0.2s, text-decoration-color 0.2s;
-    cursor: pointer;
-  }
-
-  .user-link-title:hover, .edit-user-link-title:hover {
-    text-decoration-color: rgba(0, 119, 255, 0.5);
-    color: rgba(0, 119, 255, 0.5);
-  }
-
-  .edit-user-link-title {
+  
+  .user-link-title.edit {
     min-width: 340px;
     font-size: 16px;
   }
 
-  .edit-user-link-item-container {
+  .user-link-item-container.edit {
     display: flex;
     gap: 10px;
     align-items: center;
     width: fit-content;
     margin: 0 auto;
-  }
-
-  .remove-user-link-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    background: transparent;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    margin-left: 5px;
-  }
-
-  .remove-user-link-button:hover {
-    color: red;
-  }
-
-  .user-empty-list {
-    margin: auto;
-    font-size: 20px;
   }
 
   .user-link-input-group {
@@ -196,30 +31,23 @@
     width: 60%;
   }
 
-  .edit-user-info {
+  .user-info.edit {
     justify-content: space-between;
   }
 
-  .edit-user-photo {
+  .user-photo.edit {
     width: 210px;
     height: 210px;
   }
-  
-  .user-input-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    width: 100%;
+
+  .user-description-item.username {
+    flex-direction: column;
   }
 
-  .user-input-wrapper input, .edit-user-info input, .link-input, .user-link-description-input, .user-link-input {
+  .user-description-item input, .user-info.edit input, .link-input, .user-link-description-input, .user-link-input {
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid rgba(0, 119, 255, 0.3);
-    border-radius: 10px;
-    transition: border-color 0.3s;
   }
 
   .user-link-description-input {
@@ -227,15 +55,10 @@
     padding: 5px;
   }
 
-  .edit-user-info input {
+  .user-info.edit input {
     font-size: 20px;
     width: 90%;
     text-align: center;
-  }
-  
-  .user-input-wrapper input:focus, .user-link-description-input:focus, .edit-user-info input:focus, .user-link-input:focus {
-    border-color: rgba(0, 119, 255, 1);
-    outline: none;
   }
   
   .user-data-save-button, .user-data-cancel-button, .edit-info-button, .user-photo-change, .add-user-link-button {
@@ -243,75 +66,29 @@
     font-size: 20px;
     font-weight: 600;
     margin: 0 12px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   }
 
   .user-photo-change, .add-user-link-button {
     padding: 5px 20px;
   }
-  
-  .user-data-save-button, .user-photo-change, .add-user-link-button {
-    background-color: transparent;
-    color: rgba(0, 119, 255, 1);
-    border: 2px solid rgba(0,119,255,1);
-  }
-  
-  .user-data-save-button:hover, .user-photo-change:hover, .add-user-link-button:hover {
-    background-color: rgba(0, 119, 255, 1);
-    color: #fff;
-  }
-
-  .user-data-save-button:disabled {
-    background-color: #ccc;
-    color: white;
-    border-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .user-data-cancel-button:hover {
-    background-color: rgba(172, 29, 29, 1);
-    color: #fff;    
-  }
-  
-  .user-data-cancel-button {
-    background-color: transparent;
-    color: rgba(172, 29, 29, 1);
-    border: 2px solid rgba(172, 29, 29, 1);
-  }
 
   .user-error-message {
-    position: absolute;
-    color: rgba(172, 29, 29, 1);
     font-size: 16px;
     text-align: left;
     margin-top: 60px;
-    min-width: 400px;
+    min-width: 350px;
     text-align: center;
-    margin-left: 180px;
+    margin-left: 200px;
   }
 
-  .user-input-wrapper .input-error {
-    background-color: rgba(172, 29, 29, 0.3);
-    border: 1px solid rgba(172, 29, 29, 1);
-  }
-  
-  .user-photo-edit button,
-  .edit-info-button {
-    background-color: transparent;
-    color: rgba(0,119,255,1);
-    border: 2px solid rgba(0,119,255,1);
+  .user-error-message.username {
+    min-width: 372px;
+    margin-left: 0;
+    margin-top: 45px;
   }
 
   .edit-info-button {
     margin-top: 40px;
-  }
-  
-  .user-photo-edit button:hover,
-  .edit-info-button:hover {
-    color: #fff;
-    background: rgba(0,119,255,1);
   }
 
   .user-info-actions {

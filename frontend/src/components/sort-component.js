@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/sort.css';
+import '../css/items-view-options.css';
 
 export default function SortComponent({ onSortChange }) {
   const [selectedOption, setSelectedOption] = useState('date');
@@ -18,16 +18,15 @@ export default function SortComponent({ onSortChange }) {
   }, [selectedOption, onSortChange]);
 
   return (
-    <div className="sort-options">
-      <h2>Сортировать:</h2>
+    <div className="items-view-options">
       <div
-        className={`sort-option ${selectedOption === 'date' ? 'active' : ''}`}
+        className={`items-view-option ${selectedOption === 'date' ? 'active' : ''}`}
         onClick={() => handleClick('date')}
       >
         По времени добавления
       </div>
       <div
-        className={`sort-option ${selectedOption === 'name' ? 'active' : ''}`}
+        className={`items-view-option ${selectedOption === 'name' ? 'active' : ''}`}
         onClick={() => handleClick('name')}
       >
         По названию
