@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.js';
 import { login, register } from '../services/auth-service.js';
 import { FormType } from '../consts.js';
-import { validateEmail, validateName } from '../utils/utils.js'; 
+import { validateEmail, validateName } from '../utils/utils.js';
 import logo from '../img/logo.svg';
 import logPicture from '../img/login-picture.png';
 import regPicture from '../img/reg-picture.png';
@@ -65,11 +65,11 @@ export default function AuthPage({ formType }) {
         }
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = e => {
         e.preventDefault();
         if (isRegister) {
             if (isFormValid)
-                await register({ email, password, username })
+                register({ email, password, username })
                     .then(() => window.location.href = '/login')
                     .catch(err => {
                         if (err.message.includes("Пользователь с таким email уже существует")) {
@@ -80,7 +80,7 @@ export default function AuthPage({ formType }) {
                     });
         } else {
             if (isFormValid) {
-                await login({ email, password })
+                login({ email, password })
                     .then(data => {
                         setUser(data.user);
                         window.location.href = '/';
@@ -98,9 +98,9 @@ export default function AuthPage({ formType }) {
         };
     }
 
-    isFormValid = email && (!isRegister || username) && password && (!isRegister || passwordAgain) 
-            && !emailError && !nameError && !passwordError && !passwordAgainError
-    
+    isFormValid = email && (!isRegister || username) && password && (!isRegister || passwordAgain)
+        && !emailError && !nameError && !passwordError && !passwordAgainError
+
     return (
         <div className={'auth-page ' + formType}>
             <div className="auth-content">

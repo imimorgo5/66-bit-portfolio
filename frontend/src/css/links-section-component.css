@@ -1,0 +1,204 @@
+.links-section {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.links-section.project {
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px;
+  width: calc(100% - 60px);
+  height: 410px;
+}
+
+.links-section.project.edit {
+  height: 440px;
+}
+
+.links-section.project.public {
+  height: 525px;
+}
+
+.links-section.user {
+  width: calc(56.5% - 10px);
+  height: calc(40% - 70px);
+  margin: 0 auto;
+  padding: 35px 30px;
+  text-align: center;
+  align-items: center;
+}
+
+.links-section.user.card {
+  align-items: flex-start;
+  gap: 10px;
+  padding: 30px;
+  height: 190px;
+  width: calc(100% - 60px);
+}
+
+.links-section.user.card.public {
+  height: 305px;
+}
+
+.links-title {
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+}
+
+.links-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.links-section.project .links-list {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 100%;
+  width: calc(100% - 17px);
+}
+
+.links-section.user .links-list {
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0;
+  height: 100%;
+  width: 100%;
+}
+
+.links-section.user.edit .links-list {
+  justify-content: flex-start;
+}
+
+.links-section.user.card .links-list {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0;
+  height: calc(100% - 17px);
+}
+
+.links-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.links-section.project .links-item {
+  width: 100%;
+}
+
+.links-section.project.edit .links-item {
+  gap: 15px;
+}
+
+.links-item::before {
+  content: '•';
+  font-size: 20px;
+  color: rgba(0, 119, 255, 1);
+}
+
+.links-section.user.edit .links-item::before, .links-section.project.edit .links-item::before {
+  content: none;
+}
+
+.links-item-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.links-section.project .links-item-container {
+  width: 100%;
+}
+
+.links-section.project.edit .links-item-container {
+  flex-direction: column;
+}
+
+.links-section.user.edit .links-item-container {
+  width: fit-content;
+}
+
+.link-title {
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 119, 255, 1);
+  font-size: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.links-section.project.edit .link-title {
+  font-size: 18px;
+}
+
+.links-section.user.edit .link-title {
+  min-width: 340px;
+  font-size: 16px;
+}
+
+.links-section.project .link-description-input {
+  width: calc(100% - 12px);
+  font-size: 16px;
+  padding: 5px;
+}
+
+.links-section.user .link-description-input {
+  width: 340px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.link-input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.links-section.project .link-input-group {
+  width: 100%;
+  flex-direction: column;
+}
+
+.links-section.user .link-input-group {
+  width: 60%;
+}
+
+.links-section.project .link-input {
+  width: calc(100% - 18px);
+  font-size: 16px;
+  padding: 8px;
+}
+
+.links-section.user .link-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.add-link-button {
+  font-size: 20px;
+}
+
+.links-section.project .add-link-button {
+  padding: 5px 30px;
+  min-width: fit-content;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.links-section.user .add-link-button {
+  padding: 5px 20px;
+  font-weight: 600;
+  margin: 0 12px;
+}

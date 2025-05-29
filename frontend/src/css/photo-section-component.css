@@ -1,0 +1,62 @@
+.image-container.project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    width: calc(100% - 60px);
+    height: 265px;
+}
+
+.image-container.project.edit {
+    height: 290px;
+}
+
+.preview-img {
+    object-fit: cover;
+}
+
+.image-container.project .preview-img {
+    width: 315px;
+    height: 220px;
+    border-radius: 15px;
+}
+
+.image-container.user .preview-img {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+.image-container.user.card .preview-img {
+    width: 200px;
+    height: 200px;
+}
+
+.image-container.user.edit .preview-img {
+    width: 210px;
+    height: 210px;
+}
+
+.change-photo-button {
+    font-size: 20px;
+}
+
+.image-container.project .change-photo-button {
+    padding: 5px 30px;
+    min-width: fit-content;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.image-container.user .change-photo-button {
+    padding: 5px 20px;
+    font-weight: 600;
+    margin: 0 12px;
+}

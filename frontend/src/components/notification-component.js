@@ -31,11 +31,11 @@ export default function NotificationComponent({handleRead}) {
     });
   }
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
     if (!selected) return;
     setActionLoading(true);
     try {
-      await acceptInvitation(selected.id);
+      acceptInvitation(selected.id);
       setNotifications(prev => prev.filter(n => n.id !== selected.id));
       closeDetail();
       handleRead();
@@ -45,11 +45,11 @@ export default function NotificationComponent({handleRead}) {
     setActionLoading(false);
   };
 
-  const handleReject = async () => {
+  const handleReject = () => {
     if (!selected) return;
     setActionLoading(true);
     try {
-      await rejectInvitation(selected.id);
+      rejectInvitation(selected.id);
       setNotifications(prev => prev.filter(n => n.id !== selected.id));
       closeDetail();
       handleRead();

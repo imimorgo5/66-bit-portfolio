@@ -1,0 +1,75 @@
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.action-buttons.project {
+    height: 70px;
+    padding: 10px 25px;
+    width: calc(100% - 50px);
+}
+
+.action-buttons.card {
+    height: 50px;
+    gap: 10px;
+    display: flex;
+    width: 100%;
+}
+
+.action-buttons.card.edit {
+    height: 70px;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+.action-buttons.user {
+    margin-top: 40px;
+    gap: 0;
+    background-color: transparent;
+}
+
+.action-buttons button {
+    font-size: 20px;
+}
+
+.action-buttons.project button {
+    width: 180px;
+    padding: 11.5px 0;
+}
+
+.action-buttons.project.edit button {
+    width: 300px;
+}
+
+.action-buttons.card button {
+    width: 161.5px;
+    padding: 11.5px 0;
+}
+
+.action-buttons.card.edit button {
+    width: 250px;
+}
+
+.action-buttons.team button {
+    width: 180px;
+    padding: 8px 0;
+}
+
+.action-buttons.user button {
+    padding: 11.5px 30px;
+    font-weight: 600;
+    margin: 0 12px;
+}
+
+.action-buttons.user .cancel-delete-button {
+    display: none;
+}
+
+.action-buttons.user.edit .cancel-delete-button {
+    display: block;
+}

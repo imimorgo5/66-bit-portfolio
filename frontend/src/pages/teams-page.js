@@ -8,6 +8,7 @@ import LoadingComponent from '../components/loading-component.js';
 import EmptyItemsComponent from '../components/empty-items-component.js';
 import AddButton from '../components/add-button-component.js';
 import TeamMembersList from '../components/team-members-list-component.js';
+import LoadMoreButton from '../components/load-more-button-component.js';
 import { isNewTeam } from '../utils/utils.js';
 
 export default function TeamsPage() {
@@ -19,14 +20,11 @@ export default function TeamsPage() {
 
   useEffect(() => {
     setVisibleCount(3);
-    async function init() {
-      await getAllPersonTeams().then(setTeams).catch(console.error).finally(() => setLoading(false));
-    }
-    init();
+    getAllPersonTeams().then(setTeams).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  const handleAddTeam = async () =>
-    await createTeam({ title: 'Новая команда', persons: [] })
+  const handleAddTeam = () =>
+    createTeam({ title: 'Новая команда', persons: [] })
       .then(newTeam => navigate(`/teams/${newTeam.id}`, { state: { isEdit: true } }))
       .catch(console.error);
 
@@ -61,11 +59,7 @@ export default function TeamsPage() {
                 );
               })}
             </ul>
-            {visibleCount < sortedTeams.length &&              
-              <div className='load-more-button-container'>
-                  <button className="button add-submit-button load-more-button" onClick={handleLoadMoreButtonClick}>Загрузить еще</button>
-              </div>
-            }
+            {visibleCount < sortedTeams.length && <LoadMoreButton onClick={handleLoadMoreButtonClick}/>}
           </div>
         ) : <EmptyItemsComponent title={<>У Вас пока нет команд – <span>Создайте первую!</span></>} className={'empty-teams-list'} />}
       </div>

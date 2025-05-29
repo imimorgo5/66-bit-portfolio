@@ -35,18 +35,6 @@
   height: calc(100% - 43px);
 }
 
-.team-info-buttons-conatainer {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-}
-
-.team-info-buttons-conatainer button, .add-team-project-button, .add-team-card-button {
-  width: 180px;
-  padding: 8px 0;
-  font-size: 20px;
-}
-
 .team-empty-list {
   display: flex;
   align-items: center;

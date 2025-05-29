@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ItemsPage from './pages/items-page.js';
 import ProjectDetailPage from './pages/project-detail-page.js';
 import CardDetailPage from './pages/card-detail-page';
-import TeamsDetailPage from './pages/teams-detail-page';
+import TeamsDetailPage from './pages/team-detail-page.js';
 import TeamsPage from './pages/teams-page.js';
 import UserPage from './pages/user-page.js';
 import AuthPage from './pages/auth-page.js';

@@ -1,46 +1,105 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import LinksSection from './link-section-component.js';
+import PhotoSection from './photo-section-component.js';
 import userIcon from '../img/user-icon.svg';
-import linkIcon from '../img/link_icon.svg';
-import { normalizeUrl } from '../utils/utils.js';
 import '../css/user-card-component.css'
 
-export default function UserCard({user, className = '', infoTitle = ''}) {
+export default function UserCard({ editable = false, data, errors = {}, onChangeField, onPhotoTrigger, photoInputRef, onPhotoChange,
+  linkInput, onLinkInputChange, onAddLink, onRemoveLink, onChangeLinkDesc, className = '', infoTitle = '', linkTitle = '' }) {
+  const { username, email, birthDate, phoneNumber, imagePreviewUrl, imageName, linkDTOs } = data;
+
   return (
-    <div className={`user-card ${className}`}>
+    <div className={`user-card ${className} ${editable ? 'edit' : ''}`}>
       <div className="user-info-container">
         <div className="user-info">
-          <img
-            src={user.imageName ? `http://localhost:8080/uploads/${user.imageName}` : userIcon}
-            alt="Фото пользователя"
-            className="user-photo"
+          <PhotoSection
+            isEditing={editable}
+            defaultImage={userIcon}
+            imagePreviewUrl={imagePreviewUrl}
+            imageName={imageName}
+            inputTrigger={onPhotoTrigger}
+            inputRef={photoInputRef}
+            onPhotoChange={onPhotoChange}
+            className={`user ${className}`}
           />
-          <h2>{user.username}</h2>
-        </div>
-        <div className="user-data">
-          {infoTitle && <h3 className="user-data-title">Личные данные</h3>}
-          <div className="user-description">
-            <p className='user-description-item'><span className="description-title">Email: </span>{user.email}</p>
-            <p className='user-description-item'><span className="description-title">Дата рождения: </span>{user.birthDate ? new Date(user.birthDate).toLocaleDateString('ru-RU') : 'Не указана'}</p>
-            <p className='user-description-item'><span className="description-title">Телефон: </span>{user.phoneNumber || 'Не указан'}</p>
+          <div className='user-description-item username'>
+            {editable ? (
+              <input
+                type="text"
+                name="username"
+                value={username}
+                maxLength={75}
+                onChange={onChangeField}
+                className={`text-input ${errors.username ? 'input-error' : ''}`}
+                placeholder="Ваше имя"
+              />
+            ) : (
+              <h2>{username}</h2>
+            )}
+            {errors.username && <div className="error-message user-error-message username">{errors.username}</div>}
           </div>
         </div>
+        <div className="user-data">
+          {infoTitle && <h3 className="user-data-title">{infoTitle}</h3>}
+          {editable ? (
+            <div className="user-description">
+              <div className="user-description-item">
+                <p className='description-title'>Email:</p>
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  maxLength={50}
+                  onChange={onChangeField}
+                  className={`text-input ${errors.email ? 'input-error' : ''}`}
+                />
+                {errors.email && <div className="error-message user-error-message">{errors.email}</div>}
+              </div>
+              <div className="user-description-item">
+                <p className='description-title'>Дата рождения:</p>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={birthDate || ''}
+                  onChange={onChangeField}
+                  className="text-input"
+                />
+              </div>
+              <div className="user-description-item">
+                <p className='description-title'>Телефон:</p>
+                <input
+                  type="text"
+                  name="phoneNumber"
+                  value={phoneNumber || ''}
+                  maxLength={12}
+                  onChange={onChangeField}
+                  className={`text-input ${errors.phoneNumber ? 'input-error' : ''}`}
+                />
+                {errors.phoneNumber && <div className="error-message user-error-message">{errors.phoneNumber}</div>}
+              </div>
+            </div>
+          ) : (
+            <div className="user-description">
+              <p className='user-description-item'><span className="description-title">Email: </span>{email}</p>
+              <p className='user-description-item'><span className="description-title">Дата рождения: </span>{birthDate ? new Date(birthDate).toLocaleDateString('ru-RU') : 'Не указана'}</p>
+              <p className='user-description-item'><span className="description-title">Телефон: </span>{phoneNumber || 'Не указан'}</p>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="user-links">
-        <h3 className="user-links-title">Способы связи</h3>
-        {user.linkDTOs && user.linkDTOs.length > 0 ?
-        <ul className="user-links-list">
-            {user.linkDTOs.map((link, i) => (
-                <li key={i} className="user-links-item">
-                    <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link user-link-title">
-                        {link.description ? link.description : link.link.length > 35 ? link.link.slice(0, 32) + '...' : link.link}
-                    </Link>
-                    <img src={linkIcon} alt="Иконка ссылки" className="link-icon" />
-                </li>
-            ))}
-        </ul>
-        : <p className="user-empty-list">Не указано</p>}
-      </div>
+      <LinksSection
+        title={linkTitle}
+        links={linkDTOs}
+        editable={editable}
+        maxLength={35}
+        maxCount={5}
+        onDescriptionChange={onChangeLinkDesc}
+        onAdd={onAddLink}
+        onRemove={onRemoveLink}
+        inputValue={linkInput}
+        onInputChange={onLinkInputChange}
+        className={`user ${className}`}
+      />
     </div>
   );
 }

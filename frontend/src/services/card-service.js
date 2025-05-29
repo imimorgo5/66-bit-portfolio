@@ -70,7 +70,7 @@ export const getCardById = async (id) => {
 export const updateCard = async (id, cardData) => {
     const formData = new FormData();
     formData.append('title', cardData.title);
-   
+
     if (cardData.description) {
         formData.append('description', cardData.description);
     }
@@ -83,18 +83,20 @@ export const updateCard = async (id, cardData) => {
     }
 
     if (cardData.cardFiles && Array.isArray(cardData.cardFiles)) {
-        cardData.cardFiles.forEach((fileItem, index) => {
-            if (fileItem.file) {
-                formData.append(`cardFiles[${index}].file`, fileItem.file);
+        cardData.cardFiles.forEach((file, index) => {
+            if (file.file instanceof File) {
+                formData.append(`cardFiles[${index}].file`, file.file);
+            } else {
+                formData.append(`cardFiles[${index}].file`, new Blob([], { type: 'application/octet-stream' }), file.fileTitle);
             }
-            formData.append(`cardFiles[${index}].fileTitle`, fileItem.fileTitle || '');
-            formData.append(`cardFiles[${index}].description`, fileItem.description || '');
+            formData.append(`cardFiles[${index}].fileTitle`, file.fileTitle || '');
+            formData.append(`cardFiles[${index}].description`, file.description || '');
         });
     }
 
     if (cardData.projects && Array.isArray(cardData.projects)) {
-        cardData.projects.forEach((projectId, index) => {
-            formData.append(`projects[${index}].id`, projectId);
+        cardData.projects.forEach((pid, index) => {
+            formData.append(`projects[${index}].id`, pid);
         });
     }
 

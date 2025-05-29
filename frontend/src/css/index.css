@@ -46,32 +46,18 @@ code {
   color: rgba(172, 29, 29, 1);
 }
 
-.create-button-container,
 .load-more-button-container {
   width: 100%;
 }
 
-.create-button,
 .load-more-button {
   display: block;
   max-width: fit-content;
-  height: 50px;
-  padding: 0 50px;
-  margin: 0 auto;
-  color: rgba(0, 119, 255, 1);
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.load-more-button {
   height: fit-content;
   padding: 7px 10px;
-}
-
-.create-button:hover,
-.load-more-button:hover {
-  background-color: rgba(0, 119, 255, 1);
-  color: #fff;
+  margin: 0 auto;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .text-input {
@@ -198,4 +184,13 @@ code {
 
 .link:active {
   color: rgba(0, 119, 255, 1);
+}
+
+.user-page {
+  height: calc(100vh - 60px);
+}
+
+.empty-list {
+  font-size: 20px;
+  margin: auto;
 }

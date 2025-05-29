@@ -1,0 +1,17 @@
+.create-button-container {
+  width: 100%;
+}
+
+.create-button {
+  display: block;
+  height: 50px;
+  padding: 0 50px;
+  margin: 0 auto;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.create-button.team-items {
+  height: fit-content;
+  padding: 8px 10px;
+}

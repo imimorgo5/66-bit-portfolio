@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import NotificationComponent from './notification-component.js';
+import { AuthContext } from '../context/AuthContext.js';
+import { logout } from '../services/auth-service.js';
+import { getUnreadNotifications } from '../services/notification-service';
 import userIcon from '../img/user-icon.svg';
 import logo from '../img/logo.svg';
 import notificationsIcon from '../img/notifications-icon.svg';
 import '../css/header.css';
-import { AuthContext } from '../context/AuthContext.js';
-import { logout } from '../services/auth-service.js';
-import { getUnreadNotifications } from '../services/notification-service';
 
 export default function Header() {
   const { user, setUser } = useContext(AuthContext);
@@ -20,22 +20,22 @@ export default function Header() {
   const dropdownRef = useRef(null);
   const notificationsRef = useRef(null);
 
-  const loadUnreadCount = async () => await getUnreadNotifications().then(arr => setUnreadCount(arr.length)).catch(console.error);
+  const loadUnreadCount = () => getUnreadNotifications().then(arr => setUnreadCount(arr.length)).catch(console.error);
 
-useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-      setDropdownOpen(false);
-    }
-    if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
-      setNotificationsOpen(false);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
+        setNotificationsOpen(false);
+      }
+    };
 
-  document.addEventListener('mousedown', handleClickOutside);
-  loadUnreadCount();
-  return () => document.removeEventListener('mousedown', handleClickOutside);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    document.addEventListener('mousedown', handleClickOutside);
+    loadUnreadCount();
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleDropdown = () => {
@@ -54,13 +54,13 @@ useEffect(() => {
     });
   };
 
-  const handleLogout = async () => 
-    await logout().then(() => {
+  const handleLogout = () =>
+    logout().then(() => {
       setUser(null);
       navigate('/login');
     })
-    .catch(console.error)
-    .finally(() => setDropdownOpen(false));
+      .catch(console.error)
+      .finally(() => setDropdownOpen(false));
 
   return (
     <nav className="header">
@@ -87,7 +87,7 @@ useEffect(() => {
               <img src={notificationsIcon} alt="Иконка уведомлений" />
             </div>
             {isNotificationsOpen && (
-              <NotificationComponent handleRead={loadUnreadCount}/>
+              <NotificationComponent handleRead={loadUnreadCount} />
             )}
           </div>
         )}
@@ -100,7 +100,7 @@ useEffect(() => {
             <div className="dropdown-menu">
               {user ? (
                 <>
-                  <NavLink to="/user"    onClick={() => setDropdownOpen(false)} className="link dropdown-item authorized">Личный кабинет</NavLink>
+                  <NavLink to="/user" onClick={() => setDropdownOpen(false)} className="link dropdown-item authorized">Личный кабинет</NavLink>
                   <div onClick={handleLogout} className="link dropdown-item authorized">Выйти</div>
                 </>
               ) : (

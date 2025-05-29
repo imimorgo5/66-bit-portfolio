@@ -1,0 +1,160 @@
+.file-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 60px);
+}
+
+.file-section.card {
+    align-items: flex-start;
+    gap: 10px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    height: 295px;
+}
+
+.file-section.card.edit {
+    height: 322.5px;
+}
+
+.file-section.card.public {
+    height: 395px;
+}
+
+
+.file-section.project {
+    height: 100%;
+    padding: 0 30px 30px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.file-section.project.edit {
+    height: auto;
+    width: auto;
+    background-color: transparent;
+    padding: 0;
+    align-items: flex-start;
+}
+
+.file-section h3 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+}
+
+.file-section .file-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: calc(100% - 17px);
+    overflow-y: auto;
+}
+
+.file-section.card .file-list {
+    gap: 12px;
+}
+
+.file-section.project .file-list {
+    gap: 20px;
+}
+
+.file-section.edit .file-list {
+    width: 100%;
+}
+
+.file-section.project.edit .file-list {
+    margin-left: 20px;
+    gap: 15px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.file-section.card.edit .file-item {
+    width: 100%;
+}
+
+.file-section.project.edit .file-item {
+    gap: 15px;
+}
+
+.file-item-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.file-section.card .file-item-container {
+    gap: 10px;
+}
+
+.file-section.project .file-item-container {
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.file-section.project.edit .file-item-container {
+    flex-direction: column;
+    gap: 5px;
+}
+
+.file-title {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-size: 20px;
+    white-space: nowrap;
+    color: black;
+}
+
+.file-section.edit .file-title {
+    cursor: default;
+    font-size: 16px;
+}
+
+.file-section.card.edit .file-title {
+    min-width: 50%;
+}
+
+.file-description-input {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.file-section.card .file-description-input {
+    width: calc(100% - 18px);
+}
+
+.file-section.project .file-description-input {
+    width: calc(100% - 32px);
+}
+
+.file-upload-button {
+    margin: 0 auto;
+}
+
+.file-section.card .file-upload-button {
+    padding: 5px 30px;
+    font-size: 20px;
+    width: 515px;
+    margin-top: 20px;
+}
+
+.file-section.project .file-upload-button {
+    font-size: 16px;
+    min-width: fit-content;
+    width: 50%;
+    margin-top: 10px;
+    padding: 5px;
+}

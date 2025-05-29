@@ -76,25 +76,28 @@ export const updateProject = async (id, projectData) => {
     formData.append('description', projectData.description);
   }
   
-  if (projectData.image) {
-    formData.append('imageFile', projectData.image);
+  if (projectData.imageFile) {
+    formData.append('imageFile', projectData.imageFile);
   }
 
-  if (projectData.projectLinks && Array.isArray(projectData.projectLinks)) {
+  if (Array.isArray(projectData.projectLinks)) {
     projectData.projectLinks.forEach((link, index) => {
-        formData.append(`projectLinks[${index}].link`, link.link || '');
-        formData.append(`projectLinks[${index}].description`, link.description || '');
+        formData.append(`projectLinks[${index}].link`, link.link);
+        formData.append(`projectLinks[${index}].description`, link.description);
     });
   }
-
-  if (projectData.folders && Array.isArray(projectData.folders)) {
+  if (Array.isArray(projectData.folders)) {
     projectData.folders.forEach((folder, folderIndex) => {
       formData.append(`folders[${folderIndex}].title`, folder.title || '');
       if (folder.files && Array.isArray(folder.files)) {
         folder.files.forEach((file, fileIndex) => {
-          formData.append(`folders[${folderIndex}].files[${fileIndex}].fileTitle`, file.title || '');
-          formData.append(`folders[${folderIndex}].files[${fileIndex}].description`, file.description || '');
-          formData.append(`folders[${folderIndex}].files[${fileIndex}].file`, file.file || '');
+          formData.append(`folders[${folderIndex}].files[${fileIndex}].fileTitle`, file.fileTitle);
+          formData.append(`folders[${folderIndex}].files[${fileIndex}].description`, file.description);
+          if (file.file instanceof File) {
+            formData.append(`folders[${folderIndex}].files[${fileIndex}].file`, file.file);
+          } else {
+            formData.append(`folders[${folderIndex}].files[${fileIndex}].file`, new Blob([], { type: 'application/octet-stream' }), file.fileTitle);
+          }
         });
       }
     });

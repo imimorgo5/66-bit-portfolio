@@ -8,11 +8,13 @@ import FilterComponent from '../components/filter-component';
 import LoadingComponent from '../components/loading-component.js';
 import EmptyItemsComponent from '../components/empty-items-component.js';
 import AddButton from '../components/add-button-component.js';
-import '../css/items-page.css';
+import LoadMoreButton from '../components/load-more-button-component.js';
 import { getPersonCards, getPersonTeamsCard, createPersonCard } from '../services/card-service';
 import { createPersonProject, getPersonProjects } from '../services/project-service';
-import { ItemType } from '../consts.js';
 import { isNewCard, isNewProject } from '../utils/utils.js';
+import { getFullName } from '../utils/file.js';
+import { ItemType } from '../consts.js';
+import '../css/items-page.css';
 
 export default function ItemsPage({ itemType }) {
     const { user, isLoading: authLoading } = useContext(AuthContext);
@@ -27,39 +29,24 @@ export default function ItemsPage({ itemType }) {
 
     useEffect(() => {
         setVisibleCount(8);
-        async function init() {
-            if (!authLoading) {
-                try {
-                    if (itemType === ItemType.PROJECT) {
-                        await getPersonProjects().then(setItems);
-                    } else if (itemType === ItemType.CARD) {
-                        if (isTeamMode) {
-                            await getPersonTeamsCard(user.id).then(setItems);
-                        } else {
-                            await getPersonCards().then(setItems);
-                        }
-                    } else {
-                        throw new Error();
-                    }
-                } catch (err) {
-                    console.error(err);
-                } finally {
-                    setLoading(false);
-                }
-            }
+        isProjectsPage && setIsTeamMode(false);
+        if (!authLoading) {
+            (isProjectsPage ? getPersonProjects() : isTeamMode ? getPersonTeamsCard(user.id) : getPersonCards())
+                .then(setItems)
+                .catch(console.error)
+                .finally(() => setLoading(false))
         }
-        init();
-    }, [isTeamMode, user, authLoading, itemType]);
+    }, [isTeamMode, user, authLoading, isProjectsPage]);
 
     const goToProjectDetail = (project, isEdit = false) => navigate(`/projects/${project.id}?from=/`, { state: { isEdit: isEdit } });
 
     const goToCardDetail = (card, isEdit = false) => navigate(`/cards/${card.id}?from=${isTeamMode ? '/cards?mode=team' : '/cards'}`, { state: { isEdit: isEdit } });
 
-    const handleAddItem = async () => {
+    const handleAddItem = () => {
         if (isProjectsPage) {
-            await createPersonProject({ title: 'Новый проект' }).then(newProj => goToProjectDetail(newProj, true)).catch(console.error);
+            createPersonProject({ title: 'Новый проект' }).then(newProj => goToProjectDetail(newProj, true)).catch(console.error);
         } else {
-            await createPersonCard({ title: 'Новая карточка' }).then(newCard => goToCardDetail(newCard, true)).catch(console.error);
+            createPersonCard({ title: 'Новая карточка' }).then(newCard => goToCardDetail(newCard, true)).catch(console.error);
         }
     };
 
@@ -96,30 +83,26 @@ export default function ItemsPage({ itemType }) {
                     <div className='main-item-content'>
                         <ul className="preview-list">
                             {visibleItems.map(item => (
-                                <li 
+                                <li
                                     key={item.id}
                                     onClick={() => isProjectsPage ? goToProjectDetail(item) : goToCardDetail(item)}
                                     className={(isProjectsPage ? isNewProject(item) : isNewCard(item)) ? 'new-item' : ''}
                                 >
-                                    {isProjectsPage ?
-                                        <ItemPreview title={item.title} image={item.imageName ? `http://localhost:8080/uploads/${item.imageName}` : ''} itemType={ItemType.PROJECT} />
+                                    {isProjectsPage
+                                        ? <ItemPreview title={item.title} image={item.imageName ? getFullName(item.imageName) : ''} itemType={ItemType.PROJECT} />
                                         : <ItemPreview title={item.title} itemType={ItemType.CARD} />
                                     }
                                 </li>
                             ))}
                         </ul>
-                        {visibleCount < sortedItems.length &&
-                            <div className='load-more-button-container'>
-                                <button className="button add-submit-button load-more-button" onClick={handleLoadMoreButtonClick}>Загрузить еще</button>
-                            </div>
-                        }
+                        {visibleCount < sortedItems.length && <LoadMoreButton onClick={handleLoadMoreButtonClick}/>}
                     </div>
                 ) : (
-                    !isProjectsPage && isTeamMode ? 
-                        <EmptyItemsComponent title={'У Вас пока нет командных карточек'} className = {'empty-team-cards-list'}/> :
-                        <EmptyItemsComponent 
+                    !isProjectsPage && isTeamMode ?
+                        <EmptyItemsComponent title={'У Вас пока нет командных карточек'} className={'empty-team-cards-list'} /> :
+                        <EmptyItemsComponent
                             title={<>У Вас пока нет {isProjectsPage ? 'проектов' : 'карточек'} — <span>добавьте {isProjectsPage ? 'первый' : 'первую'}!</span></>}
-                            className = {!isProjectsPage ? 'empty-cards-list' : ''}
+                            className={!isProjectsPage ? 'empty-cards-list' : ''}
                         />
                 )}
                 {(isProjectsPage || (!isProjectsPage && !isTeamMode)) &&
