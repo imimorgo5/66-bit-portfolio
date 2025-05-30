@@ -18,7 +18,7 @@
   gap: 15px;
 }
 
-.team-info-container, .team-projects-container, .team-cards-container,
+.team-info-container,
 .team-edit-container {
   width: calc((100% - 15px * 3 - 210px) / 3 - 60px);
   background: white;
@@ -35,216 +35,46 @@
   height: calc(100% - 43px);
 }
 
-.team-empty-list {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  font-size: 20px;
-  width: 100%;
-  height: calc(100% - 43px - 29px - 1.6rem);
-}
-
-.team-projects-list, .team-cards-list {
-  list-style: none;
-  margin: 30px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  min-height: calc(100% - 43px - 29px - 60px);
-}
-
 .back-to.team-link {
   width: 210px;
 }
 
-.team-project-link, .team-card-link {
-  text-decoration: none;
-}
-
-.team-projects-item, .team-cards-item {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid rgba(138, 140, 140, 0.5);
-  gap: 15px;
-  width: calc(100% - 20px);
-  height: 100px;
-  padding: 10px;
-  transition: background-color 0.2s;
-}
-
-.team-cards-item:hover, .team-projects-item:hover {
-  background-color: rgba(138, 140, 140, 0.1);
-}
-
-.team-project-image {
-  width: 175px;
-  height: 100px;
-  border-radius: 15px;
-  object-fit: cover;
-}
-
-.team-project-info-container, .team-card-info-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 265px;
-  gap: 10px;
-}
-
-.team-card-info-container {
-  width: 100%;
-}
-
-.team-project-description, .team-card-description {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  white-space: nowrap;
-  color: black;
-}
-
-.team-project-title, .team-card-title {
-  margin: 0;
-  padding: 0;
-  font-size: 20px;
-  font-weight: 400;
-  color: rgba(0, 119, 255, 1);
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 3px;
-  transition: color 0.2s, text-decoration-color 0.2s;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.team-projects-item:hover .team-project-title, .team-cards-item:hover .team-card-title {
-  text-decoration-color: rgba(0, 119, 255, 0.5);
-  color: rgba(0, 119, 255, 0.5);
-}
-
-.team-name-input, .add-person-input, .member-edit-role-input {
+.team-name-input {
   font-size: 20px;
   padding: 8px;
   height: fit-content;
   width: calc(100% - 16px);
 }
 
-.member-edit-role-input {
-  font-size: 16px;
-  width: 185px;
-}
-
-.my-role {
-  margin-right: 35px;
-}
-
-.add-person-container {
-  margin: 20px 0;
-  width: 100%;
-}
-
-.search-person-results-list {
-  position: absolute;
-  width: calc(40% - 12px);
-  list-style: none;
-  margin: 10px 0 0;
-  padding: 0;
-  background-color: white;
-  border: 1px solid rgba(0, 119, 255, 0.2);
-  border-radius: 10px;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-.search-person-results-list li {
-  padding: 8px 12px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.1s;
-}
-
-.search-person-results-list li:hover {
-  background-color: rgba(0, 119, 255, 0.2);
-}
-
-.search-person-results-list li.already-added {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.search-person-results-list li .tag {
-  font-size: 12px;
-  background: rgba(0, 119, 255, 0.2);
-  color: rgba(0, 0, 0, 0.7);
-  padding: 2px 6px;
-  border-radius: 5px;
-}
-
-.team-edit-members-list, .team-invited-list {
-  list-style: none;
-  margin: 20px 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.edit-member-item {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.edit-member-info, .team-invited-item {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.member-edit-role-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.invited-persons-section {
-  margin-top: 40px;
-  width: 100%;
-}
-
-.team-invited-title {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  color: black;
-  font-weight: 600;
-  font-size: 20px;
-}
-
 .toast-toast {
   position: fixed;
   bottom: 100px;
   left: 280px;
-  background: rgba(0,119,255,0.9);
+  background: rgba(0, 119, 255, 0.9);
   color: white;
   padding: 12px 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   font-size: 16px;
   animation: fadeIn 0.3s ease-in-out, fadeOut 0.3s ease-in-out 2.7s forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }

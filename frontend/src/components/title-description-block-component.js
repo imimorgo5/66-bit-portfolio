@@ -18,7 +18,7 @@ export default function TitleDescriptionBlock({ isEditing = false, title, descri
         <textarea
           name='description'
           value={description}
-          maxLength={2000}
+          maxLength={5000}
           onChange={onDescriptionChange}
           placeholder={'Введите описание'}
           className='text-input entity-description'
@@ -31,7 +31,9 @@ export default function TitleDescriptionBlock({ isEditing = false, title, descri
     <div className={`entity-description-container ${className}`}>
       <h2 className='entity-title'>{title}</h2>
       <label className='entity-description-label'>{descriptionLabel}</label>
-      <p className='entity-description'>{description || 'Описание не добавлено'}</p>
-    </div>
+      <div className='entity-description-element-container'>
+        <p className='entity-description'>{description || 'Описание не добавлено'}</p>
+      </div>
+    </div >
   );
 }

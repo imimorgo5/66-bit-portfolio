@@ -11,7 +11,6 @@
     right: -140%;
     top: 185%;
     background-color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
     overflow: hidden;
     overflow-y: auto;  
@@ -19,7 +18,7 @@
     width: 350px;
     min-height: 50px;
     max-height: 510px;
-    padding: 8px;
+    border: 1px solid rgba(0, 119, 255, 0.3);
     cursor: pointer;
 }
 
@@ -44,13 +43,14 @@
     gap: 10px;
     color: rgba(26, 26, 26, 1);
     transition: background-color 0.2s;
-    border-bottom: 1px solid rgba(0, 119, 255, 0.5);
+    border-bottom: 1px solid rgba(0, 119, 255, 0.2);
 }
 
 .notifications-list li:last-child {
     border-radius: 0 0 10px 10px;
     border: none;
 }
+
 .notifications-list li:first-child {
     border-radius: 10px 10px 0 0;
 }
@@ -74,7 +74,7 @@
 }
 
 .notifications-list li:active {
-    background-color: rgba(0, 119, 255, 0.4);
+    background-color: rgba(0, 119, 255, 0.3);
 }
 
 .notifications-empty-title, .notifications-loading {

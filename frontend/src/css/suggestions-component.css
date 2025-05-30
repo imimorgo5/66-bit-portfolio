@@ -1,0 +1,98 @@
+.suggestions-container {
+    width: 100%;
+}
+
+.suggestions-container.team {
+    margin: 20px 0;
+}
+
+.suggestions-input {
+    padding: 8px;
+}
+
+.suggestions-container.team .suggestions-input {
+    width: calc(100% - 16px);
+    font-size: 20px;
+}
+
+.suggestions-container.card .suggestions-input {
+    width: calc(100% - 18px);
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.suggestions-list {
+    position: absolute;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 150px;
+    background-color: white;
+    border: 1px solid rgba(0, 119, 255, 0.3);
+    border-radius: 15px;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.suggestions-container.team .suggestions-list {
+    width: calc(40% - 12px);
+    margin-top: 10px;
+}
+
+.suggestions-container.card .suggestions-list {
+    height: fit-content;
+    width: calc(40% - 74px);
+    gap: 0;
+}
+
+.suggestions-list li {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 119, 255, 0.2);
+    transition: background-color 0.1s;
+    padding: 8px 12px;
+}
+
+.suggestions-container.card .suggestions-list li {
+    width: calc(100% - 20px);
+}
+
+.suggestions-list li:hover {
+    background-color: rgba(0, 119, 255, 0.2);
+}
+
+.suggestions-list li.already-added {
+    opacity: 0.5;
+    border-bottom: 1px solid rgba(0, 119, 255, 0.4);
+    cursor: not-allowed;
+}
+
+.suggestions-list li .tag {
+    font-size: 12px;
+    background: rgba(0, 119, 255, 0.2);
+    color: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 5px;
+}
+
+.suggestions-list li:last-child {
+    border: none;
+}
+
+.suggestions-list li h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.suggestions-container.team .suggestions-list li h4 {
+    text-align: center;
+}
+
+.suggestions-container.card .suggestions-list li h4 {
+    min-width: 215px;
+    text-align: left;
+}

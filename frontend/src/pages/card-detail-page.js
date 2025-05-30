@@ -8,6 +8,8 @@ import TeamMembersList from '../components/team-members-list-component.js';
 import TitleDescriptionBlock from '../components/title-description-block-component.js';
 import ActionButtons from '../components/action-buttons-component.js';
 import FileList from '../components/file-list-component.js';
+import Suggestions from '../components/suggestions-component.js';
+import LinksSection from '../components/link-section-component.js';
 import { AuthContext } from '../context/AuthContext';
 import { getCardById, updateCard, deleteCard } from '../services/card-service.js';
 import { getPublicCard } from '../services/public-service.js';
@@ -20,7 +22,6 @@ import { useFileInput } from '../hooks/use-file-input.js';
 import { useFilesManager } from '../hooks/use-files-manager.js';
 import { useListManager } from '../hooks/use-list-manager.js';
 import { useSuggestions } from '../hooks/use-suggestions.js';
-import linkIcon from '../img/link_icon.svg';
 import { PageMode } from '../consts.js';
 import '../css/card-detail.css';
 
@@ -121,39 +122,33 @@ export default function CardDetailPage({ pageMode }) {
             />
             <div className='edit-card-appendices-container'>
               <div className='edit-card-projects'>
-                <h3>Проекты:</h3>
-                <input
-                  type='text'
-                  value={searchTerm}
+                <h3 className='links-title'>Проекты:</h3>
+                <Suggestions
+                  searchRef={suggestionsRef}
+                  searchTerm={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
-                  placeholder={editData.projects.length >= 7 ? 'Достигнут максимум файлов' : 'Введите название проекта'}
-                  className='text-input card-project-search-input'
-                  disabled={editData.projects.length >= 7}
+                  isDisabled={editData.projects.length >= 7}
+                  placeholder={editData.projects.length >= 7 ? 'Достигнут максимум проектов' : 'Введите название проекта'}
+                  suggestions={suggestions}
+                  getAlready={p => editData.projects.includes(p.id)}
+                  addItem={p => onSuggestionClick(p.id)}
+                  getSuggestionTitle={p => p.title}
+                  getAlreadyTitle={() => 'Уже добавлен'}
+                  className='card'
                 />
-                {suggestions.length > 0 && (
-                  <ul className='card-project-suggestions-list' ref={suggestionsRef}>
-                    {suggestions.map(p => {
-                      const already = editData.projects.includes(p.id);
-                      return (
-                        <li key={p.id} className={already ? 'already-added' : ''} onClick={() => onSuggestionClick(p.id)}>
-                          <h4 className='edit-card-project-title'>{p.title}</h4>
-                          {already && <span className='tag'>Уже добавлен</span>}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-                <ul className='selected-card-projects-list'>
-                  {editData.projects.map((pid, idx) => {
-                    const pr = allProjects.find(p => p.id === pid);
-                    return (
-                      <li key={idx} className='selected-card-project-item'>
-                        <h4 className="edit-card-project-title">{pr?.title || '...'}</h4>
-                        <button className='remove-button' onClick={() => removeProject(idx)}>×</button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                <LinksSection
+                  items={editData.projects}
+                  renderItem={(pid) => {
+                    const proj = allProjects.find(p => p.id === pid);
+                    return <h4 className="link-title">{proj.title}</h4>
+                  }}
+                  editable={true}
+                  emptyTitle='Проекты не прикреплены'
+                  isDescEdit={false}
+                  isNeedInput={false}
+                  onRemove={removeProject}
+                  className='card-projects'
+                />
               </div>
               <FileList
                 editable={true}
@@ -192,28 +187,23 @@ export default function CardDetailPage({ pageMode }) {
               className={`card ${pageMode}`}
             />
             <div className='card-appendices-container'>
-              <div className='card-projects'>
-                <h3>Проекты:</h3>
-                {card.projects && card.projects.length > 0 ? (
-                  <ul className="card-projects-list">
-                    {card.projects.map((project, index) => (
-                      <li key={index} className="card-projects-item">
-                        {isPublicCard ? (
-                          <Link to={`http://localhost:3000/projects/shared/${project.shareToken}`}
-                            target="_blank" rel="noopener noreferrer" className="link project-title">
-                            {project.title}
-                          </Link>) :
-                          <Link to={`/projects/${project.id}?from=${encodeURIComponent(`/cards/${card.id}?from=${backTo}`)}`} className="link project-title">
-                            {project.title}
-                          </Link>
-                        }
-                        <img src={linkIcon} className='link-icon' alt='Иконка ссылки'></img>
-                      </li>
-                    ))}
-                  </ul>
-                ) : <p className='empty-list'>Проекты не прикреплены</p>}
-              </div>
-              <FileList files={card.cardFiles} maxTitleLength={28} className={`card ${isPublicCard ? 'public' : ''}`}/>
+              <LinksSection
+                title='Проекты:'
+                items={card.projects}
+                renderItem={(project) =>
+                  isPublicCard ? (
+                    <Link to={`http://localhost:3000/projects/shared/${project.shareToken}`}
+                      target="_blank" rel="noopener noreferrer" className="link link-title">
+                      {project.title}
+                    </Link>) :
+                    <Link to={`/projects/${project.id}?from=/cards/${card.id}?from=${backTo}`} className="link link-title">
+                      {project.title}
+                    </Link>
+                }
+                emptyTitle='Проекты не прикреплены'
+                className={`card-projects ${isPublicCard ? 'public' : ''}`}
+              />
+              <FileList files={card.cardFiles} maxTitleLength={28} className={`card ${isPublicCard ? 'public' : ''}`} />
               {!isPublicCard &&
                 <div className="card-detail-actions">
                   <button type="button" className="button add-submit-button share-button" onClick={handleCopy}>{copied ? 'Ссылка скопирована' : 'Поделиться'}</button>

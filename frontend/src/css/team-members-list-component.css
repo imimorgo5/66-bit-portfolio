@@ -10,7 +10,14 @@
     text-decoration-color: rgba(0, 119, 255, 1);
 }
 
-.team-members-list {
+.team-members.card .team-title,
+.team-members.detail .team-title {
+    text-decoration: none;
+    cursor: default;
+}
+
+.team-members-list,
+.team-invited-list {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -20,7 +27,24 @@
     width: 100%;
 }
 
-.team-members-list-item {
+.team-members.edit .team-members-list,
+.team-invited-list {
+    margin: 20px 0;
+    gap: 1rem;
+}
+
+.team-members.card .team-members-list-item {
+    height: 4.5rem;
+}
+
+.team-members.edit .team-members-list-item {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.team-members-item-container,
+.team-invited-item {
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -28,8 +52,8 @@
     height: 3.75rem;
 }
 
-.team-members.card .team-members-list-item {
-    height: 4.5rem;
+.team-invited-item {
+    height: fit-content;
 }
 
 .team-member-photo {
@@ -40,7 +64,8 @@
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.team-member-name-container {
+.team-member-name-container,
+.member-edit-role-container {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -72,4 +97,29 @@
     color: white;
     border-radius: 5px;
     width: fit-content;
+}
+
+.member-edit-role-input {
+    font-size: 16px;
+    padding: 8px;
+    height: fit-content;
+    min-width: 195px;
+}
+
+.my-role {
+    margin-right: 35px;
+}
+
+.invited-persons-section {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.team-invited-title {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    color: black;
+    font-weight: 600;
+    font-size: 20px;
 }

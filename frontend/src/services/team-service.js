@@ -39,7 +39,6 @@ export const getAllPersonTeams = async () => {
 };
 
 export const updateTeamById = async (id, teamData) => {
-  console.log(teamData);
   try {
     const response = await fetch(`/teams/update/${id}`, {
       method: 'PUT',

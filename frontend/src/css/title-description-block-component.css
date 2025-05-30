@@ -38,15 +38,24 @@
   display: block;
   font-size: 24px;
   font-weight: 600;
+  margin-bottom: 15px;
   text-align: left;
+}
+
+.entity-description-element-container {
+  overflow-y: auto;
+  height: 705px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #f0f0f0;
+  padding-right: 20px;
 }
 
 .entity-description {
   margin: 0;
   padding: 0;
-  margin-top: 15px;
   font-size: 20px;
   text-align: justify;
+  white-space: pre-wrap;
 }
 
 .entity-description-container.edit .entity-description {

@@ -32,7 +32,7 @@
   gap: 0.6rem;
   cursor: pointer;
   height: calc(100% - 2.18rem * 2);
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   transition: transform 0.2s;
 }
 

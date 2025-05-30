@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { normalizeUrl } from '../utils/utils.js';
 import LinksSection from './link-section-component.js';
 import PhotoSection from './photo-section-component.js';
 import userIcon from '../img/user-icon.svg';
@@ -89,8 +91,14 @@ export default function UserCard({ editable = false, data, errors = {}, onChange
       </div>
       <LinksSection
         title={linkTitle}
-        links={linkDTOs}
+        items={linkDTOs}
+        renderItem={(link) =>
+          <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link link-title">
+            {!editable && link.description ? link.description : link.link.length > 35 ? link.link.slice(0, 32) + '...' : link.link}
+          </Link>
+        }
         editable={editable}
+        emptyTitle="Не указано"
         maxLength={35}
         maxCount={5}
         onDescriptionChange={onChangeLinkDesc}

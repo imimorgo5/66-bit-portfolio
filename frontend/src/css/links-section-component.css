@@ -13,12 +13,32 @@
   height: 410px;
 }
 
+.links-section.card-projects {
+  align-items: flex-start;
+  gap: 10px;
+  padding: 30px;
+  height: 322.5px;
+  width: calc(100% - 60px);
+  height: 295px;
+}
+
+.links-section.card-projects.edit {
+  gap: 0;
+  padding: 0;
+  height: 215px;
+  width: 100%;
+}
+
 .links-section.project.edit {
   height: 440px;
 }
 
 .links-section.project.public {
   height: 525px;
+}
+
+.links-section.card-detail.public {
+  height: 395px;
 }
 
 .links-section.user {
@@ -55,6 +75,9 @@
   margin: 0;
   padding: 0;
   overflow-y: auto;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc #f0f0f0;
 }
 
 .links-section.project .links-list {
@@ -62,7 +85,7 @@
   justify-content: flex-start;
   gap: 20px;
   height: 100%;
-  width: calc(100% - 17px);
+  width: calc(100% - 27px);
 }
 
 .links-section.user .links-list {
@@ -71,7 +94,7 @@
   gap: 10px;
   padding: 10px 0;
   height: 100%;
-  width: 100%;
+  width: calc(100% - 10px);
 }
 
 .links-section.user.edit .links-list {
@@ -86,6 +109,18 @@
   height: calc(100% - 17px);
 }
 
+.links-section.card-projects .links-list {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  height: 100%;
+  width: calc(100% - 17px);
+}
+
+.links-section.card-projects.edit .links-list {
+  width: 100%;
+}
+
 .links-item {
   display: flex;
   align-items: center;
@@ -93,7 +128,8 @@
   gap: 10px;
 }
 
-.links-section.project .links-item {
+.links-section.project .links-item,
+.links-section.card-projects .links-item {
   width: 100%;
 }
 
@@ -107,7 +143,9 @@
   color: rgba(0, 119, 255, 1);
 }
 
-.links-section.user.edit .links-item::before, .links-section.project.edit .links-item::before {
+.links-section.user.edit .links-item::before,
+.links-section.project.edit .links-item::before,
+.links-section.card-projects.edit .links-item:before {
   content: none;
 }
 
@@ -118,7 +156,7 @@
   margin: 0 auto;
 }
 
-.links-section.project .links-item-container {
+.links-section.project .links-item-container, .links-section.card-projects .links-item-container {
   width: 100%;
 }
 
@@ -135,6 +173,7 @@
   padding: 0;
   color: rgba(0, 119, 255, 1);
   font-size: 20px;
+  font-weight: 400;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -148,8 +187,13 @@
   font-size: 16px;
 }
 
+.links-section.card-projects.edit .link-title {
+  color: black;
+  cursor: default;
+}
+
 .links-section.project .link-description-input {
-  width: calc(100% - 12px);
+  width: calc(100% - 22px);
   font-size: 16px;
   padding: 5px;
 }

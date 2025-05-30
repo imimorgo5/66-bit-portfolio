@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useLocation, useParams, useNavigate, NavLink } from 'react-router-dom';
+import { useLocation, useParams, useNavigate, NavLink, Link } from 'react-router-dom';
 import Header from '../components/header-component.js';
 import ErrorComponent from '../components/error-component.js';
 import LoadingComponent from '../components/loading-component.js';
@@ -12,6 +12,7 @@ import { AuthContext } from '../context/AuthContext';
 import { getProjectById, updateProject, deleteProject } from '../services/project-service.js';
 import { getPublicProject } from '../services/public-service.js';
 import { getTeamById } from '../services/team-service.js';
+import { normalizeUrl } from '../utils/utils.js';
 import { mapProjectToEditData } from '../utils/map-data.js';
 import { useFetchDetail } from '../hooks/use-fetch-detail.js';
 import { useEditData } from '../hooks/use-edit-data.js';
@@ -113,9 +114,15 @@ export default function ProjectDetailPage({ pageMode }) {
               />
               <LinksSection
                 title='Ссылки'
-                links={editData.projectLinks}
+                items={editData.projectLinks}
+                renderItem={(link) =>
+                  <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link link-title">
+                    {link.link.length > 28 ? link.link.slice(0, 25) + '...' : link.link}
+                  </Link>
+                }
                 editable={true}
-                maxLength={30}
+                emptyTitle="Не указано"
+                maxLength={28}
                 maxCount={8}
                 onDescriptionChange={onChangeLinkDesc}
                 onAdd={onAddLink}
@@ -189,7 +196,17 @@ export default function ProjectDetailPage({ pageMode }) {
             <div className='project-appendices-container'>
               {!isPublicProject && <NavLink to={backTo} className='link back-to project-link'><span>←</span> Назад</NavLink>}
               <PhotoSection defaultImage={defaultPreview} imagePreviewUrl={project.imagePreviewUrl} imageName={project.imageName} className='project' />
-              <LinksSection title='Ссылки:' links={project.projectLinks} className={`project ${pageMode}`} />
+              <LinksSection 
+                title='Ссылки:' 
+                items={project.projectLinks}
+                renderItem={(link) =>
+                  <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link link-title">
+                    {link.description ? link.description : link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}
+                  </Link>
+                }
+                emptyTitle='Не указано'
+                className={`project ${pageMode}`}
+              />
             </div>
             <TitleDescriptionBlock
               title={project.title}

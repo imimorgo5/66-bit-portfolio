@@ -9,7 +9,7 @@ export const normalizeUrl = (input) => {
 export const isNewCard = (card) =>
   (card.description === null || card.description === '') &&
   (card.cardFiles === null || (Array.isArray(card.cardFiles) && card.cardFiles.length === 0)) &&
-  (card.cardLinks === null || (Array.isArray(card.cardLinks) && card.cardLinks.length === 0)) &&
+  (card.projects === null || (Array.isArray(card.projects) && card.projects.length === 0)) &&
   card.title === 'Новая карточка';
 
 export const isNewProject = (proj) =>

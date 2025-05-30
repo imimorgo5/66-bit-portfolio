@@ -31,10 +31,12 @@ export default function ItemsPage({ itemType }) {
         setVisibleCount(8);
         isProjectsPage && setIsTeamMode(false);
         if (!authLoading) {
-            (isProjectsPage ? getPersonProjects() : isTeamMode ? getPersonTeamsCard(user.id) : getPersonCards())
-                .then(setItems)
-                .catch(console.error)
-                .finally(() => setLoading(false))
+            user ?
+                (isProjectsPage ? getPersonProjects() : isTeamMode ? getPersonTeamsCard(user.id) : getPersonCards())
+                    .then(setItems)
+                    .catch(console.error)
+                    .finally(() => setLoading(false))
+                : setLoading(false);
         }
     }, [isTeamMode, user, authLoading, isProjectsPage]);
 
@@ -95,7 +97,7 @@ export default function ItemsPage({ itemType }) {
                                 </li>
                             ))}
                         </ul>
-                        {visibleCount < sortedItems.length && <LoadMoreButton onClick={handleLoadMoreButtonClick}/>}
+                        {visibleCount < sortedItems.length && <LoadMoreButton onClick={handleLoadMoreButtonClick} />}
                     </div>
                 ) : (
                     !isProjectsPage && isTeamMode ?
