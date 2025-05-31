@@ -1,42 +1,50 @@
 .user-card {
-    height: calc(100% - 118px);
+    height: calc(100% - 11.8rem);
 }
 
 .user-card.card {
-    height: auto;
+    height: calc(100% - 2.4rem - 1.5rem);
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1.5rem;
+}
+
+.user-card.card.public {
+    height: 100%;
 }
 
 .user-info-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 4rem;
     width: 100%;
-    height: calc(60% - 80px);
-    padding: 40px 0;
+    height: calc(60% - 8rem);
+    padding: 4rem 0;
     margin: 0 auto;
 }
 
 .user-card.card .user-info-container {
     flex-direction: column;
-    width: calc(100% - 60px);
-    height: 485px;
-    gap: 50px;
-    padding: 30px;
+    width: calc(100% - 6rem);
+    height: calc(70% - 6rem);
+    gap: 5rem;
+    padding: 3rem;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 1.5rem;
+}
+
+.user-card.card.public .user-info-container {
+    height: calc(65% - 6rem);
 }
 
 .user-info {
-    width: calc(22.5% - 60px);
-    height: calc(100% - 70px);
+    width: calc(22.5% - 6rem);
+    height: calc(100% - 7rem);
     background: #fff;
-    padding: 35px 30px;
-    border-radius: 15px;
+    padding: 3.5rem 3rem;
+    border-radius: 1.5rem;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -44,7 +52,7 @@
 }
 
 .user-card.card .user-info {
-    gap: 25px;
+    gap: 2.5rem;
     width: auto;
     height: auto;
     background: transparent;
@@ -60,22 +68,22 @@
 .user-info h2 {
     margin: auto;
     padding: 0;
-    font-size: 24px;
+    font-size: 2.4rem;
     font-weight: 600;
     color: rgba(0, 119, 255, 1);
 }
 
 .user-card.card h2 {
     margin: 0;
-    font-size: 32px;
+    font-size: 3.2rem;
 }
 
 .user-data {
-    width: calc(34% - 150px);
-    height: calc(100% - 70px);
+    width: calc(34% - 15rem);
+    height: calc(100% - 7rem);
     background: #fff;
-    padding: 35px 75px;
-    border-radius: 15px;
+    padding: 3.5rem 7.5rem;
+    border-radius: 1.5rem;
     display: flex;
     flex-direction: column;
 }
@@ -92,7 +100,7 @@
 .user-data-title {
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 2.4rem;
 }
 
 .user-description {
@@ -101,13 +109,13 @@
     justify-content: space-between;
     text-align: left;
     width: 100%;
-    height: 172px;
+    height: 17.2rem;
     margin: auto;
     white-space: nowrap;
 }
 
 .user-card.card .user-description {
-    gap: 28px;
+    gap: 2.8rem;
     width: auto;
     height: auto;
     margin: 0;
@@ -115,12 +123,12 @@
 
 .user-description-item {
     display: flex;
-    height: 35px;
+    height: 3.5rem;
     width: 100%;
     align-items: center;
     justify-content: space-between;
     margin: 0;
-    font-size: 20px;
+    font-size: 2rem;
     color: rgba(0, 119, 255, 1);
 }
 
@@ -135,34 +143,34 @@
 }
 
 .description-title {
-    min-width: 250px;
+    min-width: 25rem;
     font-weight: 500;
     color: black;
 }
 
 .user-card input {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
+    padding: 1rem;
+    font-size: 1.6rem;
 }
 
 .user-info input {
-    font-size: 20px;
+    font-size: 2rem;
     width: 90%;
     text-align: center;
 }
 
 .user-error-message {
-    font-size: 16px;
+    font-size: 1.6rem;
     text-align: left;
-    margin-top: 60px;
-    min-width: 350px;
+    margin-top: 6rem;
+    min-width: 35rem;
     text-align: center;
-    margin-left: 200px;
+    margin-left: 20rem;
 }
 
 .user-error-message.username {
-    min-width: 372px;
+    min-width: 37.2rem;
     margin-left: 0;
-    margin-top: 45px;
+    margin-top: 4.5rem;
 }

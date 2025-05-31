@@ -3,16 +3,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 2rem;
     background-color: #fff;
-    border-radius: 15px;
-    padding: 30px;
-    width: calc(100% - 60px);
-    height: 265px;
+    border-radius: 1.5rem;
+    padding: 3rem;
+    width: calc(100% - 2 * 3rem);
+    height: calc(45% - 2 * 3rem - 2* 1.5rem - 2.4rem);
 }
 
-.image-container.project.edit {
-    height: 290px;
+.image-container.project.public {
+    height: calc(45% - 2 * 3rem - 1.5rem);
 }
 
 .preview-img {
@@ -20,43 +20,43 @@
 }
 
 .image-container.project .preview-img {
-    width: 315px;
-    height: 220px;
-    border-radius: 15px;
+    width: 100%;
+    height: auto;
+    border-radius: 1.5rem;
 }
 
 .image-container.user .preview-img {
-    width: 250px;
-    height: 250px;
+    width: 25rem;
+    height: 25rem;
     margin: 0 auto;
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
     border-radius: 50%;
     border: 2px solid rgba(0, 0, 0, 0.5);
 }
 
 .image-container.user.card .preview-img {
-    width: 200px;
-    height: 200px;
+    width: 20rem;
+    height: 20rem;
 }
 
 .image-container.user.edit .preview-img {
-    width: 210px;
-    height: 210px;
+    width: 21rem;
+    height: 21rem;
 }
 
 .change-photo-button {
-    font-size: 20px;
+    font-size: 2rem;
 }
 
 .image-container.project .change-photo-button {
-    padding: 5px 30px;
+    padding: 0.5rem 3rem;
     min-width: fit-content;
     width: 50%;
     margin: 0 auto;
 }
 
 .image-container.user .change-photo-button {
-    padding: 5px 20px;
+    padding: 0.5rem 2rem;
     font-weight: 600;
-    margin: 0 12px;
+    margin: 0 1.2rem;
 }

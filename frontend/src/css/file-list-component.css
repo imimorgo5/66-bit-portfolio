@@ -1,33 +1,32 @@
 .file-section {
     display: flex;
     flex-direction: column;
-    width: calc(100% - 60px);
+    width: calc(100% - 6rem);
 }
 
 .file-section.card {
     align-items: flex-start;
-    gap: 10px;
+    gap: 1rem;
     background-color: white;
-    border-radius: 15px;
-    padding: 30px;
-    height: 295px;
+    border-radius: 1.5rem;
+    padding: 3rem;
+    height: calc(42.5% - 6rem - 1.5rem)
 }
 
 .file-section.card.edit {
-    height: 322.5px;
+    height: calc(45% - 6rem - 1.5rem)
 }
 
 .file-section.card.public {
-    height: 395px;
+    height: calc(50% - 6rem - 0.75rem)
 }
-
 
 .file-section.project {
     height: 100%;
-    padding: 0 30px 30px;
+    padding: 0 3rem 3rem;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 1rem;
 }
 
 .file-section.project.edit {
@@ -41,7 +40,7 @@
 .file-section h3 {
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 2.4rem;
 }
 
 .file-section .file-list {
@@ -52,17 +51,22 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    padding-right: 0.5rem;
     height: 100%;
-    width: calc(100% - 17px);
+    width: calc(100% - 1.7rem);
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f0f0f0;
+    scrollbar-gutter: stable;
 }
 
 .file-section.card .file-list {
-    gap: 12px;
+    gap: 1.2rem;
 }
 
 .file-section.project .file-list {
-    gap: 20px;
+    gap: 2rem;
+    padding: 0;
 }
 
 .file-section.edit .file-list {
@@ -70,15 +74,17 @@
 }
 
 .file-section.project.edit .file-list {
-    margin-left: 20px;
-    gap: 15px;
+    margin-left: 2rem;
+    gap: 1.5rem;
+    width: calc(100% - 2rem);
+    overflow-y: unset;
 }
 
 .file-item {
     display: flex;
     align-items: center;
     width: 100%;
-    gap: 10px;
+    gap: 1rem;
 }
 
 .file-section.card.edit .file-item {
@@ -86,41 +92,43 @@
 }
 
 .file-section.project.edit .file-item {
-    gap: 15px;
+    gap: 1.5rem;
 }
 
 .file-item-container {
     display: flex;
     align-items: center;
     width: 100%;
+    overflow: hidden;
 }
 
 .file-section.card .file-item-container {
-    gap: 10px;
+    gap: 1rem;
 }
 
 .file-section.project .file-item-container {
     align-items: flex-start;
-    gap: 15px;
+    gap: 1.5rem;
 }
 
 .file-section.project.edit .file-item-container {
     flex-direction: column;
-    gap: 5px;
+    gap: 0.5rem;
 }
 
 .file-title {
     margin: 0;
     padding: 0;
     font-weight: 400;
-    font-size: 20px;
-    white-space: nowrap;
+    font-size: 2rem;
+    word-break: break-all;
+    text-align: left;
     color: black;
 }
 
 .file-section.edit .file-title {
     cursor: default;
-    font-size: 16px;
+    font-size: 1.6rem;
 }
 
 .file-section.card.edit .file-title {
@@ -128,16 +136,20 @@
 }
 
 .file-description-input {
-    padding: 5px;
-    font-size: 16px;
+    padding: 0.5rem;
+    font-size: 1.6rem;
 }
 
 .file-section.card .file-description-input {
-    width: calc(100% - 18px);
+    width: calc(100% - 1.8rem);
 }
 
 .file-section.project .file-description-input {
-    width: calc(100% - 32px);
+    width: calc(100% - 1.2rem);
+}
+
+.file-section.project.edit .empty-list {
+    font-size: 1.6rem;
 }
 
 .file-upload-button {
@@ -145,16 +157,16 @@
 }
 
 .file-section.card .file-upload-button {
-    padding: 5px 30px;
-    font-size: 20px;
-    width: 515px;
-    margin-top: 20px;
+    padding: 0.5rem 3rem;
+    font-size: 2rem;
+    width: 51.5rem;
+    margin-top: 2rem;
 }
 
 .file-section.project .file-upload-button {
-    font-size: 16px;
+    font-size: 1.6rem;
     min-width: fit-content;
     width: 50%;
-    margin-top: 10px;
-    padding: 5px;
+    margin-top: 1rem;
+    padding: 0.5rem;
 }

@@ -1,8 +1,13 @@
+.team-members.team {
+    height: 100%;
+    width: 100%;
+}
+
 .team-title {
-    font-size: 24px;
+    font-size: 2.4rem;
     font-weight: 600;
     margin: 0;
-    margin-bottom: 1.6rem;
+    margin-bottom: 2.5rem;
 }
 
 .team-title:hover {
@@ -23,18 +28,18 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1.2rem;
     width: 100%;
+}
+
+.team-members.team .team-members-list {
+    min-height: 44.5rem;
 }
 
 .team-members.edit .team-members-list,
 .team-invited-list {
-    margin: 20px 0;
-    gap: 1rem;
-}
-
-.team-members.card .team-members-list-item {
-    height: 4.5rem;
+    margin: 2rem 0;
+    gap: 1.5rem;
 }
 
 .team-members.edit .team-members-list-item {
@@ -47,18 +52,13 @@
 .team-invited-item {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 1rem;
     width: 100%;
-    height: 3.75rem;
-}
-
-.team-invited-item {
-    height: fit-content;
 }
 
 .team-member-photo {
-    width: 3.15rem;
-    height: 3.15rem;
+    width: 5rem;
+    height: 5rem;
     object-fit: cover;
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -68,18 +68,18 @@
 .member-edit-role-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 1rem;
 }
 
 .team-member-username {
     margin: 0;
-    font-size: 20px;
+    font-size: 2rem;
     font-weight: 400;
     text-align: left;
 }
 
 .admin-icon {
-    width: 1.5rem;
+    width: 2.5rem;
     height: auto;
 }
 
@@ -89,29 +89,29 @@
 
 .team-member-role {
     margin: 0;
-    margin-top: 8px;
-    padding: 2px 5px;
-    font-size: 20px;
+    margin-top: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 2rem;
     font-weight: 400;
     background-color: rgba(0, 119, 255);
     color: white;
-    border-radius: 5px;
+    border-radius: 0.5rem;
     width: fit-content;
 }
 
 .member-edit-role-input {
-    font-size: 16px;
-    padding: 8px;
+    font-size: 1.6rem;
+    padding: 0.8rem;
     height: fit-content;
-    min-width: 195px;
+    min-width: 19.5rem;
 }
 
 .my-role {
-    margin-right: 35px;
+    margin-right: 3.5rem;
 }
 
 .invited-persons-section {
-    margin-top: 40px;
+    margin-top: 4rem;
     width: 100%;
 }
 
@@ -121,5 +121,5 @@
     width: 100%;
     color: black;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 2rem;
 }

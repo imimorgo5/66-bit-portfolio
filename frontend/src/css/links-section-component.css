@@ -2,70 +2,69 @@
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-radius: 15px;
+  border-radius: 1.5rem;
 }
 
 .links-section.project {
   align-items: flex-start;
-  gap: 20px;
-  padding: 30px;
-  width: calc(100% - 60px);
-  height: 410px;
+  gap: 2rem;
+  padding: 3rem;
+  width: calc(100% - 6rem);
+  height: calc(55% - 6rem - 1.5rem);
 }
 
 .links-section.card-projects {
   align-items: flex-start;
-  gap: 10px;
-  padding: 30px;
-  height: 322.5px;
-  width: calc(100% - 60px);
-  height: 295px;
+  gap: 1rem;
+  padding: 3rem;
+  height: calc(42.5% - 6rem - 1.5rem);
+  width: calc(100% - 6rem);
+}
+
+.links-section.card-projects.public {
+  height: calc(50% - 6rem - 0.75rem);
 }
 
 .links-section.card-projects.edit {
   gap: 0;
   padding: 0;
-  height: 215px;
+  height: calc(100% - 6rem);
   width: 100%;
 }
 
 .links-section.project.edit {
-  height: 440px;
+  height: calc(55% - 6rem + 2.4rem + 1.5rem);
 }
 
 .links-section.project.public {
-  height: 525px;
-}
-
-.links-section.card-detail.public {
-  height: 395px;
+  height: calc(55% - 6rem);
 }
 
 .links-section.user {
-  width: calc(56.5% - 10px);
-  height: calc(40% - 70px);
+  width: calc(56.5% - 1rem);
+  height: calc(40% - 7rem);
   margin: 0 auto;
-  padding: 35px 30px;
+  padding: 3.5rem 3rem;
   text-align: center;
   align-items: center;
 }
 
 .links-section.user.card {
   align-items: flex-start;
-  gap: 10px;
-  padding: 30px;
-  height: 190px;
-  width: calc(100% - 60px);
+  gap: 1rem;
+  padding: 3rem;
+  height: calc(30% - 6rem - 1.5rem);
+  width: calc(100% - 6rem);
 }
 
 .links-section.user.card.public {
-  height: 305px;
+  height: calc(35% - 6rem - 1.5rem);
 }
 
 .links-title {
   margin: 0;
   padding: 0;
-  font-size: 24px;
+  font-size: 2.4rem;
 }
 
 .links-list {
@@ -74,27 +73,32 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: #ccc #f0f0f0;
+  scrollbar-gutter: stable;
+  overflow-y: auto;
 }
 
 .links-section.project .links-list {
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 2rem;
   height: 100%;
-  width: calc(100% - 27px);
+  width: calc(100% - 1.7rem);
+}
+
+.links-section.project .links-list {
+  width: 100%;
 }
 
 .links-section.user .links-list {
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 10px 0;
+  gap: 1rem;
+  padding: 1rem 0;
   height: 100%;
-  width: calc(100% - 10px);
+  width: calc(100% - 1rem);
 }
 
 .links-section.user.edit .links-list {
@@ -104,17 +108,17 @@
 .links-section.user.card .links-list {
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 1.2rem;
   padding: 0;
-  height: calc(100% - 17px);
+  height: calc(100% - 1.7rem);
 }
 
 .links-section.card-projects .links-list {
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 12px;
+  gap: 1.2rem;
   height: 100%;
-  width: calc(100% - 17px);
+  width: calc(100% - 1.7rem);
 }
 
 .links-section.card-projects.edit .links-list {
@@ -125,7 +129,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .links-section.project .links-item,
@@ -134,12 +138,12 @@
 }
 
 .links-section.project.edit .links-item {
-  gap: 15px;
+  gap: 1.5rem;
 }
 
 .links-item::before {
   content: '•';
-  font-size: 20px;
+  font-size: 2rem;
   color: rgba(0, 119, 255, 1);
 }
 
@@ -151,12 +155,13 @@
 
 .links-item-container {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
   align-items: center;
   margin: 0 auto;
 }
 
-.links-section.project .links-item-container, .links-section.card-projects .links-item-container {
+.links-section.project .links-item-container,
+.links-section.card-projects .links-item-container {
   width: 100%;
 }
 
@@ -172,19 +177,24 @@
   margin: 0;
   padding: 0;
   color: rgba(0, 119, 255, 1);
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 400;
   cursor: pointer;
-  white-space: nowrap;
+  word-break: break-all;
+  text-align: left;
+}
+
+.links-section.user .link-title {
+  text-align: center;
 }
 
 .links-section.project.edit .link-title {
-  font-size: 18px;
+  font-size: 1.8rem;
 }
 
 .links-section.user.edit .link-title {
-  min-width: 340px;
-  font-size: 16px;
+  min-width: 34rem;
+  font-size: 1.6rem;
 }
 
 .links-section.card-projects.edit .link-title {
@@ -193,20 +203,20 @@
 }
 
 .links-section.project .link-description-input {
-  width: calc(100% - 22px);
-  font-size: 16px;
-  padding: 5px;
+  width: calc(100% - 2.2rem);
+  font-size: 1.6rem;
+  padding: 0.5rem;
 }
 
 .links-section.user .link-description-input {
-  width: 340px;
-  padding: 5px;
-  font-size: 16px;
+  width: 34rem;
+  padding: 0.5rem;
+  font-size: 1.6rem;
 }
 
 .link-input-group {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .links-section.project .link-input-group {
@@ -219,30 +229,30 @@
 }
 
 .links-section.project .link-input {
-  width: calc(100% - 18px);
-  font-size: 16px;
-  padding: 8px;
+  width: calc(100% - 1.8rem);
+  font-size: 1.6rem;
+  padding: 0.8rem;
 }
 
 .links-section.user .link-input {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 1rem;
+  font-size: 1.6rem;
 }
 
 .add-link-button {
-  font-size: 20px;
+  font-size: 2rem;
 }
 
 .links-section.project .add-link-button {
-  padding: 5px 30px;
+  padding: 0.5rem 3rem;
   min-width: fit-content;
   width: 50%;
   margin: 0 auto;
 }
 
 .links-section.user .add-link-button {
-  padding: 5px 20px;
+  padding: 0.5rem 2rem;
   font-weight: 600;
-  margin: 0 12px;
+  margin: 0 1.2rem;
 }

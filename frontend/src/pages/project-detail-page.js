@@ -117,12 +117,12 @@ export default function ProjectDetailPage({ pageMode }) {
                 items={editData.projectLinks}
                 renderItem={(link) =>
                   <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link link-title">
-                    {link.link.length > 28 ? link.link.slice(0, 25) + '...' : link.link}
+                    {link.link.length > 30 ? link.link.slice(0, 27) + '...' : link.link}
                   </Link>
                 }
                 editable={true}
                 emptyTitle="Не указано"
-                maxLength={28}
+                maxLength={30}
                 maxCount={8}
                 onDescriptionChange={onChangeLinkDesc}
                 onAdd={onAddLink}
@@ -195,7 +195,12 @@ export default function ProjectDetailPage({ pageMode }) {
           <div className='project-detail-container'>
             <div className='project-appendices-container'>
               {!isPublicProject && <NavLink to={backTo} className='link back-to project-link'><span>←</span> Назад</NavLink>}
-              <PhotoSection defaultImage={defaultPreview} imagePreviewUrl={project.imagePreviewUrl} imageName={project.imageName} className='project' />
+              <PhotoSection 
+                defaultImage={defaultPreview} 
+                imagePreviewUrl={project.imagePreviewUrl} 
+                imageName={project.imageName} 
+                className={`project ${isPublicProject ? 'public' : ''}`}
+              />
               <LinksSection 
                 title='Ссылки:' 
                 items={project.projectLinks}

@@ -152,8 +152,9 @@ export default function CardDetailPage({ pageMode }) {
               </div>
               <FileList
                 editable={true}
+                title='Файлы:'
                 files={editData.cardFiles}
-                maxTitleLength={28}
+                maxTitleLength={27}
                 maxCount={7}
                 onRemove={(fi, i) => removeFile(fi, i)}
                 onDescriptionChange={(fi, i, v) => updateDescription(fi, i, v)}
@@ -203,7 +204,7 @@ export default function CardDetailPage({ pageMode }) {
                 emptyTitle='Проекты не прикреплены'
                 className={`card-projects ${isPublicCard ? 'public' : ''}`}
               />
-              <FileList files={card.cardFiles} maxTitleLength={28} className={`card ${isPublicCard ? 'public' : ''}`} />
+              <FileList files={card.cardFiles} title='Файлы:' maxTitleLength={28} className={`card ${isPublicCard ? 'public' : ''}`} />
               {!isPublicCard &&
                 <div className="card-detail-actions">
                   <button type="button" className="button add-submit-button share-button" onClick={handleCopy}>{copied ? 'Ссылка скопирована' : 'Поделиться'}</button>

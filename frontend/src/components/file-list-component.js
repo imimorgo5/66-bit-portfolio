@@ -3,10 +3,10 @@ import { handleFileClick } from '../utils/file.js';
 import fileIcon from '../img/file_icon.svg';
 import '../css/file-list-component.css';
 
-export default function FileList({editable = false, folderIndex = null, files, maxTitleLength, maxCount, onRemove, onDescriptionChange, onAddClick, fileInputProps, className = ''}) {
+export default function FileList({editable = false, folderIndex = null, title, files, maxTitleLength, maxCount, onRemove, onDescriptionChange, onAddClick, fileInputProps, className = ''}) {
   return (
     <div className={`file-section ${className} ${editable ? 'edit' : ''}`}>
-      {folderIndex == null && <h3>Файлы:</h3>}
+      {title && <h3>{title}</h3>}
       {files && files.length > 0 ? (
         <ul className="file-list">
           {files.map((f, i) => (
@@ -19,7 +19,7 @@ export default function FileList({editable = false, folderIndex = null, files, m
                   <input
                     type="text"
                     value={f.description}
-                    maxLength={maxCount}
+                    maxLength={30}
                     onChange={e => onDescriptionChange(folderIndex, i, e.target.value)}
                     placeholder="Описание файла"
                     className="text-input file-description-input"

@@ -23,13 +23,17 @@ export default function TeamItemsSection({ title, items, getLink, isItemsWithPho
                                     <div className='team-item-info-container'>
                                         <h2 className='team-item-title'>{item.title}</h2>
                                         {item.description &&
-                                            <p className='team-item-description'>{item.description.length > 30 ? item.description.slice(0, 27) + '...' : item.description}</p>}
+                                            <p className='team-item-description'>{isItemsWithPhoto ?
+                                                item.description.length > 27 ? item.description.slice(0, 24) + '...' : item.description
+                                                : item.description.length > 45 ? item.description.slice(0, 42) + '...' : item.description
+                                            }</p>
+                                        }
                                     </div>
                                 </li>
                             </Link>
                         ))}
                     </ul>
-                </div> 
+                </div>
                 : <p className='team-empty-list'>{emptyTitle}</p>
             }
             {adminId === user.id && <AddButton title={buttonTitle} onClick={handleCreateItem} className='team-items' />}

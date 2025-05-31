@@ -3,27 +3,27 @@
 }
 
 .team-detail-content {
-  height: calc(100% - 60px - 30px);
-  width: calc(100% - 30px);
-  padding: 15px;
+  height: calc(100% - 6rem - 3rem);
+  width: calc(100% - 3rem);
+  padding: 1.5rem;
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
 .team-view-container {
   display: flex;
   width: 100%;
   height: 100%;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
 .team-info-container,
 .team-edit-container {
-  width: calc((100% - 15px * 3 - 210px) / 3 - 60px);
+  width: calc((100% - 1.5rem * 3 - 21rem) / 3 - 6rem);
   background: white;
-  border-radius: 15px;
-  padding: 30px;
+  border-radius: 1.5rem;
+  padding: 3rem;
 }
 
 .team-edit-container {
@@ -32,18 +32,18 @@
 
 .team-main {
   width: 100%;
-  height: calc(100% - 43px);
+  height: calc(100% - 4.3rem);
 }
 
 .back-to.team-link {
-  width: 210px;
+  width: 21rem;
 }
 
 .team-name-input {
-  font-size: 20px;
-  padding: 8px;
+  font-size: 2rem;
+  padding: 0.8rem;
   height: fit-content;
-  width: calc(100% - 16px);
+  width: calc(100% - 1.6rem);
 }
 
 .toast-toast {
@@ -52,10 +52,10 @@
   left: 280px;
   background: rgba(0, 119, 255, 0.9);
   color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 1.2rem 2rem;
+  border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-size: 16px;
+  font-size: 1.6rem;
   animation: fadeIn 0.3s ease-in-out, fadeOut 0.3s ease-in-out 2.7s forwards;
 }
 
@@ -63,7 +63,6 @@
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
@@ -73,7 +72,6 @@
   from {
     opacity: 1;
   }
-
   to {
     opacity: 0;
   }

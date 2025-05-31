@@ -54,7 +54,7 @@ export default function TeamsPage() {
                     className={`teams-list-item${isNewTeam(team) ? ' new-team' : ''}`}
                     onClick={() => navigate(`/teams/${team.id}`)}
                   >
-                    <TeamMembersList team={team} />
+                    <TeamMembersList team={team} className='team'/>
                   </li>
                 );
               })}

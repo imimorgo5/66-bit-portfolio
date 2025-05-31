@@ -1,87 +1,88 @@
 .header-user-notifications {
-    position: relative;
+  position: relative;
 }
 
 .notifications-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    position: absolute;
-    right: -140%;
-    top: 185%;
-    background-color: #fff;
-    border-radius: 15px;
-    overflow: hidden;
-    overflow-y: auto;  
-    z-index: 10;
-    width: 350px;
-    min-height: 50px;
-    max-height: 510px;
-    border: 1px solid rgba(0, 119, 255, 0.3);
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  right: -140%;
+  top: 185%;
+  background-color: #fff;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 10;
+  width: 35rem;
+  min-height: 5rem;
+  max-height: 51rem;
+  border: 1px solid rgba(0, 119, 255, 0.3);
+  cursor: pointer;
 }
 
 .notifications-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .notifications-list li {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 15px 0;
-    gap: 10px;
-    color: rgba(26, 26, 26, 1);
-    transition: background-color 0.2s;
-    border-bottom: 1px solid rgba(0, 119, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1.5rem 0;
+  gap: 1rem;
+  color: rgba(26, 26, 26, 1);
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(0, 119, 255, 0.2);
 }
 
 .notifications-list li:last-child {
-    border-radius: 0 0 10px 10px;
-    border: none;
+  border-radius: 0 0 1rem 1rem;
+  border: none;
 }
 
 .notifications-list li:first-child {
-    border-radius: 10px 10px 0 0;
+  border-radius: 1rem 1rem 0 0;
 }
 
 .notification-title {
-    font-size: 20px;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
 }
 
 .notification-date {
-    font-size: 16px;
-    font-weight: 400;
-    margin: 0;
-    padding: 0;
+  font-size: 1.6rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
 }
 
 .notifications-list li:hover {
-    background-color: rgba(0, 119, 255, 0.1);
+  background-color: rgba(0, 119, 255, 0.1);
 }
 
 .notifications-list li:active {
-    background-color: rgba(0, 119, 255, 0.3);
+  background-color: rgba(0, 119, 255, 0.3);
 }
 
-.notifications-empty-title, .notifications-loading {
-    font-size: 20px;
-    font-weight: 300;
-    margin: 0;
-    padding: 13px 0;
+.notifications-empty-title,
+.notifications-loading {
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 1.3rem 0;
 }
 
 .notification-modal-overlay {
@@ -99,32 +100,32 @@
 
 .notification-modal {
   background: white;
-  border-radius: 15px;
-  width: 500px;
-  padding: 30px;
+  border-radius: 1.5rem;
+  width: 50rem;
+  padding: 3rem;
   position: relative;
 }
 
 .notification-modal-title {
-  margin: 10px 0 0;
-  font-size: 24px;
+  margin: 1rem 0 0;
+  font-size: 2.4rem;
   font-weight: 600;
 }
 
 .notification-modal-content {
-  font-size: 20px;
-  margin: 30px 0;
+  font-size: 2rem;
+  margin: 3rem 0;
 }
 
 .notification-modal-actions {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
 .notification-modal-actions button {
-  padding: 8px 20px;
-  font-size: 20px;
+  padding: 0.8rem 2rem;
+  font-size: 2rem;
 }
 
 .notification-modal-close {

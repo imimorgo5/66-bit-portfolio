@@ -1,15 +1,15 @@
 .empty-previews {
   text-align: center;
-  margin: 276px auto 0;
+  margin: 27.6rem auto 0;
 }
 
 .empty-previews.empty-cards-list {
-  margin-top: 222px;
+  margin-top: 22.2rem;
 }
 
 .arrow-to-add {
-  margin: 14px 0;
-  min-height: 264px;
+  margin: 1.4rem 0;
+  min-height: 26.4rem;
 }
 
 .empty-team-cards-list .arrow-to-add {
@@ -17,7 +17,7 @@
 }
 
 .empty-title {
-  font-size: 32px;
+  font-size: 3.2rem;
   font-weight: 500;
   color: rgba(0, 0, 0, 1);
   margin: 0;
@@ -28,7 +28,7 @@
 }
 
 .empty-arrow {
-  margin-left: 220px;
+  margin-left: 22rem;
 }
 
 .empty-items-picture {
