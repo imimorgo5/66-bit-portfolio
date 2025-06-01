@@ -23,16 +23,16 @@ export const isNewTeam = (team) => team.persons.length === 1 && team.title === '
 export const validateEmail = (email) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (email && !emailPattern.test(email)) {
-      return {isValid: false, message: 'Некорректный email'};
-  } 
-  return {isValid: true};
+    return { isValid: false, message: 'Некорректный email' };
+  }
+  return { isValid: true };
 };
 
 export const validateName = (name) => {
   if (name && name.length > 64) {
-      return {isValid: false, message: 'Слишком длинное ФИО'};
+    return { isValid: false, message: 'Слишком длинное ФИО' };
   } else if (name && name.split(' ').filter(el => el).length < 2) {
-      return {isValid: false, message: 'Некорректное ФИО'};
-  } 
-  return {isValid: true};
+    return { isValid: false, message: 'Некорректное ФИО' };
+  }
+  return { isValid: true };
 };

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.js';
 import { login, register } from '../services/auth-service.js';
 import { FormType } from '../consts.js';
@@ -10,6 +10,7 @@ import regPicture from '../img/reg-picture.png';
 import '../css/auth.css';
 
 export default function AuthPage({ formType }) {
+    const navigate = useNavigate();
     const isRegister = formType === FormType.REGISTRATION;
     const { setUser } = useContext(AuthContext);
 
@@ -22,6 +23,17 @@ export default function AuthPage({ formType }) {
     const [passwordError, setPasswordError] = useState('');
     const [passwordAgainError, setPasswordAgainError] = useState('');
     let isFormValid = false;
+
+    useEffect(() => {
+        setEmailError('');
+        setPasswordError('');
+        setPasswordAgainError('');
+        setEmail('');
+        setPassword('');
+        setPasswordAgain('');
+        setUsername('');
+        setNameError('');
+    }, [isRegister]);
 
     const handleEmailChange = (e) => {
         const value = e.target.value;
@@ -70,9 +82,9 @@ export default function AuthPage({ formType }) {
         if (isRegister) {
             if (isFormValid)
                 register({ email, password, username })
-                    .then(() => window.location.href = '/login')
+                    .then(() => navigate('/login'))
                     .catch(err => {
-                        if (err.message.includes("Пользователь с таким email уже существует")) {
+                        if (err.message.includes('email')) {
                             setEmail('');
                             setEmailError("Пользователь с таким email уже существует");
                         }
@@ -83,7 +95,7 @@ export default function AuthPage({ formType }) {
                 login({ email, password })
                     .then(data => {
                         setUser(data.user);
-                        window.location.href = '/';
+                        window.location.href = '/'
                     })
                     .catch(err => {
                         if (err.message.includes('Invalid credentials')) {

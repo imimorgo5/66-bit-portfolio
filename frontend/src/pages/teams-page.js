@@ -10,23 +10,36 @@ import AddButton from '../components/add-button-component.js';
 import TeamMembersList from '../components/team-members-list-component.js';
 import LoadMoreButton from '../components/load-more-button-component.js';
 import { isNewTeam } from '../utils/utils.js';
+import { redirectIfSessionExpired } from '../utils/redirect.js';
 
 export default function TeamsPage() {
-  const { isLoading: authLoading } = useContext(AuthContext);
+  const { user, setUser, isLoading: authLoading } = useContext(AuthContext);
   const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(8);
 
   useEffect(() => {
-    setVisibleCount(3);
-    getAllPersonTeams().then(setTeams).catch(console.error).finally(() => setLoading(false));
-  }, []);
+    if (user) {
+      redirectIfSessionExpired(user, setUser, navigate);
+    }
+  }, [user, setUser, navigate]);
 
-  const handleAddTeam = () =>
-    createTeam({ title: 'Новая команда', persons: [] })
-      .then(newTeam => navigate(`/teams/${newTeam.id}`, { state: { isEdit: true } }))
-      .catch(console.error);
+  useEffect(() => {
+    if (!authLoading) {
+      if (user) {
+        setVisibleCount(3);
+        getAllPersonTeams().then(setTeams).catch(console.error).finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
+    }
+  }, [navigate, authLoading, user]);
+
+  const handleAddTeam = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    createTeam({ title: 'Новая команда', persons: [] }).then(newTeam => navigate(`/teams/${newTeam.id}`, { state: { isEdit: true } })).catch(console.error);
+  }
 
   const handleLoadMoreButtonClick = () => setVisibleCount(vc => Math.min(vc + 3, sortedTeams.length));
 
@@ -54,12 +67,12 @@ export default function TeamsPage() {
                     className={`teams-list-item${isNewTeam(team) ? ' new-team' : ''}`}
                     onClick={() => navigate(`/teams/${team.id}`)}
                   >
-                    <TeamMembersList team={team} className='team'/>
+                    <TeamMembersList team={team} className='team' />
                   </li>
                 );
               })}
             </ul>
-            {visibleCount < sortedTeams.length && <LoadMoreButton onClick={handleLoadMoreButtonClick}/>}
+            {visibleCount < sortedTeams.length && <LoadMoreButton onClick={handleLoadMoreButtonClick} />}
           </div>
         ) : <EmptyItemsComponent title={<>У Вас пока нет команд – <span>Создайте первую!</span></>} className={'empty-teams-list'} />}
       </div>

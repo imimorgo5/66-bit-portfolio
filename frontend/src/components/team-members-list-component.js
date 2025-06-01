@@ -30,7 +30,7 @@ export default function TeamMembersList({ editable = false, team, editData, onRo
                                     <h2 className="team-member-username">{member.username}</h2>
                                     {member.id === team.adminId && <img src={adminIcon} alt="Иконка админа" className="admin-icon" />}
                                 </div>
-                                {member.role && <h3 className="team-member-role">{member.role}</h3>}
+                                {(!editable && member.role) && <h3 className="team-member-role">{member.role}</h3>}
                             </div>
                         </div>
                         {editable &&

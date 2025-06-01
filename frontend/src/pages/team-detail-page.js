@@ -7,6 +7,7 @@ import TeamMembersList from '../components/team-members-list-component.js';
 import ActionButtons from '../components/action-buttons-component.js';
 import TeamItemsSection from '../components/team-items-section-component.js';
 import Suggestions from '../components/suggestions-component.js';
+import { pendingRedirect, redirectIfSessionExpired } from '../utils/redirect.js';
 import { AuthContext } from '../context/AuthContext.js';
 import { getTeamById, updateTeamById, deleteTeamById, getInvitedPersons } from '../services/team-service.js';
 import { createTeamCard, getTeamCards } from '../services/card-service.js';
@@ -16,7 +17,7 @@ import { useSuggestions } from '../hooks/use-suggestions.js';
 import '../css/team-detail.css';
 
 export default function TeamDetailPage() {
-  const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const { user, setUser, isLoading: authLoading, error: authError } = useContext(AuthContext);
   const { state } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -35,6 +36,12 @@ export default function TeamDetailPage() {
   const [allPeopleLoading, setAllPeopleLoading] = useState(true);
 
   useEffect(() => {
+    if (user) {
+      redirectIfSessionExpired(user, setUser, navigate);
+    }
+  }, [user, setUser, navigate]);
+
+  useEffect(() => {
     getTeamById(id).then(setTeam).catch(console.error).finally(() => setTeamLoading(false));
     getTeamProjects(id).then(setProjects).catch(console.error).finally(() => setTeamProjectsLoading(false));
     getTeamCards(id).then(setCards).catch(console.error).finally(() => setTeamCardsLoading(false));
@@ -49,7 +56,7 @@ export default function TeamDetailPage() {
       }
       return (p.email.includes(term) || p.username.toLowerCase().includes(term.toLowerCase())) && p.id !== user.id;
     }, [user]),
-    maxItems: 10,
+    maxItems: 5,
   });
 
   useEffect(() => {
@@ -75,11 +82,18 @@ export default function TeamDetailPage() {
 
   const loadTeam = () => getTeamById(id).then(setTeam).catch(console.error).finally(() => setTeamLoading(false));
 
-  const handleDelete = () => deleteTeamById(id).then(() => navigate('/teams')).catch(console.error);
+  const handleDelete = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    deleteTeamById(id).then(() => navigate('/teams')).catch(console.error);
+  }
 
-  const handleEditClick = () => setIsEditMode(true);
+  const handleEditClick = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setIsEditMode(true);
+  }
 
   const cancelEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     setIsEditMode(false);
     setSearchTerm('');
   };
@@ -101,6 +115,7 @@ export default function TeamDetailPage() {
   const changeRole = (id, role) => setEditData(d => ({ ...d, roles: { ...d.roles, [id]: role } }));
 
   const handleSave = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     const existingIds = team.persons.map(p => p.id);
     const added = editData.members.filter(m => !existingIds.includes(m.id));
     const payload = {
@@ -121,21 +136,28 @@ export default function TeamDetailPage() {
       .catch(console.error);
   };
 
-  const handleCreateProject = () =>
+  const handleCreateProject = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     createTeamProject({ teamId: id, title: 'Новый проект' })
       .then(newProj => navigate(`/projects/${newProj.id}?from=/teams/${id}`, { state: { isEdit: true } }))
       .catch(console.error);
+  }
 
-  const handleCreateCard = () =>
+  const handleCreateCard = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     createTeamCard({ teamId: id, title: 'Новая карточка' })
       .then(newCard => navigate(`/cards/${newCard.id}?from=/teams/${id}`, { state: { isEdit: true } }))
       .catch(console.error);
+  }
 
-  if (teamLoading || teamProjectsLoading || teamCardsLoading || (isEditMode && allPeopleLoading) || authLoading) return <LoadingComponent />;
-  if (!team || !projects || !cards || (isEditMode && !allPeople) || authError) return <ErrorComponent />;
   if (!user) {
     navigate('/login');
     return null;
+  }
+  if (teamLoading || teamProjectsLoading || teamCardsLoading || (isEditMode && allPeopleLoading) || authLoading) return <LoadingComponent />;
+  if (!team || !projects || !cards || (isEditMode && !allPeople) || authError) {
+    pendingRedirect(navigate, '/teams');
+    return <ErrorComponent />;
   }
 
   return (
@@ -177,7 +199,7 @@ export default function TeamDetailPage() {
           <div className="team-edit-container">
             <div className='team-main'>
               <input type="text" value={editData.title} maxLength={30} onChange={changeTitle} className='text-input team-name-input' />
-              <Suggestions 
+              <Suggestions
                 searchRef={searchRef}
                 searchTerm={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -190,10 +212,10 @@ export default function TeamDetailPage() {
                 getAlreadyTitle={p => editData.members.some(m => m.id === p.id) ? 'Уже добавлен' : 'Уже приглашён'}
                 className='team'
               />
-              <TeamMembersList 
-                editable={true} 
-                team={team} 
-                editData={editData} 
+              <TeamMembersList
+                editable={true}
+                team={team}
+                editData={editData}
                 onRoleChange={(e, m) => changeRole(m.id, e.target.value)}
                 onRemoveClick={m => removeMember(m.id)}
               />

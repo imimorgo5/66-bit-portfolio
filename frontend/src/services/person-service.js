@@ -1,5 +1,5 @@
 export const getPersonById = async (id) => {
-  const res = await fetch(`/person/profile/${id}`, { credentials: 'include' });
+  const res = await fetch(`/person/profile/${id}`, { credentials: 'include', method: 'GET' });
 
   if (!res.ok) {
     throw new Error('Ошибка при получении информации о пользователе');

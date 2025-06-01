@@ -13,6 +13,7 @@ import { getProjectById, updateProject, deleteProject } from '../services/projec
 import { getPublicProject } from '../services/public-service.js';
 import { getTeamById } from '../services/team-service.js';
 import { normalizeUrl } from '../utils/utils.js';
+import { pendingRedirect, redirectIfSessionExpired } from '../utils/redirect.js';
 import { mapProjectToEditData } from '../utils/map-data.js';
 import { useFetchDetail } from '../hooks/use-fetch-detail.js';
 import { useEditData } from '../hooks/use-edit-data.js';
@@ -26,7 +27,7 @@ import '../css/project-detail.css';
 
 export default function ProjectDetailPage({ pageMode }) {
   const { identifier } = useParams();
-  const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const { user, setUser, isLoading: authLoading, error: authError } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const backTo = new URLSearchParams(location.search).get('from');
@@ -47,13 +48,23 @@ export default function ProjectDetailPage({ pageMode }) {
   const { inputRef: folderFilesInputRef, trigger: triggerFolderFilesInput, handleChange: handleFolderFilesChange } =
     useFileInput(fileList => { addFiles(selectedFolder, fileList) });
 
-  const handleEditClick = () => setIsEditing(true);
+  const handleEditClick = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setIsEditing(true);
+  }
 
-  const handleDelete = () => deleteProject(project.id).then(() => navigate(backTo)).catch(console.error);
+  const handleDelete = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    deleteProject(project.id).then(() => navigate(backTo)).catch(console.error);
+  }
 
-  const handleCancelEdit = () => setIsEditing(false);
+  const handleCancelEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setIsEditing(false);
+  }
 
   const handleSaveEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     updateProject(project.id, editData)
       .then(() => getProjectById(project.id))
       .then((updatedProject) => {
@@ -88,11 +99,14 @@ export default function ProjectDetailPage({ pageMode }) {
 
   const removeFolder = (index) => setEditData(prev => ({ ...prev, folders: prev.folders.filter((_, i) => i !== index) }));
 
-  if (projectLoading || (!isPublicProject && (authLoading || (isTeamProject && teamLoading) || (isEditing && !editData)))) return <LoadingComponent />;
-  if (!project || (!isPublicProject && (authError || (isTeamProject && !team)))) return <ErrorComponent />;
   if (!isPublicProject && !user) {
     navigate('/login');
     return null;
+  }
+  if (projectLoading || (!isPublicProject && (authLoading || (isTeamProject && teamLoading) || (isEditing && !editData)))) return <LoadingComponent />;
+  if (!project || (!isPublicProject && (authError || (isTeamProject && !team)))) {
+    pendingRedirect(navigate, '/');
+    return <ErrorComponent />;
   }
 
   return (
@@ -195,14 +209,14 @@ export default function ProjectDetailPage({ pageMode }) {
           <div className='project-detail-container'>
             <div className='project-appendices-container'>
               {!isPublicProject && <NavLink to={backTo} className='link back-to project-link'><span>←</span> Назад</NavLink>}
-              <PhotoSection 
-                defaultImage={defaultPreview} 
-                imagePreviewUrl={project.imagePreviewUrl} 
-                imageName={project.imageName} 
+              <PhotoSection
+                defaultImage={defaultPreview}
+                imagePreviewUrl={project.imagePreviewUrl}
+                imageName={project.imageName}
                 className={`project ${isPublicProject ? 'public' : ''}`}
               />
-              <LinksSection 
-                title='Ссылки:' 
+              <LinksSection
+                title='Ссылки:'
                 items={project.projectLinks}
                 renderItem={(link) =>
                   <Link to={normalizeUrl(link.link)} target="_blank" rel="noopener noreferrer" className="link link-title">

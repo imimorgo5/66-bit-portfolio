@@ -16,6 +16,7 @@ import { getPublicCard } from '../services/public-service.js';
 import { getPersonProjects, getTeamProjects } from '../services/project-service.js';
 import { getTeamById } from '../services/team-service.js';
 import { mapCardToEditData } from '../utils/map-data.js';
+import { pendingRedirect, redirectIfSessionExpired } from '../utils/redirect.js';
 import { useFetchDetail } from '../hooks/use-fetch-detail.js';
 import { useEditData } from '../hooks/use-edit-data.js';
 import { useFileInput } from '../hooks/use-file-input.js';
@@ -27,7 +28,7 @@ import '../css/card-detail.css';
 
 export default function CardDetailPage({ pageMode }) {
   const { identifier } = useParams();
-  const { user, isLoading: authLoading, error: authError } = useContext(AuthContext);
+  const { user, setUser, isLoading: authLoading, error: authError } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const backTo = new URLSearchParams(location.search).get('from');
@@ -62,16 +63,21 @@ export default function CardDetailPage({ pageMode }) {
     maxItems: 5,
   });
 
-  const handleCopy = () =>
+  const handleCopy = () => {
     navigator.clipboard.writeText(`http://localhost:3000/cards/shared/${card.shareToken}`)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
-      })
+      });
+    }
 
-  const handleEditClick = () => setIsEditing(true);
+  const handleEditClick = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setIsEditing(true);
+  }
 
   const handleSave = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     updateCard(card.id, editData)
       .then(() => getCardById(card.id))
       .then((updatedCard) => {
@@ -83,11 +89,15 @@ export default function CardDetailPage({ pageMode }) {
   };
 
   const handleCancelEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     setIsEditing(false);
     setSearchTerm('');
   }
 
-  const handleDelete = () => deleteCard(card.id).then(() => navigate(backTo)).catch(console.error);
+  const handleDelete = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    deleteCard(card.id).then(() => navigate(backTo)).catch(console.error);
+  }
 
   const handleNameDescriptionChange = (e) => setEditData(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
@@ -98,11 +108,14 @@ export default function CardDetailPage({ pageMode }) {
     setSearchTerm('');
   };
 
-  if (cardLoading || (!isPublicCard && ((isTeamCard && teamLoading) || (isEditing && (allProjectsLoading || !editData)) || authLoading))) return <LoadingComponent />;
-  if (!card || (!isPublicCard && ((isTeamCard && !team) || !allProjects || authError))) return <ErrorComponent />;
   if (!isPublicCard && !user) {
     navigate('/login');
     return null;
+  }
+  if (cardLoading || (!isPublicCard && ((isTeamCard && teamLoading) || (isEditing && (allProjectsLoading || !editData)) || authLoading))) return <LoadingComponent />;
+  if (!card || (!isPublicCard && ((isTeamCard && !team) || (isEditing && !allProjects) || authError))) {
+    pendingRedirect(navigate, '/cards');
+    return <ErrorComponent />;
   }
 
   return (

@@ -35,7 +35,6 @@ export default function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     loadUnreadCount();
     return () => document.removeEventListener('mousedown', handleClickOutside);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleDropdown = () => {
@@ -55,12 +54,14 @@ export default function Header() {
   };
 
   const handleLogout = () =>
-    logout().then(() => {
-      setUser(null);
-      navigate('/login');
-    })
+    logout()
+      .then(() => null)
       .catch(console.error)
-      .finally(() => setDropdownOpen(false));
+      .finally(() => {
+        setDropdownOpen(false);
+        setUser(null);
+        navigate('/login');
+      });
 
   return (
     <nav className="header">

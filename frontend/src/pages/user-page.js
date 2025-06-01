@@ -8,6 +8,8 @@ import { updatePerson } from '../services/person-service';
 import { useFileInput } from '../hooks/use-file-input.js';
 import { useListManager } from '../hooks/use-list-manager.js';
 import { validateEmail, validateName } from '../utils/utils.js';
+import { pendingRedirect } from '../utils/redirect.js';
+import { redirectIfSessionExpired } from '../utils/redirect.js';
 import '../css/user-card-component.css';
 
 export default function UserPage() {
@@ -19,6 +21,12 @@ export default function UserPage() {
   const [linkInput, setLinkInput] = useState('');
   const { inputRef, trigger, handleChange: handlePhotoFiles } = useFileInput(files => setEditData(prev => ({ ...prev, imageFile: files[0], imagePreviewUrl: URL.createObjectURL(files[0]) })));
   const { addItem: addLink, removeItem: removeLink, updateItem: updateLink } = useListManager('linkDTOs', setEditData, 5);
+
+  useEffect(() => {
+    if (user) {
+      redirectIfSessionExpired(user, setUser, navigate);
+    }
+  }, [user, setUser, navigate]);
 
   useEffect(() => {
     if (editMode) {
@@ -57,6 +65,7 @@ export default function UserPage() {
   };
 
   const handleSave = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
     const payload = { ...editData, birthDate: editData.birthDate.split('-').reverse().join('.') };
 
     updatePerson(user.id, payload)
@@ -73,17 +82,26 @@ export default function UserPage() {
       });
   };
 
-  const handleEdit = () => setEditMode(true);
+  const handleEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setEditMode(true);
+  }
 
-  const handleCancelEdit = () => setEditMode(false);
+  const handleCancelEdit = () => {
+    redirectIfSessionExpired(user, setUser, navigate);
+    setEditMode(false);
+  }
 
   const isFormValid = editData.email && editData.username && !errors.email && !errors.username && !errors.phoneNumber;
 
-  if (authLoading) return <div className='loading-container'>Загрузка...</div>;
-  if (authError) return <div className='error-container'>Ошибка получения данных...</div>;
   if (!user) {
     navigate('/login');
     return null;
+  }
+  if (authLoading) return <div className='loading-container'>Загрузка...</div>;
+  if (authError) {
+    pendingRedirect(navigate, '/login');
+    return <div className='error-container'>Ошибка получения данных...</div>;
   }
 
   return (
@@ -108,12 +126,12 @@ export default function UserPage() {
               infoTitle='Личные данные'
               linkTitle='Способы связи'
             />
-            <ActionButtons isEdit={true} onSave={handleSave} onCancel={handleCancelEdit} isDisabled={!isFormValid} className='user'/>
+            <ActionButtons isEdit={true} onSave={handleSave} onCancel={handleCancelEdit} isDisabled={!isFormValid} className='user' />
           </>
         ) : (
           <>
             <UserCard data={user} infoTitle='Личные данные' linkTitle='Способы связи' />
-            <ActionButtons onEdit={handleEdit} editTitle='Редактировать профиль' className='user'/>
+            <ActionButtons onEdit={handleEdit} editTitle='Редактировать профиль' className='user' />
           </>
         )}
       </div>

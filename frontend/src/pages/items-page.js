@@ -13,11 +13,12 @@ import { getPersonCards, getPersonTeamsCard, createPersonCard } from '../service
 import { createPersonProject, getPersonProjects } from '../services/project-service';
 import { isNewCard, isNewProject } from '../utils/utils.js';
 import { getFullName } from '../utils/file.js';
+import { redirectIfSessionExpired } from '../utils/redirect.js';
 import { ItemType } from '../consts.js';
 import '../css/items-page.css';
 
 export default function ItemsPage({ itemType }) {
-    const { user, isLoading: authLoading } = useContext(AuthContext);
+    const { user, setUser, isLoading: authLoading } = useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -26,6 +27,12 @@ export default function ItemsPage({ itemType }) {
     const [isTeamMode, setIsTeamMode] = useState(new URLSearchParams(location.search).get('mode') === 'team');
     const [visibleCount, setVisibleCount] = useState(8);
     const isProjectsPage = itemType === ItemType.PROJECT;
+
+    useEffect(() => {
+        if (user) {
+            redirectIfSessionExpired(user, setUser, navigate);
+        }
+    }, [user, setUser, navigate]);
 
     useEffect(() => {
         setVisibleCount(8);
@@ -38,13 +45,14 @@ export default function ItemsPage({ itemType }) {
                     .finally(() => setLoading(false))
                 : setLoading(false);
         }
-    }, [isTeamMode, user, authLoading, isProjectsPage]);
+    }, [isTeamMode, user, authLoading, isProjectsPage, navigate]);
 
     const goToProjectDetail = (project, isEdit = false) => navigate(`/projects/${project.id}?from=/`, { state: { isEdit: isEdit } });
 
     const goToCardDetail = (card, isEdit = false) => navigate(`/cards/${card.id}?from=${isTeamMode ? '/cards?mode=team' : '/cards'}`, { state: { isEdit: isEdit } });
 
     const handleAddItem = () => {
+        redirectIfSessionExpired(user, setUser, navigate);
         if (isProjectsPage) {
             createPersonProject({ title: 'Новый проект' }).then(newProj => goToProjectDetail(newProj, true)).catch(console.error);
         } else {
