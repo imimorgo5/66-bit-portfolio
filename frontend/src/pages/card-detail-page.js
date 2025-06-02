@@ -69,7 +69,7 @@ export default function CardDetailPage({ pageMode }) {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });
-    }
+  }
 
   const handleEditClick = () => {
     redirectIfSessionExpired(user, setUser, navigate);
@@ -108,11 +108,11 @@ export default function CardDetailPage({ pageMode }) {
     setSearchTerm('');
   };
 
+  if (cardLoading || (!isPublicCard && ((isTeamCard && teamLoading) || (isEditing && (allProjectsLoading || !editData)) || authLoading))) return <LoadingComponent />;
   if (!isPublicCard && !user) {
     navigate('/login');
     return null;
   }
-  if (cardLoading || (!isPublicCard && ((isTeamCard && teamLoading) || (isEditing && (allProjectsLoading || !editData)) || authLoading))) return <LoadingComponent />;
   if (!card || (!isPublicCard && ((isTeamCard && !team) || (isEditing && !allProjects) || authError))) {
     pendingRedirect(navigate, '/cards');
     return <ErrorComponent />;

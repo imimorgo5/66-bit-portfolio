@@ -150,11 +150,11 @@ export default function TeamDetailPage() {
       .catch(console.error);
   }
 
+  if (teamLoading || teamProjectsLoading || teamCardsLoading || (isEditMode && allPeopleLoading) || authLoading) return <LoadingComponent />;
   if (!user) {
     navigate('/login');
     return null;
   }
-  if (teamLoading || teamProjectsLoading || teamCardsLoading || (isEditMode && allPeopleLoading) || authLoading) return <LoadingComponent />;
   if (!team || !projects || !cards || (isEditMode && !allPeople) || authError) {
     pendingRedirect(navigate, '/teams');
     return <ErrorComponent />;

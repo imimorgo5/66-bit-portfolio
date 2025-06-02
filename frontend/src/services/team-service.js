@@ -80,7 +80,7 @@ export const deleteTeamById = async (id) => {
 };
 
 export const getInvitedPersons = async (teamId) => {
-  const res = await fetch(`/teams//${teamId}/show-invited`, {
+  const res = await fetch(`/teams/${teamId}/show-invited`, {
     method: 'GET',
     credentials: 'include'
   });

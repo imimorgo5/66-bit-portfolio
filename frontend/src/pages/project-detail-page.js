@@ -99,11 +99,11 @@ export default function ProjectDetailPage({ pageMode }) {
 
   const removeFolder = (index) => setEditData(prev => ({ ...prev, folders: prev.folders.filter((_, i) => i !== index) }));
 
+  if (projectLoading || (!isPublicProject && (authLoading || (isTeamProject && teamLoading) || (isEditing && !editData)))) return <LoadingComponent />;
   if (!isPublicProject && !user) {
     navigate('/login');
     return null;
   }
-  if (projectLoading || (!isPublicProject && (authLoading || (isTeamProject && teamLoading) || (isEditing && !editData)))) return <LoadingComponent />;
   if (!project || (!isPublicProject && (authError || (isTeamProject && !team)))) {
     pendingRedirect(navigate, '/');
     return <ErrorComponent />;

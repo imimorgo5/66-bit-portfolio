@@ -1,0 +1,56 @@
+.preview-file-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.preview-file-container {
+    background-color: white;
+    width: 50%;
+    height: 50%;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview-file-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.6rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.preview-file-title {
+    font-weight: 400;
+}
+
+.preview-file-content {
+    border-radius: 0 0 1rem 1rem;
+    flex: 1;
+    overflow: auto;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.preview-file-iframe {
+    border-radius: 0 0 1rem 1rem;
+    width: calc(100% - 0.4rem);
+    height: calc(100% - 0.4rem);
+}
+
+.preview-file-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}

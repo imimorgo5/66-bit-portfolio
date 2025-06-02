@@ -66,7 +66,7 @@ export default function UserPage() {
 
   const handleSave = () => {
     redirectIfSessionExpired(user, setUser, navigate);
-    const payload = { ...editData, birthDate: editData.birthDate.split('-').reverse().join('.') };
+    const payload = { ...editData, birthDate: editData.birthDate ? editData.birthDate.split('-').reverse().join('.') : '', phoneNumber: editData.phoneNumber ? editData.phoneNumber : '' };
 
     updatePerson(user.id, payload)
       .then((updatedPerson) => {
@@ -94,11 +94,11 @@ export default function UserPage() {
 
   const isFormValid = editData.email && editData.username && !errors.email && !errors.username && !errors.phoneNumber;
 
+  if (authLoading) return <div className='loading-container'>Загрузка...</div>;
   if (!user) {
     navigate('/login');
     return null;
   }
-  if (authLoading) return <div className='loading-container'>Загрузка...</div>;
   if (authError) {
     pendingRedirect(navigate, '/login');
     return <div className='error-container'>Ошибка получения данных...</div>;
