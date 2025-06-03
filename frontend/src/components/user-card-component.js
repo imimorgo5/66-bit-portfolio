@@ -82,9 +82,9 @@ export default function UserCard({ editable = false, data, errors = {}, onChange
             </div>
           ) : (
             <div className="user-description">
-              <p className='user-description-item'><span className="description-title">Email: </span>{email}</p>
-              <p className='user-description-item'><span className="description-title">Дата рождения: </span>{birthDate ? new Date(birthDate).toLocaleDateString('ru-RU') : 'Не указана'}</p>
-              <p className='user-description-item'><span className="description-title">Телефон: </span>{phoneNumber || 'Не указан'}</p>
+              <div className='user-description-item'><span className="description-title">Email: </span><p>{email}</p></div>
+              <div className='user-description-item'><span className="description-title">Дата рождения: </span><p>{birthDate ? new Date(birthDate).toLocaleDateString('ru-RU') : 'Не указана'}</p></div>
+              <div className='user-description-item'><span className="description-title">Телефон: </span><p>{phoneNumber || 'Не указан'}</p></div>
             </div>
           )}
         </div>

@@ -1,5 +1,7 @@
 .teams-page-wrapper {
   padding-bottom: 2.8rem;
+  min-height: calc(100vh - 2.8rem);
+  position: relative;
 }
 
 .teams-page-content {
@@ -45,7 +47,7 @@
   margin-bottom: 5rem;
 }
 
-@media (max-width: 1555px) {
+@media (max-width: 1535px) {
   .teams-list {
     grid-template-columns: repeat(2, 45%);
   }

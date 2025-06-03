@@ -4,7 +4,7 @@ import { getFullName } from '../utils/file.js';
 import fileIcon from '../img/file_icon.svg';
 import '../css/file-list-component.css';
 
-export default function FileList({ editable = false, folderIndex = null, title, files, maxTitleLength, maxCount, onRemove, onDescriptionChange, onAddClick, fileInputProps, className = '' }) {
+export default function FileList({ editable = false, title, files, maxTitleLength, maxCount, onRemove, onDescriptionChange, onAddClick, fileInputProps, className = '' }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
 
@@ -48,7 +48,7 @@ export default function FileList({ editable = false, folderIndex = null, title, 
         <ul className="file-list">
           {files.map((f, i) => (
             <li key={i} className="file-item">
-              {editable && <button type="button" onClick={() => onRemove(folderIndex, i)} className="remove-button">×</button>}
+              {editable && <button type="button" onClick={() => onRemove(i)} className="remove-button">×</button>}
               <div className="file-item-container">
                 {!editable && <img src={fileIcon} className='file-icon' alt='Иконка файла'></img>}
                 <h4 className={`${editable ? '' : 'link'} file-title`} onClick={editable ? null : () => onFileClick(f)}>
@@ -59,7 +59,7 @@ export default function FileList({ editable = false, folderIndex = null, title, 
                     type="text"
                     value={f.description}
                     maxLength={30}
-                    onChange={e => onDescriptionChange(folderIndex, i, e.target.value)}
+                    onChange={e => onDescriptionChange(i, e.target.value)}
                     placeholder="Описание файла"
                     className="text-input file-description-input"
                   />

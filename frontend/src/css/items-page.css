@@ -1,5 +1,7 @@
 .items-page {
   padding: 2.8rem 3rem;
+  min-height: calc(100vh - 2 * 2.8rem - 6rem);
+  position: relative;
 }
 
 .items-actions {

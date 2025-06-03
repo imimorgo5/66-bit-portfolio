@@ -169,8 +169,8 @@ export default function CardDetailPage({ pageMode }) {
                 files={editData.cardFiles}
                 maxTitleLength={27}
                 maxCount={7}
-                onRemove={(fi, i) => removeFile(fi, i)}
-                onDescriptionChange={(fi, i, v) => updateDescription(fi, i, v)}
+                onRemove={i => removeFile(null, i)}
+                onDescriptionChange={(i, v) => updateDescription(null, i, v)}
                 onAddClick={triggerFilesInput}
                 fileInputProps={{
                   type: 'file',
@@ -191,7 +191,7 @@ export default function CardDetailPage({ pageMode }) {
               {isTeamCard ? (
                 <div className='card-team-main'><TeamMembersList team={isPublicCard ? card.team : team} className='card' /></div>
               ) : (
-                <UserCard data={isPublicCard ? card.publicPerson : user} className={isPublicCard ? 'card public' : 'card'} />
+                <UserCard data={isPublicCard ? card.publicPerson : user} linkTitle='Способы связи:' className={isPublicCard ? 'card public' : 'card'} />
               )}
             </div>
             <TitleDescriptionBlock

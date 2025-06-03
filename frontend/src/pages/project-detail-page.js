@@ -160,35 +160,34 @@ export default function ProjectDetailPage({ pageMode }) {
                 <h3>Папки:</h3>
                 {editData.folders && editData.folders.length > 0 ? (
                   <ul className="edit-project-folders-list">
-                    {editData.folders.map((folder, index) => (
-                      <li key={index} className="edit-project-folder-item">
+                    {editData.folders.map((folder, folderIndex) => (
+                      <li key={folderIndex} className="edit-project-folder-item">
                         <div className='folder-name-input-container'>
-                          <button type="button" className="remove-button" onClick={() => removeFolder(index)}>×</button>
+                          <button type="button" className="remove-button" onClick={() => removeFolder(folderIndex)}>×</button>
                           <input
                             type="text"
                             className="text-input folder-name-input"
                             value={folder.title}
                             maxLength={40}
-                            onChange={(e) => handleFolderNameChange(index, e.target.value)}
+                            onChange={(e) => handleFolderNameChange(folderIndex, e.target.value)}
                             placeholder="Название папки"
                           />
                         </div>
                         <FileList
-                          folderIndex={selectedFolder}
                           editable={true}
                           files={folder.files}
                           maxTitleLength={41}
                           maxCount={5}
-                          onRemove={(fi, i) => removeFile(fi, i)}
-                          onDescriptionChange={(fi, i, v) => updateFileDescription(fi, i, v)}
+                          onRemove={(fi) => removeFile(folderIndex, fi)}
+                          onDescriptionChange={(fi, v) => updateFileDescription(folderIndex, fi, v)}
                           onAddClick={() => {
-                            setSelectedFolder(index);
+                            setSelectedFolder(folderIndex);
                             triggerFolderFilesInput();
                           }}
                           fileInputProps={{
                             type: 'file',
                             multiple: true,
-                            id: `file-input-${index}`,
+                            id: `file-input-${folderIndex}`,
                             ref: folderFilesInputRef,
                             onChange: handleFolderFilesChange
                           }}
