@@ -37,6 +37,10 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
         return ['mp4', 'webm', 'ogg'].includes(ext);
     }, [ext]);
 
+    const isAudio = useMemo(() => {
+        return ['mp3','wav','flac','aac','ogg'].includes(ext);
+    }, [ext]);
+
     const isDoc = useMemo(() => {
         return ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'txt'].includes(ext);
     }, [ext]);
@@ -99,7 +103,8 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                 <div className="preview-file-content">
                     {isImage && fileUrl && (<img src={fileUrl} alt={file.fileName} className="preview-file-image" />)}
                     {!isImage && isVideo && fileUrl && (<video src={fileUrl} controls className="preview-file-video" />)}
-                    {!isImage && !isVideo && isDoc && viewerUrl && (
+                    {!isImage && !isVideo && isAudio && fileUrl && (<audio src={fileUrl} controls className="preview-file-audio" />)}
+                    {!isImage && !isVideo && !isAudio && isDoc && viewerUrl && (
                         <div className="iframe-wrapper">
                             {isIframeLoading && (
                                 <div className="iframe-loader">
@@ -114,7 +119,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                             />
                         </div>
                     )}
-                    {!isImage && !isVideo && !isDoc && fileUrl && (
+                    {!isImage && !isVideo && !isDoc && !isAudio && fileUrl && (
                         <div className="download-wrapper">
                             <h1>Предпросмотр файлов такого типа не поддерживается</h1>
                             <button className="link download-link" onClick={handleDownload}>Скачать файл</button>

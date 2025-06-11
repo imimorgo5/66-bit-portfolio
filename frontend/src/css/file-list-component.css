@@ -1,11 +1,11 @@
 .file-section {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     width: calc(100% - 6rem);
 }
 
 .file-section.card {
-    align-items: flex-start;
     gap: 1rem;
     background-color: white;
     border-radius: 1.5rem;
@@ -23,8 +23,7 @@
 
 .file-section.project {
     height: 100%;
-    padding: 0 3rem 3rem;
-    align-items: center;
+    width: 100%;
     justify-content: center;
     gap: 1rem;
 }
@@ -34,13 +33,13 @@
     width: auto;
     background-color: transparent;
     padding: 0;
-    align-items: flex-start;
 }
 
 .file-section h3 {
     margin: 0;
     padding: 0;
     font-size: 2.4rem;
+    font-weight: 600;
 }
 
 .file-section .file-list {

@@ -88,6 +88,10 @@
     background-color: black;
 }
 
+.preview-file-audio {
+    width: 70%;
+}
+
 .download-wrapper {
     display: flex;
     flex-direction: column;

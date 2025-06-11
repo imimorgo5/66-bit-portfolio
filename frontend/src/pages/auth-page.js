@@ -152,7 +152,7 @@ export default function AuthPage({ formType }) {
                             value={password}
                             onChange={handlePasswordChange}
                             maxLength={25}
-                            placeholder="Придумайте пароль (не менее 8 символов)"
+                            placeholder={isRegister ? "Придумайте пароль (не менее 8 символов)" : 'Введите пароль'}
                             className={`text-input ${passwordError ? 'input-error' : ''}`}
                         />
                         {passwordError && <span className="error-message auth-error-message">{passwordError}</span>}

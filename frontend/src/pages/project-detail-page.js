@@ -38,7 +38,6 @@ export default function ProjectDetailPage({ pageMode }) {
   const [isEditing, setIsEditing] = useState(location.state?.isEdit);
   const [linkInput, setLinkInput] = useState('');
   const [selectedFolder, setSelectedFolder] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { editData, setEditData } = useEditData({ entity: project, isEditing, mapEntityToEdit: mapProjectToEditData, fileKeys: ['folders.files'] });
   const { inputRef: inputImageRef, trigger: triggerImageInput, handleChange: handlePhotoChange } =
     useFileInput(files => setEditData(prev => ({ ...prev, imageFile: files[0], imagePreviewUrl: URL.createObjectURL(files[0]) })));
@@ -50,6 +49,7 @@ export default function ProjectDetailPage({ pageMode }) {
 
   const handleEditClick = () => {
     redirectIfSessionExpired(user, setUser, navigate);
+    setSelectedFolder(null);
     setIsEditing(true);
   }
 
@@ -60,6 +60,7 @@ export default function ProjectDetailPage({ pageMode }) {
 
   const handleCancelEdit = () => {
     redirectIfSessionExpired(user, setUser, navigate);
+    setSelectedFolder(null);
     setIsEditing(false);
   }
 
@@ -69,6 +70,7 @@ export default function ProjectDetailPage({ pageMode }) {
       .then(() => getProjectById(project.id))
       .then((updatedProject) => {
         SetProject(updatedProject);
+        setSelectedFolder(null);
         setIsEditing(false);
       })
       .catch(console.error);
@@ -238,10 +240,7 @@ export default function ProjectDetailPage({ pageMode }) {
                 {project.folders && project.folders.length > 0 ? (
                   <ul className="project-folders-list">
                     {project.folders.map((folder, index) => (
-                      <li key={index} className="project-folder-item" onClick={() => {
-                        setSelectedFolder(index);
-                        setIsModalOpen(true);
-                      }}>
+                      <li key={index} className="project-folder-item" onClick={() => setSelectedFolder(index)}>
                         <img className='folder-icon' src={folderIcon} alt='Иконка папки'></img>
                         <h4 className="link folder-title">{folder.title}</h4>
                       </li>
@@ -251,15 +250,14 @@ export default function ProjectDetailPage({ pageMode }) {
                   <p className="project-empty-list">Не создано ни одной папки</p>
                 )}
               </div>
-              {isModalOpen && selectedFolder !== null && (
-                <div className="modal-folder-overlay">
-                  <div className='modal-folder-header'>
-                    <h3>{project.folders[selectedFolder].title}</h3>
-                    <button className="remove-button" onClick={() => setIsModalOpen(false)}>×</button>
-                  </div>
-                  <FileList folderIndex={selectedFolder} files={project.folders[selectedFolder].files} maxTitleLength={41} className='project' />
-                </div>
-              )}
+              <div className='folder-files-container'>
+                {selectedFolder !== null ?
+                  <>
+                    <h3>Файлы в <span>{project.folders[selectedFolder].title}</span>:</h3>
+                    <FileList folderIndex={selectedFolder} files={project.folders[selectedFolder].files} maxTitleLength={41} className='project' />
+                  </>
+                : <p className='empty-list'>Выберите папку для просмотра файлов</p>}
+              </div>
               {(!isPublicProject && (!isTeamProject || team.adminId === user.id)) &&
                 <ActionButtons onEdit={handleEditClick} onDelete={handleDelete} className='project' />
               }
