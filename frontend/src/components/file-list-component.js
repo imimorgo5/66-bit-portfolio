@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import FilePreviewModal from './file-preview.js';
-import { getFullName } from '../utils/file.js';
-import fileIcon from '../img/file_icon.svg';
+import { getFullName, getFileType } from '../utils/file.js';
+import { FileType } from '../consts.js';
+import imageIcon from '../img/picture-icon.svg';
+import videoIcon from '../img/video-icon.svg';
+import audioIcon from '../img/audio-icon.svg';
+import textIcon from '../img/text-icon.svg';
+import systemIcon from '../img/system-icon.svg';
 import '../css/file-list-component.css';
 
 export default function FileList({ editable = false, title, files, maxTitleLength, maxCount, onRemove, onDescriptionChange, onAddClick, fileInputProps, className = '' }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
+
+  const getfileImageName = (file) => {
+    const fileType = getFileType(file);
+    if (fileType === FileType.IMAGE) return imageIcon;
+    if (fileType === FileType.VIDEO) return videoIcon;
+    if (fileType === FileType.AUDIO) return audioIcon;
+    if (fileType === FileType.DOCUMENT) return textIcon;
+    return systemIcon;
+  }
 
   const onFileClick = (f) => {
     if (!f) {
@@ -16,14 +30,14 @@ export default function FileList({ editable = false, title, files, maxTitleLengt
 
     if (f.file instanceof File) {
       fileData = {
-        fileName: f.fileTitle || f.file.name,
+        fileTitle: f.fileTitle || f.file.name,
         fileViewName: f.description ? f.description : f.fileTitle.slice(14, 14 + maxTitleLength),
         url: null,
         file: f.file
       };
     } else {
       fileData = {
-        fileName: f.fileTitle,
+        fileTitle: f.fileTitle,
         fileViewName: f.description ? f.description : f.fileTitle.slice(14, 14 + maxTitleLength),
         url: getFullName(f.fileTitle),
         file: null
@@ -50,7 +64,7 @@ export default function FileList({ editable = false, title, files, maxTitleLengt
             <li key={i} className="file-item">
               {editable && <button type="button" onClick={() => onRemove(i)} className="remove-button">×</button>}
               <div className="file-item-container">
-                {!editable && <img src={fileIcon} className='file-icon' alt='Иконка файла'></img>}
+                {!editable && <img src={getfileImageName(f)} className='file-icon' alt='Иконка файла'></img>}
                 <h4 className={`${editable ? '' : 'link'} file-title`} onClick={editable ? null : () => onFileClick(f)}>
                   {(f.description && !editable) ? f.description : f.file ? f.fileTitle.slice(0, maxTitleLength) : f.fileTitle.slice(14, 14 + maxTitleLength)}
                 </h4>

@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { getFileType } from '../utils/file.js';
+import { FileType } from '../consts.js';
 import '../css/file-preview.css';
 
 export default function FilePreviewModal({ file, isOpen, onClose }) {
@@ -23,32 +25,20 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
         }
     }, [file, fileUrl]);
 
-    const ext = useMemo(() => {
-        if (!file || !file.fileName) return '';
-        const parts = file.fileName.split('.');
-        return parts.length > 1 ? parts.pop().toLowerCase() : '';
-    }, [file]);
+    const fileType = useMemo(() => getFileType(file), [file])
 
-    const isImage = useMemo(() => {
-        return ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'].includes(ext);
-    }, [ext]);
+    const isImageFile = useMemo(() => fileType === FileType.IMAGE, [fileType]);
 
-    const isVideo = useMemo(() => {
-        return ['mp4', 'webm', 'ogg'].includes(ext);
-    }, [ext]);
+    const isVideoFile = useMemo(() => fileType === FileType.VIDEO, [fileType]);
 
-    const isAudio = useMemo(() => {
-        return ['mp3','wav','flac','aac','ogg'].includes(ext);
-    }, [ext]);
+    const isAudioFile = useMemo(() => fileType === FileType.AUDIO, [fileType]);
 
-    const isDoc = useMemo(() => {
-        return ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'txt'].includes(ext);
-    }, [ext]);
+    const isDocFile = useMemo(() => fileType === FileType.DOCUMENT, [fileType]);
 
     const viewerUrl = useMemo(() => {
-        if (!fileUrl || !isDoc) return null;
+        if (!fileUrl || !isDocFile) return null;
         return `https://docs.google.com/gview?url=${fileUrl}&embedded=true`;
-    }, [fileUrl, isDoc]);
+    }, [fileUrl, isDocFile]);
 
     useEffect(() => {
         if (viewerUrl) {
@@ -101,10 +91,10 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                     <button className="remove-button" onClick={onClose}>×</button>
                 </div>
                 <div className="preview-file-content">
-                    {isImage && fileUrl && (<img src={fileUrl} alt={file.fileName} className="preview-file-image" />)}
-                    {!isImage && isVideo && fileUrl && (<video src={fileUrl} controls className="preview-file-video" />)}
-                    {!isImage && !isVideo && isAudio && fileUrl && (<audio src={fileUrl} controls className="preview-file-audio" />)}
-                    {!isImage && !isVideo && !isAudio && isDoc && viewerUrl && (
+                    {isImageFile && fileUrl && (<img src={fileUrl} alt={file.fileName} className="preview-file-image" />)}
+                    {!isImageFile && isVideoFile && fileUrl && (<video src={fileUrl} controls className="preview-file-video" />)}
+                    {!isImageFile && !isVideoFile && isAudioFile && fileUrl && (<audio src={fileUrl} controls className="preview-file-audio" />)}
+                    {!isImageFile && !isVideoFile && !isAudioFile && isDocFile && viewerUrl && (
                         <div className="iframe-wrapper">
                             {isIframeLoading && (
                                 <div className="iframe-loader">
@@ -119,7 +109,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                             />
                         </div>
                     )}
-                    {!isImage && !isVideo && !isDoc && !isAudio && fileUrl && (
+                    {!isImageFile && !isVideoFile && !isDocFile && !isAudioFile && fileUrl && (
                         <div className="download-wrapper">
                             <h1>Предпросмотр файлов такого типа не поддерживается</h1>
                             <button className="link download-link" onClick={handleDownload}>Скачать файл</button>

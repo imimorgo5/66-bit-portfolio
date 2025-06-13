@@ -39,9 +39,14 @@
 }
 
 .photo-section.project .preview-img {
+    height: 100%;
     width: 100%;
-    height: auto;
     border-radius: 1.5rem;
+}
+
+.photo-section.project.edit .image-container {
+    height: 75%;
+    margin: 0 auto;
 }
 
 .photo-section.user .preview-img {

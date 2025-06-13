@@ -86,6 +86,11 @@
     gap: 1rem;
 }
 
+.file-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+}
+
 .file-section.card.edit .file-item {
     width: 100%;
 }

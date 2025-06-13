@@ -53,6 +53,7 @@
   font-size: 2rem;
   text-align: justify;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .entity-description-container.edit .entity-description {
