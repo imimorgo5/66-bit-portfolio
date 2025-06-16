@@ -52,7 +52,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
         if (file.file instanceof File && fileUrl) {
             const link = document.createElement('a');
             link.href = fileUrl;
-            link.download = file.fileName;
+            link.download = file.fileTitle;
             document.body.appendChild(link);
             link.click();
             link.remove();
@@ -67,7 +67,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                 const blobUrl = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = blobUrl;
-                link.download = file.fileName;
+                link.download = file.fileTitle;
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
@@ -91,7 +91,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                     <button className="remove-button" onClick={onClose}>×</button>
                 </div>
                 <div className="preview-file-content">
-                    {isImageFile && fileUrl && (<img src={fileUrl} alt={file.fileName} className="preview-file-image" />)}
+                    {isImageFile && fileUrl && (<img src={fileUrl} alt={file.fileTitle} className="preview-file-image" />)}
                     {!isImageFile && isVideoFile && fileUrl && (<video src={fileUrl} controls className="preview-file-video" />)}
                     {!isImageFile && !isVideoFile && isAudioFile && fileUrl && (<audio src={fileUrl} controls className="preview-file-audio" />)}
                     {!isImageFile && !isVideoFile && !isAudioFile && isDocFile && viewerUrl && (
@@ -104,7 +104,7 @@ export default function FilePreviewModal({ file, isOpen, onClose }) {
                             <iframe
                                 src={viewerUrl}
                                 className="preview-file-iframe"
-                                title={file.fileName}
+                                title={file.fileTitle}
                                 onLoad={() => setIsIframeLoading(false)}
                             />
                         </div>

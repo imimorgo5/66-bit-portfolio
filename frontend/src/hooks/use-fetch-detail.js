@@ -21,7 +21,7 @@ export function useFetchDetail({ identifier, pageMode, getPublic, getPrivate, ge
         if (!mounted) return;
         setEntity(data);
 
-        if (data.teamId) {
+        if (data.teamId && pageMode !== PageMode.PUBLIC) {
           setLoading(prev => ({ ...prev, team: true }));
           const teamData = await getTeamById(data.teamId);
           if (mounted) setTeam(teamData);

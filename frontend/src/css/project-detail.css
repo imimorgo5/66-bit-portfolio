@@ -176,6 +176,7 @@
 
 .project-detail-page.public .project-folders-container,
 .project-detail-page.public .folder-files-container,
-.project-folders-container.not-admin {
+.project-folders-container.not-admin,
+.folder-files-container.not-admin {
   height: calc(50% - 6rem);
 }

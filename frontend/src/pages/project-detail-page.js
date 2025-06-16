@@ -235,7 +235,7 @@ export default function ProjectDetailPage({ pageMode }) {
               className={`project ${pageMode}`}
             />
             <div className='project-appendices-container'>
-              <div className={'project-folders-container' + (isTeamProject && team.adminId !== user.id ? ' not-admin' : '')}>
+              <div className={'project-folders-container' + (isTeamProject && team && team.adminId !== user.id ? ' not-admin' : '')}>
                 <h3>Папки:</h3>
                 {project.folders && project.folders.length > 0 ? (
                   <ul className="project-folders-list">
@@ -250,7 +250,7 @@ export default function ProjectDetailPage({ pageMode }) {
                   <p className="project-empty-list">Не создано ни одной папки</p>
                 )}
               </div>
-              <div className='folder-files-container'>
+              <div className={'folder-files-container' + (isTeamProject && team && team.adminId !== user.id ? ' not-admin' : '')}>
                 {selectedFolder !== null ?
                   <>
                     <h3>Файлы в <span>{project.folders[selectedFolder].title}</span>:</h3>

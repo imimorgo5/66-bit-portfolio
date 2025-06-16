@@ -132,6 +132,11 @@
     color: rgba(0, 119, 255, 1);
 }
 
+.user-description-item p {
+    word-break: break-all;
+    white-space: normal;
+}
+
 .user-description-item.username {
     flex-direction: column;
     height: auto;
